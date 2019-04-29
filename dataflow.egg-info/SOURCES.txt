@@ -2,6 +2,8 @@ setup.py
 dataflow/__init__.py
 dataflow/ftp.py
 dataflow/main.py
+dataflow/tiff_to_nii.py
+dataflow/transfer_to_oak.py
 dataflow.egg-info/PKG-INFO
 dataflow.egg-info/SOURCES.txt
 dataflow.egg-info/dependency_links.txt

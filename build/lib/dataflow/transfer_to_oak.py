@@ -32,7 +32,7 @@ def transfer_to_oak(source, target):
 
 def main(args):
     directory_from = args[0]
-    directory_to = os.path.join('X:\\data\\Brezovec\\2P_Imaging/IMPORTS', os.path.split(directory_from)[-1])
+    directory_to = 'X:/data/Brezovec/2P_Imaging/IMPORTS' + os.path.split(directory_from)[-1]
     try:
         os.mkdir(directory_to)
         print('Moving from  {}'.format(directory_from))

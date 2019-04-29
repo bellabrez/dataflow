@@ -1,3 +1,3 @@
-from dataflow.ftp import nothing
+import dataflow as flow
 
-nothing()
+flow.nothing()
