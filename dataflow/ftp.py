@@ -49,7 +49,7 @@ def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd):
 
 def check_for_flag(ftp_host, user, flag):
 
-    batch_found_files = "C:/Users/User/projects/dataflow/scripts/found_files.txt" # For batch communication
+    batch_found_files = "C:/Users/User/projects/dataflow/scripts/batch_communicate/found_files.txt" # For batch communication
 
     # Assume did not find files (unless is set to True below)
     with open(batch_found_files, 'w') as file:
@@ -66,7 +66,7 @@ def check_for_flag(ftp_host, user, flag):
     return None
 
 def define_target(target, folder, flag):
-    batch_folder_path = "C:/Users/User/projects/dataflow/scripts/folder_name.txt" # For batch communication
+    batch_folder_path = "C:/Users/User/projects/dataflow/scripts/batch_communicate/folder_name.txt" # For batch communication
     folder_flagless = folder.replace(flag, '')
     target = os.path.join(target, folder_flagless)
     abort_copy = False

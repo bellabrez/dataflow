@@ -5,15 +5,18 @@ If it finds one, it will set the ripper_done_file to be False.
 
 import os
 
-ripper_done_file = "C:/Users/User/projects/dataflow/scripts/ripper_done.txt"
-folder_name = "C:/Users/User/projects/dataflow/scripts/folder_name.txt"
+def main():
+    ripper_done_file = "C:/Users/User/projects/dataflow/scripts/batch_communicate/ripper_done.txt"
+    folder_name = "C:/Users/User/projects/dataflow/scripts/batch_communicate/folder_name.txt"
 
-with open(folder_name, 'r') as file:
-    directory = file.read()
+    with open(folder_name, 'r') as file:
+        directory = file.read()
 
-# Start with assuming ripper is done, unless we find a rawfile (then will be changed to False)
-with open(ripper_done_file, 'w') as file:
-    file.write('True')
+    # Start with assuming ripper is done, unless we find a rawfile (then will be changed to False)
+    with open(ripper_done_file, 'w') as file:
+        file.write('True')
+
+    check_for_raw_file(directory)
 
 def check_for_raw_file(directory): 
     for item in os.listdir(directory):
@@ -30,4 +33,5 @@ def check_for_raw_file(directory):
                     file.write('False')
                 break
 
-check_for_raw_file(directory)
+if __name__ == "__main__":
+    main()
