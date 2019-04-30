@@ -42,45 +42,43 @@ def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd):
         # If the item is a file
         else:
             if os.path.isfile(target_path):
-                print('File already exists. Skipping.  {}'.format(target_path))
+                print('File already exists. Skipping. {}'.format(target_path))
             else:
                 print('Transfering file {}'.format(target_path))
                 ftp_host.download(source_path, target_path)
 
 def check_for_flag(ftp_host, user, flag):
-
-    batch_found_files = "C:/Users/User/projects/dataflow/scripts/batch_communicate/found_files.txt" # For batch communication
-
-    # Assume did not find files (unless is set to True below)
-    with open(batch_found_files, 'w') as file:
-        file.write('False')
-
-    flagged_folders = []
     for folder in ftp_host.listdir(user):
         if flag in folder:
-            # tell batch we found files
-            with open(batch_found_files, 'w') as file:
-                file.write('True')
             print('Found flagged directory: {}'.format(folder))
             return folder
     return None
 
 def define_target(target, folder, flag):
     batch_folder_path = "C:/Users/User/projects/dataflow/scripts/batch_communicate/folder_name.txt" # For batch communication
+    batch_found_files = "C:/Users/User/projects/dataflow/scripts/batch_communicate/found_files.txt" # For batch communication
+
+    # Assume did not find files (unless is set to True below)
+    with open(batch_found_files, 'w') as file:
+        file.write('False')
+
     folder_flagless = folder.replace(flag, '')
     target = os.path.join(target, folder_flagless)
     abort_copy = False
 
     try:
         os.mkdir(target)
+
+        # tell batch we found files
+        with open(batch_found_files, 'w') as file:
+            file.write('True')
+
         # tell batch what the folder path is (ripping utility needs this)
         with open(batch_folder_path, 'w') as file:
             file.write(target)
+
     except FileExistsError:
         print('WARNING: Directory already exists  {}'.format(target))
         print('Aborting copy.')
         abort_copy = True
-
-
-
     return target, abort_copy
