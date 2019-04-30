@@ -1,7 +1,7 @@
 @echo off
 :: check if there are flagged files to transfer
 echo Checking for files to transfer.
-"C:\Users\User\AppData\Local\Programs\Python\Python37\python.exe" "C:\Users\User\projects\dataflow\dataflow\check_for_bruker_transfer.py"
+"C:\Users\User\AppData\Local\Programs\Python\Python37\python.exe" "C:\Users\User\projects\dataflow\dataflow\bruker_transfer.py"
 echo Done checking for files to transfer.
 
 :: check if files were transfered by python ftp
