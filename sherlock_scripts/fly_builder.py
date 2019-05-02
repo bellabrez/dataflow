@@ -149,6 +149,7 @@ def get_new_fly_number(target_path):
     return current_fly_number
 
 def check_for_done_flag(imports_path, done_flag):
+    print('Checking for done flag.')
     for item in os.listdir(imports_path):
         if done_flag in item:
             print('Found flagged directory {}'.format(item))
