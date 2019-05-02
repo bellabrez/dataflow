@@ -63,7 +63,7 @@ def copy_fly(source_fly, destination_fly):
             destination_region = os.path.join(destination_fly, region)
             os.mkdir(destination_region)
             print('Created region directory: {}'.format(destination_region))
-            copy_data(source_region, destination_region):
+            copy_data(source_region, destination_region)
 
     # Else just copy the one fly folder
     else:
