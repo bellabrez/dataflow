@@ -4,42 +4,43 @@ from time import strftime
 from shutil import copyfile
 from xml.etree import ElementTree as ET
 
-### Move folders from imports to fly dataset - need to restructure folders ###
-imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/IMPORTS'
-target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-done_flag = '__done__'
+def main():
+    ### Move folders from imports to fly dataset - need to restructure folders ###
+    imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/IMPORTS'
+    target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
+    done_flag = '__done__'
 
-# Will look for and get folder that contains __done__
-flagged_directory = check_for_done_flag(imports_path, done_flag)
+    # Will look for and get folder that contains __done__
+    flagged_directory = check_for_done_flag(imports_path, done_flag)
 
-# Assume this folder contains fly_1 etc
-# This folder may (or may not) contain separate areas
-# Each area will have a T and a Z
-# Avoid grabbing other weird xml files, reference folder etc.
-# Need to move into fly_X folder that reflects it's date
+    # Assume this folder contains fly_1 etc
+    # This folder may (or may not) contain separate areas
+    # Each area will have a T and a Z
+    # Avoid grabbing other weird xml files, reference folder etc.
+    # Need to move into fly_X folder that reflects it's date
 
-# Get new destination fly number by looking at last 2 char of current flies
-current_fly_number = get_new_fly_number(target_path)
+    # Get new destination fly number by looking at last 2 char of current flies
+    current_fly_number = get_new_fly_number(target_path)
 
-for likely_fly_folder in os.listdir(flagged_directory): #NEED TO SORT THESE FLIES BY NUMBER
-    if 'fly' in likely_fly_folder:
-        print('This fly will be number : {}'.format(current_fly_number))
+    for likely_fly_folder in os.listdir(flagged_directory): #NEED TO SORT THESE FLIES BY NUMBER
+        if 'fly' in likely_fly_folder:
+            print('This fly will be number : {}'.format(current_fly_number))
 
-        # Define source fly directory
-        source_fly = os.path.join(flagged_directory, likely_fly_folder)
+            # Define source fly directory
+            source_fly = os.path.join(flagged_directory, likely_fly_folder)
 
-        # Define destination fly directory
-        fly_time = get_fly_time(source_fly)
-        new_fly_folder = 'fly_' + fly_time + '_' + str(current_fly_number)
-        destination_fly = os.path.join(target_path, new_fly_folder)
-        os.mkdir(destination_fly)
-        print('Created fly directory: {}'.format(destination_fly))
+            # Define destination fly directory
+            fly_time = get_fly_time(source_fly)
+            new_fly_folder = 'fly_' + fly_time + '_' + str(current_fly_number)
+            destination_fly = os.path.join(target_path, new_fly_folder)
+            os.mkdir(destination_fly)
+            print('Created fly directory: {}'.format(destination_fly))
 
-        # Copy fly data
-        copy_fly(source_fly, destination_fly)
+            # Copy fly data
+            copy_fly(source_fly, destination_fly)
 
-        # Get new fly number
-        current_fly_number += 1
+            # Get new fly number
+            current_fly_number += 1
 
 
 # Delete these remaining files
@@ -154,3 +155,6 @@ def check_for_done_flag(imports_path, done_flag):
             item_path = os.path.join(imports_path, item)
             return item_path
     raise SystemExit
+
+if __name__ == '__main__':
+    main()
