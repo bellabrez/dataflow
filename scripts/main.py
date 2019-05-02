@@ -20,6 +20,7 @@ oak_target = 'X:/data/Brezovec/2P_Imaging/IMPORTS'
 extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
 delete_source = False # Currently unused
 convert_to = '.nii' # Currently unsused
+quit_if_local_target_exists = True
 
 ##################################
 ### Transfer files from Bruker ###
@@ -40,7 +41,7 @@ convert_to = metadata['convert_to']
 full_target = target + '/' + folder.replace(flag, '')
 
 # Check if this folder exists, QUIT IF YES
-flow.check_for_target(full_target) #checks if that flagless-folder already exists on target drive
+flow.check_for_target(full_target, quit_if_local_target_exists) #checks if that flagless-folder already exists on target drive
 
 # Send start email
 flow.send_email(subject='Dataflow STARTED', message='Processing {}'.format(full_target))
@@ -53,6 +54,7 @@ flow.start_copy_recursive_ftp(ftp_host, user + '/' + folder, full_target, ip, us
 #################################
 
 # Start ripper watcher, which will kill bruker conversion utility when complete
+print('Starting Ripper Watcher. Will watch {}'.format(full_target))
 subprocess.Popen([sys.executable, 'ripper_killer.py', full_target])
 
 # Start Bruker conversion utility by calling ripper.bat 
@@ -72,3 +74,5 @@ flow.start_oak_transfer(full_target, oak_target, extensions_for_oak_transfer)
 ### Notify user via email ###
 flow.send_email(subject='Dataflow COMPLETE',
 				message='Processed {}\nProcessed files located at {}'.format(full_target, oak_target))
+
+### Delete files from Bruker Computer ###

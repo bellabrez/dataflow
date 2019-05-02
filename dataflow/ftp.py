@@ -42,9 +42,9 @@ def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd):
             # Create same directory in target
             try:
                 os.mkdir(target_path)
-                copy_recursive_ftp(ftp_host, source_path, target_path, ip, username, passwd)
             except FileExistsError:
                 print('Directory already exists  {}'.format(target_path))
+            copy_recursive_ftp(ftp_host, source_path, target_path, ip, username, passwd)
 
         # If the item is a file
         else:
@@ -82,10 +82,11 @@ def check_for_flag(ftp_host, flag):
                 return flagged_folder, metadata
     raise SystemExit # Exit everything if no flagged folder
 
-def check_for_target(full_target):
+def check_for_target(full_target, quit_if_local_target_exists):
     try:
         os.mkdir(full_target)
     except FileExistsError:
         print('WARNING: Directory already exists  {}'.format(full_target))
-        print('Aborting.')
-        raise SystemExit
+        if quit_if_local_target_exists:
+            print('Aborting.')
+            raise SystemExit
