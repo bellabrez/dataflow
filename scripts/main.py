@@ -53,12 +53,7 @@ flow.start_copy_recursive_ftp(ftp_host, user + '/' + folder, full_target, ip, us
 ### Convert from raw to tiffs ###
 #################################
 
-# Start ripper watcher, which will kill bruker conversion utility when complete
-print('Starting Ripper Watcher. Will watch {}'.format(full_target))
-subprocess.Popen([sys.executable, 'ripper_killer.py', full_target])
-
-# Start Bruker conversion utility by calling ripper.bat 
-os.system("ripper.bat " + full_target)
+flow.convert_raw_to_tiff(full_target)
 
 ###########################
 ### Convert tiff to nii ###
@@ -69,6 +64,7 @@ flow.start_convert_tiff_collections(full_target)
 #######################
 ### Transfer to Oak ###
 #######################
+
 flow.start_oak_transfer(full_target, oak_target, extensions_for_oak_transfer)
 
 ### Notify user via email ###

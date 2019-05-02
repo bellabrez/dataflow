@@ -87,7 +87,12 @@ def get_fly_time(fly_folder):
     for xml_file in xml_files:
         datetimes.append(get_datetime_from_xml(xml_file))
 
-    strftime("%Y%m%d-%H%M%S")
+    # Now pick the oldest datetime
+    datetimes = np.asarray(datetimes)
+    print('Found datetimes: {}'.format(datetimes))
+    datetime = np.min(datetimes)
+    print('Found oldest datetime: {}'.format(datetime))
+    return datetime
 
 def get_xml_files(fly_folder):
     xml_files = []
@@ -107,15 +112,30 @@ def get_xml_files(fly_folder):
         else:
             if '.xml' in item:
                 xml_files.append(item_path)
+                print('Found xml file: {}'.format(item_path))
     return xml_files
 
 def get_datetime_from_xml(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    date = root['date']
-    # should look like "4/2/2019 4:16:03 PM"
-    list_of_nums = int(filter(str.isdigit, date)) #FIX
+    datetime = root['date']
+    # will look like "4/2/2019 4:16:03 PM" to start
 
+    # Get dates
+    date = datetime.split(' ')[0]
+    month = date.split('/')[0]
+    day = date.split('/')[1]
+    year = date.split('/')[2]
+
+    # Get times
+    time = datetime.split(' ')[1]
+    hour = time.split(':')[0]
+    minute = time.split(':')[1]
+    second = time.split(':')[2]
+
+    # Combine
+    datetime_new = year + month + day + '-' + hour + minute + second
+    return datetime_new
 
 def get_new_fly_number(target_path):
     oldest_fly = 0
