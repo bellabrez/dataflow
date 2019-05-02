@@ -5,8 +5,7 @@ from matplotlib.pyplot import imread
 from xml.etree import ElementTree as ET
 import sys
 from tqdm import tqdm
-
-#directory =  'F:\\FTP_IMPORTS\\pipeline_test\\fly1'
+from dataflow.utils import timing
 
 def tiff_to_nii(xml_file):
     data_dir, _ = os.path.split(xml_file)
@@ -45,6 +44,10 @@ def tiff_to_nii(xml_file):
     print('Saving nii as {}'.format(save_name))
     img.to_filename(save_name)
 
+@timing
+def start_convert_tiff_collections(*args):
+    convert_tiff_collections(*args)
+
 def convert_tiff_collections(directory): 
     for item in os.listdir(directory):
         new_path = directory + '/' + item
@@ -62,11 +65,3 @@ def convert_tiff_collections(directory):
                 # If the item is an xml file with scann info
                 if root.tag == 'PVScan':
                     tiff_to_nii(new_path)
-
-def main(args):
-    directory = args[0]
-    print('DIRECTORY:{}'.format(directory))
-    convert_tiff_collections(directory)
-
-if __name__ == "__main__":
-    main(sys.argv[1:])

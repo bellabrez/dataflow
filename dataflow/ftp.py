@@ -3,7 +3,10 @@ import sys
 import warnings
 import ftputil
 import ftplib
+import json
+import ast
 from time import sleep
+from dataflow.utils import timing
 warnings.filterwarnings("ignore",category=DeprecationWarning)
 
 def connect_to_ftp(ip, username, passwd):
@@ -21,6 +24,10 @@ def connect_to_ftp(ip, username, passwd):
     print('Connected to ftp_host {}'.format(ip))
     print('Found directories: {}'.format(ftp_host.listdir('')))
     return ftp_host
+
+@timing
+def start_copy_recursive_ftp(*args):
+    copy_recursive_ftp(*args)
 
 def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd): 
     for item in ftp_host.listdir(source):
@@ -47,38 +54,38 @@ def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd):
                 print('Transfering file {}'.format(target_path))
                 ftp_host.download(source_path, target_path)
 
-def check_for_flag(ftp_host, user, flag):
-    for folder in ftp_host.listdir(user):
-        if flag in folder:
-            print('Found flagged directory: {}'.format(folder))
-            return folder
-    return None
+def check_for_flag(ftp_host, flag):
+    # Look in each user folder
+    for user in ftp_host.listdir(''):
+        metadata = None
+        flagged_folder = None
+        # Check if an actual directory
+        if ftp_host.path.isdir(user):
+            # Get all items in this user's directory
+            items = ftp_host.listdir(user)
+            # Do any items have a flag?
+            for item in items:
+                if flag in item:
+                    flagged_folder = item
+                    print('Found flagged directory {} in {}'.format(flagged_folder, user))
+                # Check if the user's folder has a dataflow.json file
+                if item == 'dataflow.json':
+                    metadata_file = user + '/' + item
+                    print('Found metadata {}'.format(metadata_file))
+                    #Copy the metadata info
+                    with ftp_host.open(metadata_file) as fobj:
+                        # Read in as string
+                        metadata = fobj.read()
+                        # Convert to dict
+                        metadata = ast.literal_eval(metadata)
+            if flagged_folder is not None:
+                return flagged_folder, metadata
+    raise SystemExit # Exit everything if no flagged folder
 
-def define_target(target, folder, flag):
-    batch_folder_path = "C:/Users/User/projects/dataflow/scripts/batch_communicate/folder_name.txt" # For batch communication
-    batch_found_files = "C:/Users/User/projects/dataflow/scripts/batch_communicate/found_files.txt" # For batch communication
-
-    # Assume did not find files (unless is set to True below)
-    with open(batch_found_files, 'w') as file:
-        file.write('False')
-
-    folder_flagless = folder.replace(flag, '')
-    target = os.path.join(target, folder_flagless)
-    abort_copy = False
-
+def check_for_target(full_target):
     try:
-        os.mkdir(target)
-
-        # tell batch we found files
-        with open(batch_found_files, 'w') as file:
-            file.write('True')
-
-        # tell batch what the folder path is (ripping utility needs this)
-        with open(batch_folder_path, 'w') as file:
-            file.write(target)
-
+        os.mkdir(full_target)
     except FileExistsError:
-        print('WARNING: Directory already exists  {}'.format(target))
-        print('Aborting copy.')
-        abort_copy = True
-    return target, abort_copy
+        print('WARNING: Directory already exists  {}'.format(full_target))
+        print('Aborting.')
+        raise SystemExit
