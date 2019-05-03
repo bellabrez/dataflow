@@ -10,7 +10,6 @@ def main():
     imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports'
     target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
     done_flag = '__done__'
-    xml_files = []
 
     # Will look for and get folder that contains __done__
     flagged_directory = check_for_done_flag(imports_path, done_flag)
@@ -49,38 +48,33 @@ def main():
 
 ### Pull fictrac and visual from stim computer via ftp ###
 
-def copy_fly(source_fly, destination_fly):
-    # Check if the source fly has folders for brain areas:
-    has_brain_regions = True
-    for item in os.listdir(source_fly):
-        full_item = os.path.join(source_fly, item)
-        # If any items are not directories, must not contain brain regions.
-        if os.path.isfile(full_item):
-            has_brain_regions = False
-
-    # If brain regions, copy files for each region
-    if has_brain_regions:
-        for region in os.listdir(source_fly):
-            source_region = os.path.join(source_fly, region)
-            destination_region = os.path.join(destination_fly, region)
-            os.mkdir(destination_region)
-            print('Created region directory: {}'.format(destination_region))
-            copy_data(source_region, destination_region)
-
-    # Else just copy the one fly folder
-    else:
-        copy_data(source_fly, destination_fly)
-
-def copy_data(source, destination):
+def copy_fly(source, target): 
     for item in os.listdir(source):
-        source_path = os.path.join(source, item)
-        target_path = os.path.join(destination, item)
+        # Create full path to item
+        source_path = source + '/' + item
+        target_path = target + '/' + item
 
-        # Exclude directories (avoids reference directory etc.).
-        if os.path.isfile(source_path):
-            # CAN ADD OTHER FILTERS HERE
-            print('Transfering file {}'.format(target_path))
-            copyfile(source_path, target_path)
+        # Check if item is a directory
+        if os.path.isdir(source_path):
+            # Create same directory in target
+            try:
+                os.mkdir(target_path)
+                print('Creating directory {}'.format(os.path.split(target_path)[-1]))
+                # RECURSE!
+                copy_fly(source_path, target_path)
+            except FileExistsError:
+                print('WARNING: Directory already exists  {}'.format(target_path))
+                print('Skipping Directory.')
+            
+        # If the item is a file
+        else:
+            if os.path.isfile(target_path):
+                print('File already exists. Skipping.  {}'.format(target_path))
+            #elif source_path[-4:] in allowable_extensions:
+                print('Transfering file {}'.format(target_path))
+                copyfile(source_path, target_path)
+            else:
+                pass
 
 def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time
