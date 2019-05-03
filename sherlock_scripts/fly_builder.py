@@ -57,24 +57,28 @@ def copy_fly(source, target):
         # Check if item is a directory
         if os.path.isdir(source_path):
             # Create same directory in target
-            try:
-                os.mkdir(target_path)
-                print('Creating directory {}'.format(os.path.split(target_path)[-1]))
-                # RECURSE!
+            # Do not create Tseries or Zseries directories
+            if 'Tseries' in source_path or 'Zseries' in source_path:
                 copy_fly(source_path, target_path)
-            except FileExistsError:
-                print('WARNING: Directory already exists  {}'.format(target_path))
-                print('Skipping Directory.')
+            elif 'References' in source_path:
+                break
+            else:
+                try:
+                    os.mkdir(target_path)
+                    print('Creating directory {}'.format(os.path.split(target_path)[-1]))
+                    # RECURSE!
+                    copy_fly(source_path, target_path)
+                except FileExistsError:
+                    print('WARNING: Directory already exists  {}'.format(target_path))
+                    print('Skipping Directory.')
             
         # If the item is a file
         else:
             if os.path.isfile(target_path):
                 print('File already exists. Skipping.  {}'.format(target_path))
-            #elif source_path[-4:] in allowable_extensions:
+            else: #source_path[-4:] in allowable_extensions:
                 print('Transfering file {}'.format(target_path))
                 copyfile(source_path, target_path)
-            else:
-                pass
 
 def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time
