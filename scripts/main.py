@@ -21,7 +21,7 @@ oak_target = 'X:/data/Brezovec/2P_Imaging/IMPORTS'
 extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
 delete_bruker_source = False # Currently unused
 convert_to = '.nii' # Currently unsused
-quit_if_local_target_exists = True
+quit_if_local_target_exists = False
 
 ##################################
 ### Transfer files from Bruker ###
