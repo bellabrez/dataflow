@@ -92,33 +92,27 @@ def check_for_target(full_target, quit_if_local_target_exists):
             raise SystemExit
 
 def get_dir_size_ftp(ftp_host, directory):
-    global source_size
-    for item in ftp_host.listdir(directory):
-        full_path = directory + '/' + item
-        if ftp_host.path.isdir(full_path):
-                get_dir_size_ftp(ftp_host, full_path)
-        else:
-            file_size = ftp_host.path.getsize(full_path)
-            if file_size is not None:
-                dir_size += file_size
+    total_size = 0
+    for dirpath, dirnames, filenames in ftp_host.walk(directory):
+        for f in filenames:
+            fp = dirpath + '/' + f
+            total_size += ftp_host.path.getsize(fp)
+    return total_size
 
 def get_dir_size_local(directory):
-    global destination_size
-    for item in ftp_host.listdir(directory):
-        full_path = directory + '/' + item
-        if ftp_host.path.isdir(full_path):
-                get_dir_size_ftp(ftp_host, full_path)
-        else:
-            file_size = ftp_host.path.getsize(full_path)
-            if file_size is not None:
-                dir_size += file_size
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(directory):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            total_size += os.path.getsize(fp)
+    return total_size
 
 def confirm_bruker_transfer(ip, username, passwd, bruker_folder, full_target):
-    source_size = 0
-    destination_size = 0
-    ftp_host = flow.connect_to_ftp(ip, username, passwd)
-    source_size = flow.get_dir_size_ftp(ftp_host, bruker_folder)
-    destination_size = flow.get_dir_size_local(full_target)
+    destination_size = get_dir_size_local(full_target)
+    print('Destination size: {}'.format(destination_size))
+    ftp_host = connect_to_ftp(ip, username, passwd)
+    source_size = get_dir_size_ftp(ftp_host, bruker_folder)
+    print('Bruker size: {}'.format(source_size))
     if source_size !=0 and destination_size !=0 and source_size == destination_size:
         print('Source and desitination directory sizes match.')
     else:
