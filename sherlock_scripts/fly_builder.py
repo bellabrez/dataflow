@@ -84,6 +84,7 @@ def copy_data(source, destination):
 def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time
     # find all xml files
+    xml_files = [] # used as global
     xml_files = get_xml_files(fly_folder)
     print('found xml files: {}'.format(xml_files))
     datetimes_str = []
@@ -102,27 +103,16 @@ def get_fly_time(fly_folder):
     return datetime
 
 def get_xml_files(fly_folder):
-    xml_files = []
+    global xml_files
     # Look at items in fly folder
     for item in os.listdir(fly_folder):
-        print('Looking at item: {}'.format(item))
-        item_path = os.path.join(fly_folder, item)
-        for another_item in os.listdir(item_path):
-            another_item_path = os.path.join(fly_folder, another_item)
-            # If this item is a directory, it is a region directory
-            if os.path.isdir(another_item_path):
-                region_folder = os.path.join(fly_folder, item_path)
-                print('Found region folder: {}'.format(region_folder))
-                # Look at items in fly region folder if they exist
-                for sub_item in os.listdir(region_folder):
-                    sub_item_path = os.path.join(region_folder, sub_item)
-                    print('Found sub-item: {}'.format(sub_item_path))
-                    if '.xml' in sub_item:
-                        xml_files.append(sub_item_path)
-            else:
-                if '.xml' in item:
-                    xml_files.append(item_path)
-                    print('Found xml file: {}'.format(item_path))
+        full_path = os.path.join(fly_folder, item)
+        if os.path.isdir(full_path):
+            get_xml_files(full_path)
+        else:
+            if '.xml' in item:
+                xml_files.append(full_path)
+                print('Found xml file: {}'.format(item_path))
     return xml_files
 
 def get_datetime_from_xml(xml_file):
