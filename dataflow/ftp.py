@@ -117,3 +117,12 @@ def confirm_bruker_transfer(ip, username, passwd, bruker_folder, full_target):
         print('Source and desitination directory sizes match.')
     else:
         raise SystemExit
+
+def delete_bruker_folder(ip, username, passwd, bruker_folder):
+    ftp_host = connect_to_ftp(ip, username, passwd)
+    ftp_host.rmdir(bruker_folder)
+    print('Deleted: {}'.format(bruker_folder))
+
+def delete_local(directory):
+    os.rmdir(directory)
+    print('Deleted: {}'.format(directory))

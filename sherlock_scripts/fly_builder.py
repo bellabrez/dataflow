@@ -52,8 +52,10 @@ def copy_fly(source_fly, destination_fly):
     for item in os.listdir(source_fly):
         full_item = os.path.join(source_fly, item)
         # If any items are not directories, must not contain brain regions.
-        if 'Tseries' in full_item or 'Zseries' in full_item:
+        if 'TSeries' in full_item or 'ZSeries' in full_item:
             has_brain_regions = False
+
+    print('Has brain regions: {}'.format(has_brain_regions))
 
     # If brain regions, copy files for each region
     if has_brain_regions:

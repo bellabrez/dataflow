@@ -19,9 +19,12 @@ username = 'user'
 passwd = 'flyeye'
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
 extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
-delete_bruker_source = False # Currently unused
 convert_to = '.nii' # Currently unsused
 quit_if_local_target_exists = False
+
+delete_bruker = False # Currently unused
+delete_local = False
+delete_oak = False
 
 ##################################
 ### Transfer files from Bruker ###
@@ -32,7 +35,7 @@ ftp_host = flow.connect_to_ftp(ip, username, passwd)
 
 # Check if any folders have flag ~quit capabilities~
 folder, metadata = flow.check_for_flag(ftp_host, flag)
-bruker_folder = user + '/' + folder
+bruker_folder = user + '/' + folder # Can intercept user here (do this later!)
 
 # Set variables based on loaded metadata
 oak_target = metadata['oak_target']
@@ -77,3 +80,7 @@ flow.send_email(subject='Dataflow SUCCESS',
                 message='Processed {}\nProcessed files located at {}'.format(full_target, oak_target))
 
 ### Delete files from Bruker Computer ###
+if delete_bruker:
+    flow.delete_bruker_folder(ip, username, passwd, bruker_folder)
+if delete_locall:
+    flow.delete_local(full_target)
