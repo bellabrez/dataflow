@@ -73,12 +73,12 @@ def copy_data(source, destination):
     for item in os.listdir(source):
         # Create full path to item
         source_path = source + '/' + item
-        target_path = target + '/' + item
+        target_path = destination + '/' + item
 
         # Check if item is a directory
         if os.path.isdir(source_path):
             # Do not update destination - download all files into that destination
-            copy_data(source_path, target)
+            copy_data(source_path, destination)
             
         # If the item is a file
         else:
