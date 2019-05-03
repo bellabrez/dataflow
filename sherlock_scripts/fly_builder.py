@@ -10,6 +10,7 @@ def main():
     imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports'
     target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
     done_flag = '__done__'
+    xml_files = []
 
     # Will look for and get folder that contains __done__
     flagged_directory = check_for_done_flag(imports_path, done_flag)
@@ -84,8 +85,8 @@ def copy_data(source, destination):
 def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time
     # find all xml files
-    xml_files = [] # used as global
-    xml_files = get_xml_files(fly_folder)
+    xml_files = []
+    xml_files = get_xml_files(fly_folder, xml_files)
     print('found xml files: {}'.format(xml_files))
     datetimes_str = []
     datetimes_int = []
@@ -102,23 +103,22 @@ def get_fly_time(fly_folder):
     print('Found oldest datetime: {}'.format(datetime))
     return datetime
 
-def get_xml_files(fly_folder):
-    global xml_files
+def get_xml_files(fly_folder, xml_files):
     # Look at items in fly folder
     for item in os.listdir(fly_folder):
         full_path = os.path.join(fly_folder, item)
         if os.path.isdir(full_path):
-            get_xml_files(full_path)
+            xml_files = get_xml_files(full_path, xml_files)
         else:
-            if '.xml' in item:
+            if '.xml' in item and '_Cycle' not in item:
                 xml_files.append(full_path)
-                print('Found xml file: {}'.format(item_path))
+                print('Found xml file: {}'.format(full_path))
     return xml_files
 
 def get_datetime_from_xml(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    datetime = root['date']
+    datetime = root.get('date')
     # will look like "4/2/2019 4:16:03 PM" to start
 
     # Get dates
