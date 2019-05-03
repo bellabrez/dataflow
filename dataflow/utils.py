@@ -29,6 +29,7 @@ def send_email(subject='', message='', recipient="brezovec@stanford.edu"):
     Returns
     -------
     Nothing. """
+    print('Sending email.')
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login("python.notific@gmail.com", "9!tTT77x!ma8cGy")
@@ -70,7 +71,7 @@ def timing(f):
         return result
     return wrapper
 
-class Logger(object):
+class Logger_stdout(object):
     def __init__(self):
         self.terminal = sys.stdout
         log_folder = 'C:/Users/User/Desktop/dataflow_logs'
@@ -86,4 +87,22 @@ class Logger(object):
         #this flush method is needed for python 3 compatibility.
         #this handles the flush command by doing nothing.
         #you might want to specify some extra behavior here.
-        pass    
+        pass 
+
+class Logger_stderr(object):
+    def __init__(self):
+        self.terminal = sys.stderr
+        log_folder = 'C:/Users/User/Desktop/dataflow_logs'
+        log_file = 'dataflow_log_' + strftime("%Y%m%d-%H%M%S") + '.txt'
+        self.full_log_file = os.path.join(log_folder, log_file)
+        self.log = open(self.full_log_file, "a")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)  
+
+    def flush(self):
+        #this flush method is needed for python 3 compatibility.
+        #this handles the flush command by doing nothing.
+        #you might want to specify some extra behavior here.
+        pass

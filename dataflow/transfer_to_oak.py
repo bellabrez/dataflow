@@ -40,6 +40,9 @@ def start_oak_transfer(directory_from, oak_target, allowable_extensions):
         print('Moving to  {}'.format(directory_to))
         transfer_to_oak(directory_from, directory_to, allowable_extensions)
         print('Copy completed.')
+        os.rename(directory_to, directory_to + '__done__')
+        print('Added __done__ flag')
+
     except FileExistsError:
         print('WARNING: Directory already exists  {}'.format(directory_to))
         print('Skipping directory.')

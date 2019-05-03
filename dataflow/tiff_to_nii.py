@@ -16,48 +16,63 @@ def tiff_to_nii(xml_file):
     root = tree.getroot()
     # Get all volumes
     sequences = root.findall('Sequence')
-    volumes_img = []
+
+    
+
+    # Get num channels
+    num_channels = get_num_channels(sequences[0])
+
+    # De each channel separately (for memory reasons)
+    # I think this should also work for 1 channel recordings but should confirm
     print('Converting tiffs to nii in directory: \n{}'.format(data_dir))
-    for sequence in tqdm(sequences):
-        # For given volume, get all frames
-        frames = sequence.findall('Frame')
-        frames_img = []
-        for frame in frames:
-            # For a given frame, get all channels
-            files = frame.findall('File')
-            channels_img = []
-            for file in files:
-                filename = file.get('filename')
+    for channel in range(num_channels):
+        volumes_img = []
+        for sequence in tqdm(sequences):
+            # For a given volume, get all frames
+            frames = sequence.findall('Frame')
+            frames_img = []
+            for frame in frames:
+                # For a given frame, get all channels
+                files = frame.findall('File')
+                filename = files[channel].get('filename')
                 fullfile = os.path.join(data_dir, filename)
 
                 # Read in file
-                starting_bit_depth = 2**13
-                desired_bit_depth = 2**8
-                im = Image.open(fullfile)
-                imarray = np.asarray(im)
-                imarray = imarray*(desired_bit_depth/starting_bit_depth)
-                imarray = imarray.astype('uint8')
+                compress = False
+                if compress:
+                    starting_bit_depth = 2**13
+                    desired_bit_depth = 2**8
+                    im = Image.open(fullfile)
+                    img = np.asarray(im)
+                    img = img*(desired_bit_depth/starting_bit_depth)
+                    img = img.astype('uint8')
+                else:
+                    img = imread(fullfile)
 
-                channels_img.append(imarray)
-            frames_img.append(channels_img)
-        volumes_img.append(frames_img)
+                frames_img.append(img)
+            volumes_img.append(frames_img)
         
-    memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
-    print('Current memory usage: {:.2f}GB'.format(memory_usage))
-    sys.stdout.flush()
+        memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+        print('Current memory usage: {:.2f}GB'.format(memory_usage))
+        sys.stdout.flush()
 
-    volumes_img = np.asarray(volumes_img, dtype=np.uint8)
-    volumes_img = np.moveaxis(volumes_img,1,-1)
-    volumes_img = np.moveaxis(volumes_img,0,-1)
-    volumes_img = np.moveaxis(volumes_img,0,-1)
-    volumes_img = np.swapaxes(volumes_img,0,1)
+        volumes_img = np.asarray(volumes_img)
+        # Will start as t,z,x,y. Want y,x,z,t
+        volumes_img = np.moveaxis(volumes_img,1,-1) # Now t,x,y,z
+        volumes_img = np.moveaxis(volumes_img,0,-1) # Now x,y,z,t
+        volumes_img = np.swapaxes(volumes_img,0,1) # Now y,x,z,t
 
-    aff = np.eye(4)
-    save_name = xml_file[:-4] + '.nii'
-    img = nib.Nifti1Image(volumes_img, aff)
-    volumes_img = None # for memory
-    print('Saving nii as {}'.format(save_name))
-    img.to_filename(save_name)
+        aff = np.eye(4)
+        save_name = xml_file[:-4] + '_channel_{}'.format(channel+1) + '.nii'
+        img = nib.Nifti1Image(volumes_img, aff)
+        volumes_img = None # for memory
+        print('Saving nii as {}'.format(save_name))
+        img.to_filename(save_name)
+
+def get_num_channels(sequence):
+    frame = sequence.findall('Frame')[0]
+    files = frame.findall('File')
+    return len(files)
 
 @timing
 def start_convert_tiff_collections(*args):
