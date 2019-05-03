@@ -1,12 +1,13 @@
 import os
 import sys
+import numpy as np
 from time import strftime
 from shutil import copyfile
 from xml.etree import ElementTree as ET
 
 def main():
     ### Move folders from imports to fly dataset - need to restructure folders ###
-    imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/IMPORTS'
+    imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports'
     target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
     done_flag = '__done__'
 
@@ -53,7 +54,7 @@ def copy_fly(source_fly, destination_fly):
     for item in os.listdir(source_fly):
         full_item = os.path.join(source_fly, item)
         # If any items are not directories, must not contain brain regions.
-        if os.isfile(full_item):
+        if os.path.isfile(full_item):
             has_brain_regions = False
 
     # If brain regions, copy files for each region
@@ -75,7 +76,7 @@ def copy_data(source, destination):
         target_path = os.path.join(destination, item)
 
         # Exclude directories (avoids reference directory etc.).
-        if os.isfile(source_path):
+        if os.path.isfile(source_path):
             # CAN ADD OTHER FILTERS HERE
             print('Transfering file {}'.format(target_path))
             copyfile(source_path, target_path)
@@ -84,14 +85,19 @@ def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time
     # find all xml files
     xml_files = get_xml_files(fly_folder)
-    datetimes = []
+    print('found xml files: {}'.format(xml_files))
+    datetimes_str = []
+    datetimes_int = []
     for xml_file in xml_files:
-        datetimes.append(get_datetime_from_xml(xml_file))
+        datetime_str, datetime_int = get_datetime_from_xml(xml_file)
+        datetimes_str.append(datetime_str)
+        datetimes_int.append(datetime_int)
 
     # Now pick the oldest datetime
-    datetimes = np.asarray(datetimes)
-    print('Found datetimes: {}'.format(datetimes))
-    datetime = np.min(datetimes)
+    datetimes_int = np.asarray(datetimes_int)
+    print('Found datetimes: {}'.format(datetimes_str))
+    index_min = np.argmin(datetimes_int)
+    datetime = datetimes_str[index_min]
     print('Found oldest datetime: {}'.format(datetime))
     return datetime
 
@@ -99,15 +105,17 @@ def get_xml_files(fly_folder):
     xml_files = []
     # Look at items in fly folder
     for item in os.listdir(fly_folder):
+        print('Looking at item: {}'.format(item))
         item_path = os.path.join(fly_folder, item)
 
         # If this item is a directory, it is a region directory
-        if os.isdir(item_path):
+        if os.path.isdir(item_path):
             region_folder = os.path.join(fly_folder, item_path)
-
+            print('Found region folder: {}'.format(region_folder))
             # Look at items in fly region folder if they exist
             for sub_item in os.listdir(region_folder):
                 sub_item_path = os.path.join(region_folder, sub_item)
+                print('Found sub-item: {}'.format(sub_item_path))
                 if '.xml' in sub_item:
                     xml_files.append(sub_item_path)
         else:
@@ -135,8 +143,9 @@ def get_datetime_from_xml(xml_file):
     second = time.split(':')[2]
 
     # Combine
-    datetime_new = year + month + day + '-' + hour + minute + second
-    return datetime_new
+    datetime_str = year + month + day + '-' + hour + minute + second
+    datetime_int = int(year + month + day + hour + minute + second)
+    return datetime_str, datetime_int
 
 def get_new_fly_number(target_path):
     oldest_fly = 0
