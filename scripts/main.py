@@ -1,10 +1,6 @@
 import sys
 import os
 import warnings
-import ftputil
-import ftplib
-import subprocess
-from time import sleep
 import dataflow as flow
 
 warnings.filterwarnings("ignore",category=DeprecationWarning)
@@ -22,8 +18,8 @@ extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
 convert_to = '.nii' # Currently unsused
 quit_if_local_target_exists = False
 
-delete_bruker = False # Currently unused
-delete_local = False
+delete_bruker = True # Currently unused
+delete_local = True
 delete_oak = False
 
 ##################################
@@ -38,9 +34,9 @@ folder, metadata = flow.check_for_flag(ftp_host, flag)
 bruker_folder = user + '/' + folder # Can intercept user here (do this later!)
 
 # Set variables based on loaded metadata
-oak_target = metadata['oak_target']
-delete_bruker_source = metadata['delete_source']
-convert_to = metadata['convert_to']
+#oak_target = metadata['oak_target']
+#delete_bruker_source = metadata['delete_source']
+#convert_to = metadata['convert_to']
 
 # Strip flag of folder and join to target
 full_target = target + '/' + folder.replace(flag, '')
