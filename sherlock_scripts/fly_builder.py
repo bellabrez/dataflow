@@ -107,21 +107,22 @@ def get_xml_files(fly_folder):
     for item in os.listdir(fly_folder):
         print('Looking at item: {}'.format(item))
         item_path = os.path.join(fly_folder, item)
-
-        # If this item is a directory, it is a region directory
-        if os.path.isdir(item_path):
-            region_folder = os.path.join(fly_folder, item_path)
-            print('Found region folder: {}'.format(region_folder))
-            # Look at items in fly region folder if they exist
-            for sub_item in os.listdir(region_folder):
-                sub_item_path = os.path.join(region_folder, sub_item)
-                print('Found sub-item: {}'.format(sub_item_path))
-                if '.xml' in sub_item:
-                    xml_files.append(sub_item_path)
-        else:
-            if '.xml' in item:
-                xml_files.append(item_path)
-                print('Found xml file: {}'.format(item_path))
+        for another_item in os.listdir(item_path):
+            another_item_path = os.path.join(fly_folder, another_item)
+            # If this item is a directory, it is a region directory
+            if os.path.isdir(another_item_path):
+                region_folder = os.path.join(fly_folder, item_path)
+                print('Found region folder: {}'.format(region_folder))
+                # Look at items in fly region folder if they exist
+                for sub_item in os.listdir(region_folder):
+                    sub_item_path = os.path.join(region_folder, sub_item)
+                    print('Found sub-item: {}'.format(sub_item_path))
+                    if '.xml' in sub_item:
+                        xml_files.append(sub_item_path)
+            else:
+                if '.xml' in item:
+                    xml_files.append(item_path)
+                    print('Found xml file: {}'.format(item_path))
     return xml_files
 
 def get_datetime_from_xml(xml_file):
