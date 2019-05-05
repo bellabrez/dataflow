@@ -139,6 +139,14 @@ def get_datetime_from_xml(xml_file):
     minute = time.split(':')[1]
     second = time.split(':')[2]
 
+    # Add zeros if needed
+    if len(month) == 1:
+        month = '0' + month
+    if len(day) == 1:
+        day = '0' + day
+    if len(hour) == 1:
+        hour = '0' + hour
+
     # Combine
     datetime_str = year + month + day + '-' + hour + minute + second
     datetime_int = int(year + month + day + hour + minute + second)
