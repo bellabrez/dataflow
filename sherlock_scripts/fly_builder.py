@@ -134,7 +134,7 @@ def copy_bruker_data(source, destination):
         if os.path.isdir(source_path):
             # Do not update destination - download all files into that destination
             print('copy data is recursing.')
-            copy_data(source_path, destination)
+            copy_bruker_data(source_path, destination)
             
         # If the item is a file
         else:

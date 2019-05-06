@@ -127,6 +127,12 @@ def delete_bruker_folder(ip, username, passwd, bruker_folder):
     ftp_host.rmtree(bruker_folder)
     print('DELETED: {}'.format(bruker_folder))
 
+def strip_bruker_flag(ip, username, passwd, bruker_folder, flag):
+    ftp_host = ftputil.FTPHost(ip, username, passwd)
+    flagless_folder = bruker_folder.replace(flag, '')
+    ftp_host.rename(bruker_folder, flagless_folder)
+    print('Renamed bruker folder to {}'.format(flagless_folder))
+
 def delete_local(directory):
     shutil.rmtree(directory)
     print('DELETED: {}'.format(directory))

@@ -68,6 +68,9 @@ flow.confirm_bruker_transfer(ip, username, passwd, bruker_folder, full_target)
 ### Delete files from Bruker Computer ###
 if delete_bruker:
     flow.delete_bruker_folder(ip, username, passwd, bruker_folder)
+else:
+    # Strip flag from folder
+    flow.strip_bruker_flag(ip, username, passwd, bruker_folder, flag)
 
 # Send 'transfered' email
 flow.send_email(subject='Dataflow bruker transfer complete', message='Safe to turn off bruker', recipient=email)
