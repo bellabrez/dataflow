@@ -11,7 +11,7 @@ def main(directory):
         print('raws_exist is {}'.format(raws_exist))
 
     # Kill bruker converter now that no more raws exist
-    os.system("ripper_killer.bat")
+    os.system("C:/Users/User/projects/dataflow/scripts/ripper_killer.bat")
 
 def check_for_raw_files(directory, raws_exist):
     for item in os.listdir(directory):

@@ -17,8 +17,6 @@ def tiff_to_nii(xml_file):
     # Get all volumes
     sequences = root.findall('Sequence')
 
-    
-
     # Get num channels
     num_channels = get_num_channels(sequences[0])
 
@@ -27,7 +25,8 @@ def tiff_to_nii(xml_file):
     print('Converting tiffs to nii in directory: \n{}'.format(data_dir))
     for channel in range(num_channels):
         volumes_img = []
-        for sequence in sequences:
+        for i, sequence in enumerate(sequences):
+            print('{}/{}'.format(i+1, len(sequences)))
             # For a given volume, get all frames
             frames = sequence.findall('Frame')
             frames_img = []

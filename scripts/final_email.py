@@ -34,5 +34,7 @@ if os.stat(error_file).st_size != 0:
 else:
     for email in emails:
         flow.send_email(subject='Dataflow SUCCESS', message=' ', recipient=email)
-
-os.remove(email_file)
+try:
+    os.remove(email_file)
+except:
+    print('Could not remove email file.')

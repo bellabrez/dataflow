@@ -1,6 +1,7 @@
 import sys
 import os
 import warnings
+import subprocess
 import dataflow as flow
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -10,15 +11,16 @@ sys.stderr = flow.Logger_stderr()
 target = 'F:/ftp_imports' # Where on this computer it goes
 flag = '__flag__' #flag = '__flag__'
 user = 'luke' # folder to look in E: drive in Bruker
-ip='171.65.18.54'
-username = 'user'
-passwd = 'flyeye'
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
 extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
 convert_to = '.nii' # Currently unsused
 quit_if_local_target_exists = False
 
-delete_bruker = True
+# For Bruker computer
+ip ='171.65.18.54'
+username = 'user'
+passwd = 'flyeye'
+
 delete_local = True
 delete_bruker = False
 
@@ -36,6 +38,7 @@ bruker_folder = user + '/' + folder
 # Overwrite default variables based on loaded metadata
 oak_target = metadata['oak_target']
 delete_bruker = metadata['delete_source']
+print('Delete bruker is {}'.format(delete_bruker))
 email = metadata['email']
 
 # Save email for error reporting
@@ -48,6 +51,10 @@ full_target = target + '/' + folder.replace(flag, '')
 
 # Send start email
 flow.send_email(subject='Dataflow STARTED', message='Processing {}'.format(full_target), recipient=email)
+
+# For Luke, pull fictrac and visual stim files from stim computer (and send to oak)
+if user == 'luke':
+    subprocess.Popen([sys.executable, 'C:/Users/User/projects/dataflow/scripts/from_stim_computer.py'])
 
 # Check if this folder exists ~quit capabilities~
 flow.check_for_target(full_target, quit_if_local_target_exists)

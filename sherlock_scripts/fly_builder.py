@@ -49,29 +49,82 @@ def main():
 def copy_fly(source_fly, destination_fly):
     # Check if the source fly has folders for brain areas:
     # Switching to assuming there are brain regions!!!
-    has_brain_regions = True
-    for item in os.listdir(source_fly):
-        full_item = os.path.join(source_fly, item)
-        # If any items are not directories, must not contain brain regions.
-        if 'TSeries' in full_item or 'ZSeries' in full_item:
-            has_brain_regions = False
+    #has_brain_regions = True
+    #for item in os.listdir(source_fly):
+    #    full_item = os.path.join(source_fly, item)
+    #    # If any items are not directories, must not contain brain regions.
+    #    if 'TSeries' in full_item or 'ZSeries' in full_item:
+    #        has_brain_regions = False
 
-    print('Has brain regions: {}'.format(has_brain_regions))
+    #print('Has brain regions: {}'.format(has_brain_regions))
 
     # If brain regions, copy files for each region
-    if has_brain_regions:
-        for region in os.listdir(source_fly):
-            source_region = os.path.join(source_fly, region)
-            destination_region = os.path.join(destination_fly, region)
-            os.mkdir(destination_region)
-            print('Created region directory: {}'.format(destination_region))
-            copy_data(source_region, destination_region)
+    # if has_brain_regions:
+    # Assuming flies contain region folders
+    for region in os.listdir(source_fly):
+        source_region = os.path.join(source_fly, region)
+        destination_region = os.path.join(destination_fly, region)
+        os.mkdir(destination_region)
+        print('Created region directory: {}'.format(destination_region))
+        copy_bruker_data(source_region, destination_region)
+        copy_fictrac(destination_region)
 
-    # Else just copy the one fly folder
-    else:
-        copy_data(source_fly, destination_fly)
 
-def copy_data(source, destination):
+def copy_fictrac(destination_region):
+    fictrac_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/fictrac'
+    # Find time of experiment based on functional.xml
+    xml_file = os.path.join(destination_region, 'functional.xml')
+    _, _, datetime_dict = get_datetime_from_xml(xml_file)
+    true_ymd = datetime_dict['year'] + datetime_dict['month'] + datetime_dict['day']
+    true_total_seconds = int(datetime_dict['hour']) * 60 * 60 + \
+                         int(datetime_dict['minute']) * 60 + \
+                         int(datetime_dict['second'])
+
+    # Find .dat file of 1) correct-ish time, 2) correct-ish size
+    for file in os.path.listdir(fictrac_folder)
+        # Get datetime from file name
+        datetime = file.split('-')[1]
+        test_ymd = datetime.split('_')[0]
+        test_time = datetime.split('_')[1]
+        test_hour = test_time[0:2]
+        test_minute = test_time[2:4]
+        test_second = test_time[4:6]
+        test_total_seconds = int(test_hour) * 60 * 60 + \
+                             int(test_minute) * 60 + \
+                             int(test_second)
+
+        # Year/month/day must be exact
+        if true_ymd == test_ymd:
+            # Must be within 3 minutes
+            time_difference = np.abs(true_total_seconds - test_total_seconds)
+            if time_difference < 3 * 60:
+                print('Found fictrac file that matches time.')
+                # Must be correct size
+                if file[-4:] == '.dat':
+                    fp = os.path.join(fictrac, file)
+                    file_size = os.path.getsize(fp)
+                    if file_size > 30000000:
+                        print('Found correct .dat file: {}'.format(file))
+                        datetime_correct = datetime
+                        break
+
+    # Now collect the 4 files with correct datetime
+    correct_time_files = []
+    for file in os.path.listdir(fictrac_folder):
+        datetime = file.split('-')[1]
+        if datetime == datetime_correct:
+            correct_time_files.append(file)
+
+    print('Found these files with correct times: {}'.format(correct_time_files))
+
+    # Now transfer these 4 files to the fly
+    for file in correct_time_files:
+        target_path = os.path.join(destination_region, file)
+        source_path = os.path.join(fictrac_folder, file)
+        print('Tansfering {}'.format(target_path))
+        copyfile(source_path, target_path)
+
+def copy_bruker_data(source, destination):
     # Do not update destination - download all files into that destination
     for item in os.listdir(source):
         # Create full path to item
@@ -112,7 +165,7 @@ def get_fly_time(fly_folder):
     datetimes_str = []
     datetimes_int = []
     for xml_file in xml_files:
-        datetime_str, datetime_int = get_datetime_from_xml(xml_file)
+        datetime_str, datetime_int, _ = get_datetime_from_xml(xml_file)
         datetimes_str.append(datetime_str)
         datetimes_int.append(datetime_int)
 
@@ -154,6 +207,11 @@ def get_datetime_from_xml(xml_file):
     minute = time.split(':')[1]
     second = time.split(':')[2]
 
+    # AM vs PM
+    am_pm = datetime.split(' ')[-1]
+    if am_pm == 'PM':
+        hour = str(int(hour) + 12)
+
     # Add zeros if needed
     if len(month) == 1:
         month = '0' + month
@@ -162,10 +220,18 @@ def get_datetime_from_xml(xml_file):
     if len(hour) == 1:
         hour = '0' + hour
 
+
     # Combine
     datetime_str = year + month + day + '-' + hour + minute + second
     datetime_int = int(year + month + day + hour + minute + second)
-    return datetime_str, datetime_int
+    datetime_dict = {'year': year,
+                     'month': month,
+                     'day': day,
+                     'hour': hour,
+                     'minute': minute,
+                     'second': second}
+
+    return datetime_str, datetime_int, datetime_dict
 
 def get_new_fly_number(target_path):
     oldest_fly = 0

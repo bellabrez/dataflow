@@ -82,6 +82,7 @@ def check_for_flag(ftp_host, flag):
                                 metadata = ast.literal_eval(metadata)
             if flagged_folder is not None and metadata is not None:
                 return flagged_folder, metadata, user
+    print('No flagged folders found.')
     raise SystemExit # Exit everything if no flagged folder
 
 def check_for_target(full_target, quit_if_local_target_exists):
