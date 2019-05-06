@@ -35,6 +35,7 @@ bruker_folder = user + '/' + folder
 # Overwrite default variables based on loaded metadata
 oak_target = metadata['oak_target']
 delete_bruker = metadata['delete_source']
+delete_bruker = True
 #convert_to = metadata['convert_to']
 email = metadata['email']
 
