@@ -3,11 +3,11 @@ import os
 import warnings
 import dataflow as flow
 
-warnings.filterwarnings("ignore",category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 sys.stdout = flow.Logger_stdout()
 sys.stderr = flow.Logger_stderr()
 
-target = 'F:/FTP_IMPORTS' # Where on this computer it goes
+target = 'F:/ftp_imports' # Where on this computer it goes
 flag = '__flag__' #flag = '__flag__'
 user = 'luke' # folder to look in E: drive in Bruker
 ip='171.65.18.54'
@@ -18,9 +18,8 @@ extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
 convert_to = '.nii' # Currently unsused
 quit_if_local_target_exists = False
 
-delete_bruker = True # Currently unused
+delete_bruker = True
 delete_local = True
-delete_oak = False
 
 ##################################
 ### Transfer files from Bruker ###
@@ -35,7 +34,7 @@ bruker_folder = user + '/' + folder
 
 # Overwrite default variables based on loaded metadata
 oak_target = metadata['oak_target']
-#delete_bruker = metadata['delete_source']
+delete_bruker = metadata['delete_source']
 #convert_to = metadata['convert_to']
 email = metadata['email']
 
