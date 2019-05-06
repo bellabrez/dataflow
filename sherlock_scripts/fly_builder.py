@@ -48,6 +48,7 @@ def main():
 ### Pull fictrac and visual from stim computer via ftp ###
 def copy_fly(source_fly, destination_fly):
     # Check if the source fly has folders for brain areas:
+    # Switching to assuming there are brain regions!!!
     has_brain_regions = True
     for item in os.listdir(source_fly):
         full_item = os.path.join(source_fly, item)
@@ -75,17 +76,31 @@ def copy_data(source, destination):
     for item in os.listdir(source):
         # Create full path to item
         source_path = source + '/' + item
-        target_path = destination + '/' + item
 
         # Check if item is a directory
         if os.path.isdir(source_path):
             # Do not update destination - download all files into that destination
+            print('copy data is recursing.')
             copy_data(source_path, destination)
             
         # If the item is a file
         else:
-            #source_path[-4:] in allowable_extensions:
+            ### Change file names
+            if '.nii' in item and 'TSeries' in item:
+                # '_' is from channel numbers my tiff to nii adds
+                item = 'functional_' + item.split('_')[1] + '_' + item.split('_')[1]
+            if '.nii' in item and 'ZSeries' in item:
+                item = 'anatomy_' + item.split('_')[1] + '_' + item.split('_')[1]
+            if '.csv' in item:
+                item = 'photodiode.csv'
+            if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:
+                item = 'anatomy.xml'
+            if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
+                item = 'functional.xml'
+
+            target_path = destination + '/' + item
             print('Transfering file {}'.format(target_path))
+
             copyfile(source_path, target_path)
 
 def get_fly_time(fly_folder):
