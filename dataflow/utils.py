@@ -92,7 +92,7 @@ class Logger_stdout(object):
 class Logger_stderr(object):
     def __init__(self):
         self.terminal = sys.stderr
-        log_folder = 'C:/Users/User/Desktop/dataflow_logs'
+        log_folder = 'C:/Users/User/Desktop/dataflow_error'
         log_file = 'dataflow_log_' + strftime("%Y%m%d-%H%M%S") + '.txt'
         self.full_log_file = os.path.join(log_folder, log_file)
         self.log = open(self.full_log_file, "a")

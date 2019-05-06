@@ -5,6 +5,7 @@ import ftputil
 import ftplib
 import json
 import ast
+import shutil
 from time import sleep
 from dataflow.utils import timing
 warnings.filterwarnings("ignore",category=DeprecationWarning)
@@ -68,17 +69,18 @@ def check_for_flag(ftp_host, flag):
                 if flag in item:
                     flagged_folder = item
                     print('Found flagged directory {} in {}'.format(flagged_folder, user))
-                # Check if the user's folder has a dataflow.json file
-                if item == 'dataflow.json':
-                    metadata_file = user + '/' + item
-                    print('Found metadata {}'.format(metadata_file))
-                    #Copy the metadata info
-                    with ftp_host.open(metadata_file) as fobj:
-                        # Read in as string
-                        metadata = fobj.read()
-                        # Convert to dict
-                        metadata = ast.literal_eval(metadata)
-            if flagged_folder is not None:
+                    # Check for dataflow.json file
+                    for item in items:
+                        if item == 'dataflow.json':
+                            metadata_file = user + '/' + item
+                            print('Found metadata for user {}'.format(metadata_file))
+                            #Copy the metadata info
+                            with ftp_host.open(metadata_file) as fobj:
+                                # Read in as string
+                                metadata = fobj.read()
+                                # Convert to dict
+                                metadata = ast.literal_eval(metadata)
+            if flagged_folder is not None and metadata is not None:
                 return flagged_folder, metadata, user
     raise SystemExit # Exit everything if no flagged folder
 
@@ -110,19 +112,20 @@ def get_dir_size_local(directory):
 def confirm_bruker_transfer(ip, username, passwd, bruker_folder, full_target):
     destination_size = get_dir_size_local(full_target)
     print('Destination size: {}'.format(destination_size))
-    ftp_host = connect_to_ftp(ip, username, passwd)
+    ftp_host = ftputil.FTPHost(ip, username, passwd)
     source_size = get_dir_size_ftp(ftp_host, bruker_folder)
     print('Bruker size: {}'.format(source_size))
     if source_size !=0 and destination_size !=0 and source_size == destination_size:
         print('Source and desitination directory sizes match.')
     else:
+        print('Source and desitination directory sizes DO NOT match.')
         raise SystemExit
 
 def delete_bruker_folder(ip, username, passwd, bruker_folder):
-    ftp_host = connect_to_ftp(ip, username, passwd)
-    ftp_host.rmdir(bruker_folder)
-    print('Deleted: {}'.format(bruker_folder))
+    ftp_host = ftputil.FTPHost(ip, username, passwd)
+    ftp_host.rmtree(bruker_folder)
+    print('DELETED: {}'.format(bruker_folder))
 
 def delete_local(directory):
-    os.rmdir(directory)
-    print('Deleted: {}'.format(directory))
+    shutil.rmtree(directory)
+    print('DELETED: {}'.format(directory))

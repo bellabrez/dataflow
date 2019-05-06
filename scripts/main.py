@@ -20,6 +20,7 @@ quit_if_local_target_exists = False
 
 delete_bruker = True
 delete_local = True
+delete_bruker = False
 
 ##################################
 ### Transfer files from Bruker ###
@@ -35,9 +36,12 @@ bruker_folder = user + '/' + folder
 # Overwrite default variables based on loaded metadata
 oak_target = metadata['oak_target']
 delete_bruker = metadata['delete_source']
-delete_bruker = True
-#convert_to = metadata['convert_to']
 email = metadata['email']
+
+# Save email for error reporting
+email_file = 'C:/Users/User/projects/dataflow/scripts/email.txt'
+with open(email_file, 'w') as f:
+    f.write(email)
 
 # Strip flag of folder and join to target
 full_target = target + '/' + folder.replace(flag, '')
@@ -82,8 +86,3 @@ flow.start_oak_transfer(full_target, oak_target, extensions_for_oak_transfer)
 ### Delete files locally
 if delete_local:
     flow.delete_local(full_target)
-
-### Notify user via email ###
-flow.send_email(subject='Dataflow SUCCESS',
-                message='Processed {}\nProcessed files located at {}'.format(full_target, oak_target),
-                recipient=email)
