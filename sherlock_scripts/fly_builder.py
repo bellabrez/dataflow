@@ -81,7 +81,7 @@ def copy_fictrac(destination_region):
                          int(datetime_dict['second'])
 
     # Find .dat file of 1) correct-ish time, 2) correct-ish size
-    for file in os.path.listdir(fictrac_folder)
+    for file in os.path.listdir(fictrac_folder):
         # Get datetime from file name
         datetime = file.split('-')[1]
         test_ymd = datetime.split('_')[0]
