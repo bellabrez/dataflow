@@ -24,6 +24,7 @@ def tiff_to_nii(xml_file):
     # I think this should also work for 1 channel recordings but should confirm
     print('Converting tiffs to nii in directory: \n{}'.format(data_dir))
     for channel in range(num_channels):
+        last_num_z = None
         volumes_img = []
         for i, sequence in enumerate(sequences):
             print('{}/{}'.format(i+1, len(sequences)))
@@ -47,10 +48,19 @@ def tiff_to_nii(xml_file):
                     img = img.astype('uint8')
                 else:
                     img = imread(fullfile)
-
                 frames_img.append(img)
-            volumes_img.append(frames_img)
+                 
+            current_num_z = np.shape(frames_img)[0]
         
+            if last_num_z is not None:
+                if current_num_z != last_num_z:
+                    print('Inconsistent number of z-slices (scan aborted).')
+                    print('Tossing last volume.')
+                    break
+            print('frames_img shape: {}'.format(np.shape(frames_img)))
+            volumes_img.append(frames_img)
+            last_num_z = current_num_z
+
         memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
         print('Current memory usage: {:.2f}GB'.format(memory_usage))
         sys.stdout.flush()

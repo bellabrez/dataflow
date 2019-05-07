@@ -156,9 +156,9 @@ def copy_bruker_data(source, destination):
             ### Change file names
             if '.nii' in item and 'TSeries' in item:
                 # '_' is from channel numbers my tiff to nii adds
-                item = 'functional_' + item.split('_')[1] + '_' + item.split('_')[1]
+                item = 'functional_' + item.split('_')[1] + '_' + item.split('_')[2]
             if '.nii' in item and 'ZSeries' in item:
-                item = 'anatomy_' + item.split('_')[1] + '_' + item.split('_')[1]
+                item = 'anatomy_' + item.split('_')[1] + '_' + item.split('_')[2]
             if '.csv' in item:
                 item = 'photodiode.csv'
             if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:

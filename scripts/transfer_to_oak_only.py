@@ -1,6 +1,6 @@
 import dataflow as flow
 
-full_target = 'F:/FTP_IMPORTS/20190425'
+full_target = 'F:/FTP_IMPORTS/20190506'
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
 extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
 
