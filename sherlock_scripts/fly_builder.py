@@ -79,6 +79,10 @@ def copy_fictrac(destination_region):
     true_total_seconds = int(datetime_dict['hour']) * 60 * 60 + \
                          int(datetime_dict['minute']) * 60 + \
                          int(datetime_dict['second'])
+    
+    print('true_ymd: {}'.format(true_ymd))
+    print('true_total_seconds: {}'.format(true_total_seconds))
+
 
     # Find .dat file of 1) correct-ish time, 2) correct-ish size
     for file in os.listdir(fictrac_folder):
@@ -92,6 +96,9 @@ def copy_fictrac(destination_region):
         test_total_seconds = int(test_hour) * 60 * 60 + \
                              int(test_minute) * 60 + \
                              int(test_second)
+        
+        print('test_ymd: {}'.format(test_ymd))
+        print('test_total_seconds: {}'.format(test_total_seconds))
 
         # Year/month/day must be exact
         if true_ymd == test_ymd:
