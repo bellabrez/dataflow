@@ -120,7 +120,7 @@ def copy_fictrac(destination_region):
     correct_time_files = []
     for file in os.listdir(fictrac_folder):
         datetime = datetime_from_fictrac(file)
-        print('datetime: {}'.format(datetime))
+        #print('datetime: {}'.format(datetime))
         if datetime == datetime_correct:
             correct_time_files.append(file)
 
