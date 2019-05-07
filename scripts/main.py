@@ -10,7 +10,7 @@ sys.stderr = flow.Logger_stderr()
 
 target = 'F:/ftp_imports' # Where on this computer it goes
 flag = '__flag__' #flag = '__flag__'
-user = 'luke' # folder to look in E: drive in Bruker
+#user = 'luke' # folder to look in E: drive in Bruker
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
 extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
 convert_to = '.nii' # Currently unsused
@@ -22,7 +22,6 @@ username = 'user'
 passwd = 'flyeye'
 
 delete_local = True
-delete_bruker = False
 
 ##################################
 ### Transfer files from Bruker ###
@@ -38,7 +37,6 @@ bruker_folder = user + '/' + folder
 # Overwrite default variables based on loaded metadata
 oak_target = metadata['oak_target']
 delete_bruker = metadata['delete_source']
-print('Delete bruker is {}'.format(delete_bruker))
 email = metadata['email']
 
 # Save email for error reporting
@@ -66,7 +64,8 @@ flow.start_copy_recursive_ftp(ftp_host, bruker_folder, full_target, ip, username
 flow.confirm_bruker_transfer(ip, username, passwd, bruker_folder, full_target)
 
 ### Delete files from Bruker Computer ###
-if delete_bruker:
+print('Delete bruker is {}'.format(delete_bruker))
+if delete_bruker in ['True', 'true', 'yes']:
     flow.delete_bruker_folder(ip, username, passwd, bruker_folder)
 else:
     # Strip flag from folder
