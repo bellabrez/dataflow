@@ -109,7 +109,7 @@ def copy_fictrac(destination_region):
                 print('Found fictrac file that matches time.')
                 # Must be correct size
                 if file[-4:] == '.dat':
-                    fp = os.path.join(fictrac, file)
+                    fp = os.path.join(fictrac_folder, file)
                     file_size = os.path.getsize(fp)
                     if file_size > 30000000:
                         print('Found correct .dat file: {}'.format(file))
@@ -217,7 +217,6 @@ def get_datetime_from_xml(xml_file):
 
     # Convert from 12 to 24 hour time
     am_pm = datetime.split(' ')[-1]
-    print(am_pm)
     if am_pm == 'AM' and hour == '12':
         hour = str(00)
     elif am_pm == 'AM':
