@@ -80,6 +80,7 @@ def copy_fictrac(destination_region):
                          int(datetime_dict['minute']) * 60 + \
                          int(datetime_dict['second'])
     
+    print('dict: {}'.format(datetime_dict))
     print('true_ymd: {}'.format(true_ymd))
     print('true_total_seconds: {}'.format(true_total_seconds))
 
