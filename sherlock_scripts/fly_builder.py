@@ -89,6 +89,7 @@ def copy_fictrac(destination_region):
     for file in os.listdir(fictrac_folder):
         # Get datetime from file name
         datetime = file.split('-')[1]
+        datetime = datetime[:-4] # remove file extension
         test_ymd = datetime.split('_')[0]
         test_time = datetime.split('_')[1]
         test_hour = test_time[0:2]
