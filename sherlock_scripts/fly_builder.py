@@ -136,7 +136,7 @@ def copy_fictrac(destination_region):
 def datetime_from_fictrac(file):
     datetime = file.split('-')[1]
     if '.dat' in datetime or '.log' in datetime:
-        datetime = datetime[-4:]
+        datetime = datetime[:-4]
     return datetime
 
 def copy_bruker_data(source, destination):

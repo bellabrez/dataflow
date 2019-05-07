@@ -38,6 +38,10 @@ bruker_folder = user + '/' + folder
 oak_target = metadata['oak_target']
 delete_bruker = metadata['delete_source']
 email = metadata['email']
+try:
+    transfer_stim_computer = metadata['transfer_stim_computer']
+except:
+    transfer_stim_computer = None
 
 # Save email for error reporting
 email_file = 'C:/Users/User/projects/dataflow/scripts/email.txt'
@@ -51,7 +55,8 @@ full_target = target + '/' + folder.replace(flag, '')
 flow.send_email(subject='Dataflow STARTED', message='Processing {}'.format(full_target), recipient=email)
 
 # For Luke, pull fictrac and visual stim files from stim computer (and send to oak)
-if user == 'luke':
+if transfer_stim_computer in ['True', 'true', 'yes']:
+    print('Transfering stim computer files')
     subprocess.Popen([sys.executable, 'C:/Users/User/projects/dataflow/scripts/from_stim_computer.py'])
 
 # Check if this folder exists ~quit capabilities~
