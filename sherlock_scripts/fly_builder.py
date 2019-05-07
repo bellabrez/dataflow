@@ -110,7 +110,7 @@ def copy_fictrac(destination_region):
 
     # Now collect the 4 files with correct datetime
     correct_time_files = []
-    for file in os.path.listdir(fictrac_folder):
+    for file in os.listdir(fictrac_folder):
         datetime = file.split('-')[1]
         if datetime == datetime_correct:
             correct_time_files.append(file)
