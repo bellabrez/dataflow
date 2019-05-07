@@ -97,11 +97,11 @@ def copy_fictrac(destination_region):
                              int(test_minute) * 60 + \
                              int(test_second)
         
-        print('test_ymd: {}'.format(test_ymd))
-        print('test_total_seconds: {}'.format(test_total_seconds))
-
         # Year/month/day must be exact
         if true_ymd == test_ymd:
+            print('Found file from same day: {}'.format(file))
+            print('test_ymd: {}'.format(test_ymd))
+            print('test_total_seconds: {}'.format(test_total_seconds))
             # Must be within 3 minutes
             time_difference = np.abs(true_total_seconds - test_total_seconds)
             if time_difference < 3 * 60:
