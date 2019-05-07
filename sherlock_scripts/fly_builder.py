@@ -88,8 +88,7 @@ def copy_fictrac(destination_region):
     # Find .dat file of 1) correct-ish time, 2) correct-ish size
     for file in os.listdir(fictrac_folder):
         # Get datetime from file name
-        datetime = file.split('-')[1]
-        datetime = datetime[:-4] # remove file extension
+        datetime = datetime_from_fictrac(file)
         test_ymd = datetime.split('_')[0]
         test_time = datetime.split('_')[1]
         test_hour = test_time[0:2]
@@ -119,7 +118,7 @@ def copy_fictrac(destination_region):
     print('Correct datetime: {}'.format(datetime_correct))
     correct_time_files = []
     for file in os.listdir(fictrac_folder):
-        datetime = file.split('-')[1]
+        datetime = datetime_from_fictrac(file)
         print('datetime: {}'.format(datetime))
         if datetime == datetime_correct:
             correct_time_files.append(file)
@@ -132,6 +131,12 @@ def copy_fictrac(destination_region):
         source_path = os.path.join(fictrac_folder, file)
         print('Transfering {}'.format(target_path))
         copyfile(source_path, target_path)
+
+def datetime_from_fictrac(file):
+    datetime = file.split('-')[1]
+    if '.dat' in datetime or '.log' in datetime:
+        datetime = datetime[-4:]
+    return datetime
 
 def copy_bruker_data(source, destination):
     # Do not update destination - download all files into that destination
