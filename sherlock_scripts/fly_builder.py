@@ -101,8 +101,6 @@ def copy_fictrac(destination_region):
         # Year/month/day must be exact
         if true_ymd == test_ymd:
             print('Found file from same day: {}'.format(file))
-            print('test_ymd: {}'.format(test_ymd))
-            print('test_total_seconds: {}'.format(test_total_seconds))
             # Must be within 3 minutes
             time_difference = np.abs(true_total_seconds - test_total_seconds)
             if time_difference < 3 * 60:
@@ -117,9 +115,11 @@ def copy_fictrac(destination_region):
                         break
 
     # Now collect the 4 files with correct datetime
+    print('Correct datetime: {}'.format(datetime_correct))
     correct_time_files = []
     for file in os.listdir(fictrac_folder):
         datetime = file.split('-')[1]
+        print('datetime: {}'.format(datetime))
         if datetime == datetime_correct:
             correct_time_files.append(file)
 
@@ -129,7 +129,7 @@ def copy_fictrac(destination_region):
     for file in correct_time_files:
         target_path = os.path.join(destination_region, file)
         source_path = os.path.join(fictrac_folder, file)
-        print('Tansfering {}'.format(target_path))
+        print('Transfering {}'.format(target_path))
         copyfile(source_path, target_path)
 
 def copy_bruker_data(source, destination):
