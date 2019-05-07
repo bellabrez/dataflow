@@ -217,11 +217,12 @@ def get_datetime_from_xml(xml_file):
 
     # Convert from 12 to 24 hour time
     am_pm = datetime.split(' ')[-1]
-    if am_pm == 'AM' and hour == 12:
+    print(am_pm)
+    if am_pm == 'AM' and hour == '12':
         hour = str(00)
     elif am_pm == 'AM':
         pass
-    elif am_pm == 'PM' and hour == 12:
+    elif am_pm == 'PM' and hour == '12':
         pass
     else:
         hour = str(int(hour) + 12)
