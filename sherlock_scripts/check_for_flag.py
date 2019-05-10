@@ -10,9 +10,7 @@ def main():
         if done_flag in item:
             print('Found flagged directory {}'.format(item))
             item_path = os.path.join(imports_path, item)
-            #subprocess.call('sbatch ./build_fly.sh')
             os.system("sbatch build_fly.sh")
-            #subprocess.Popen(["bash", "./build_fly.sh"])
             return
     raise SystemExit
 
