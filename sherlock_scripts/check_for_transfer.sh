@@ -7,4 +7,5 @@
 
 ml python/3.6.1
 
+echo "Bash - Checking for flag"
 python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py
