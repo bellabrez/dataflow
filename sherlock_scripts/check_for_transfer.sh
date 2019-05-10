@@ -8,4 +8,4 @@
 ml python/3.6.1
 
 variable=$(python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py)
-echo variable
+echo $variable
