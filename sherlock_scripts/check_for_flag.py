@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 def main():
     imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports'
@@ -9,8 +10,8 @@ def main():
         if done_flag in item:
             print('Found flagged directory {}'.format(item))
             item_path = os.path.join(imports_path, item)
-            return item_path
-    return 'None'
+            subprocess.call('build_fly.sh')
+    raise SystemExit
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test
+#SBATCH --job-name=build_fly
 #SBATCH --partition=trc
 #SBATCH --time=0:30:00
 #SBATCH --ntasks=1
