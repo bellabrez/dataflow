@@ -7,5 +7,8 @@
 
 ml python/3.6.1
 
+#chmod +x build_fly.sh
+
 echo "Bash - Checking for flag"
-python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py
+
+python3 chmod +x /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py
