@@ -1,0 +1,10 @@
+<scan>
+  <power_min>200</power_min>
+  <power_max>300</power_max>
+  <PMT_green>700</PMT_green>
+  <PMT_red>600</PMT_red>
+  <rate>2.765</rate>
+  <x_dim>120</x_dim>
+  <y_dim>80</y_dim>
+  <z_dim>50</z_dim>
+</scan>
