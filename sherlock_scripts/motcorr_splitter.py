@@ -21,7 +21,7 @@ def main(args):
 
     ### Make subfolder if it doesn't exist
     subfolder = 'motcorr'
-    motcorr_directory = os.path.join(directory, subfolder)
+    motcorr_directory = os.path.join(path, subfolder)
     if not os.path.exists(motcorr_directory):
         os.makedirs(motcorr_directory)
 
