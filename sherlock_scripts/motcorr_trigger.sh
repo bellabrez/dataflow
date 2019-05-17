@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=motcorr_trigger
 #SBATCH --partition=trc
-#SBATCH --time=0:10:00
+#SBATCH --time=0:5:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
+#SBATCH --output=./outputs/slurm-%j.out
 
 # Will create mean brain and start each partial motcorr
 
