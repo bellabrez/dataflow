@@ -57,7 +57,6 @@ def tiff_to_nii(xml_file):
                     print('Inconsistent number of z-slices (scan aborted).')
                     print('Tossing last volume.')
                     break
-            print('frames_img shape: {}'.format(np.shape(frames_img)))
             volumes_img.append(frames_img)
             last_num_z = current_num_z
 

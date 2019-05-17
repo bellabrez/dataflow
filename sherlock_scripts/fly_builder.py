@@ -68,6 +68,8 @@ def copy_fly(source_fly, destination_fly):
         print('Created region directory: {}'.format(destination_region))
         copy_bruker_data(source_region, destination_region)
         copy_fictrac(destination_region)
+        with open('experiment_file.txt') as file:
+            file.write(destination_region)
         os.system("sbatch motcorr_trigger.sh")
 
 def copy_fictrac(destination_region):
