@@ -1,4 +1,0 @@
-  File "/home/users/brezovec/projects/dataflow/sherlock_scripts/fly_builder.py", line 66
-    copy_data(source_region, destination_region):
-                                                ^
-SyntaxError: invalid syntax

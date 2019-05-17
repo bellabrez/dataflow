@@ -68,7 +68,7 @@ def copy_fly(source_fly, destination_fly):
         print('Created region directory: {}'.format(destination_region))
         copy_bruker_data(source_region, destination_region)
         copy_fictrac(destination_region)
-
+        os.system("sbatch motcorr_trigger.sh")
 
 def copy_fictrac(destination_region):
     fictrac_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/fictrac'
