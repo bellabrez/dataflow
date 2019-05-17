@@ -14,7 +14,8 @@ ml py-pandas/0.23.0_py36
 ml viz
 ml py-scikit-learn/0.19.1_py36
 
-path="$1"
+#path="$1"
+path="/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_20190507-090018_52/optic"
 echo "Bash - motcorr_trigger.sh started."
 echo "$path"
 
