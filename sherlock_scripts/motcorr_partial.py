@@ -2,6 +2,9 @@ import sys
 import os
 import BigBadBrain as bbb
 
+sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
+import ants
+
 def main(args):
 	directory = args[0]
 	motcorr_directory = args[1]
@@ -11,9 +14,9 @@ def main(args):
 	vol_start = args[5]
 	vol_end = args[6]
 
-	master_brain = bbb.load_numpy_brain(master_path)
-	slave_brain = bbb.load_numpy_brain(slave_path)
-	mean_brain = bbb.load_numpy_brain(master_path_mean)
+	master_brain = ants.from_numpy(bbb.load_numpy_brain(master_path))
+	slave_brain = ants.from_numpy(bbb.load_numpy_brain(slave_path))
+	mean_brain = ants.from_numpy(bbb.load_numpy_brain(master_path_mean))
 
 	bbb.motion_correction(master_brain,
 						  slave_brain,

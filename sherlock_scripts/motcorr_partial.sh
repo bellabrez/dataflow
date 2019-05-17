@@ -4,6 +4,7 @@
 #SBATCH --time=0:30:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
+#SBATCH --output=./outputs_motcorr_partial/slurm-%j.out
 
 ml gcc/6.3.0
 ml python/3.6.1

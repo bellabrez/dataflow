@@ -4,7 +4,7 @@
 #SBATCH --time=0:5:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
-#SBATCH --output=./outputs/slurm-%j.out
+#SBATCH --output=./outputs_motcorr_trigger/slurm-%j.out
 
 # Will create mean brain and start each partial motcorr
 
