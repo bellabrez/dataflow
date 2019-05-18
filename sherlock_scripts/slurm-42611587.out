@@ -1,0 +1,27 @@
+
+~~ load_numpy_brain ~~
+load_numpy_brain done. Duration: 7.66 sec
+
+~~ load_numpy_brain ~~
+load_numpy_brain done. Duration: 7.53 sec
+
+~~ load_numpy_brain ~~
+load_numpy_brain done. Duration: 8.18 ms
+
+~~ motion_correction ~~
+Performing motion correction...
+Aligning brain volume 1 of 5248...Current memory usage: 21.23GB
+Traceback (most recent call last):
+  File "/home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_partial.py", line 27, in <module>
+    main(sys.argv[1:])
+  File "/home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_partial.py", line 24, in main
+    end_volume=vol_end)
+  File "/home/users/brezovec/projects/BigBadBrain/BigBadBrain/utils.py", line 46, in wrapper
+    result = f(*args, **kwargs)
+  File "/home/users/brezovec/projects/BigBadBrain/BigBadBrain/motcorr.py", line 110, in motion_correction
+    motCorr_vol_master = align_volume(fixed=meanbrain, moving=brain_master, vol=i)
+  File "/home/users/brezovec/projects/BigBadBrain/BigBadBrain/motcorr.py", line 29, in align_volume
+    motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
+  File "/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/ants/registration/interface.py", line 180, in registration
+    if (np.sum(np.isnan(fixed.numpy())) > 0):
+AttributeError: 'numpy.ndarray' object has no attribute 'numpy'
