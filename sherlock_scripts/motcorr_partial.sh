@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=moco_partial
 #SBATCH --partition=trc
-#SBATCH --time=0:15:00
+#SBATCH --time=0:5:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=slurm_all.out
