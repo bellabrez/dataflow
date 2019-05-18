@@ -5,6 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=slurm_all.out
+#SBATCH --open-mode=append
 
 ml gcc/6.3.0
 ml python/3.6.1
