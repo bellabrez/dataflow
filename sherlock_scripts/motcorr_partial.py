@@ -15,8 +15,8 @@ def main(args):
     master_path = args[2]
     slave_path = args[3]
     master_path_mean = args[4]
-    vol_start = args[5]
-    vol_end = args[6]
+    vol_start = int(args[5])
+    vol_end = int(args[6])
 
     # For the sake of memory, lets try to load only the part of the brain we will need.
     master_brain = load_partial_brain(master_path,vol_start,vol_end)
