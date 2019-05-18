@@ -3,7 +3,7 @@
 #SBATCH --partition=trc
 #SBATCH --time=0:05:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=12
 #SBATCH --output=./outputs_motcorr_partial/slurm-%j.out
 
 ml gcc/6.3.0

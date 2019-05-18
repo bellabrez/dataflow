@@ -6,8 +6,6 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --output=./outputs_motcorr_trigger/slurm-%j.out
 
-# Will create mean brain and start each partial motcorr
-
 ml gcc/6.3.0
 ml python/3.6.1
 ml py-numpy/1.14.3_py36
