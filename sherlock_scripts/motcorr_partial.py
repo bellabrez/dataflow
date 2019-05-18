@@ -19,8 +19,8 @@ def main(args):
     vol_end = args[6]
 
     # For the sake of memory, lets try to load only the part of the brain we will need.
-    master_brain = load_partial_brain(master_path,0,10)
-    slave_brain = load_partial_brain(slave_path,0,10)
+    master_brain = load_partial_brain(master_path,vol_start,vol_end)
+    slave_brain = load_partial_brain(slave_path,vol_start,vol_end)
     mean_brain = ants.from_numpy(bbb.load_numpy_brain(master_path_mean))
 
     bbb.motion_correction(master_brain,
