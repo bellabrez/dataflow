@@ -27,7 +27,7 @@ def main(args):
 
     #Start 10 motcorr_partial.sh, giving each the correct portion of data
     vol_start = 0
-    vol_end = 20
+    vol_end = 100
     os.system("sbatch motcorr_partial.sh {} {} {} {} {} {} {}".format(path, motcorr_directory, master_brain_path, slave_brain_path, master_brain_mean_file, vol_start, vol_end))
 
 if __name__ == '__main__':
