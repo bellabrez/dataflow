@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=motcorr_partial
 #SBATCH --partition=trc
-#SBATCH --time=0:30:00
+#SBATCH --time=0:05:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
 #SBATCH --output=./outputs_motcorr_partial/slurm-%j.out
 
 ml gcc/6.3.0
