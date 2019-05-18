@@ -1,6 +1,6 @@
 import os
 import sys
-import BigBadBrain as bbb
+import bigbadbrain as bbb
 
 def main(args):
     '''
