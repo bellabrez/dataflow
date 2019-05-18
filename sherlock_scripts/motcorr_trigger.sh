@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=motcorr_trigger
+#SBATCH --job-name=moco_trigger
 #SBATCH --partition=trc
 #SBATCH --time=0:5:00
 #SBATCH --ntasks=1
