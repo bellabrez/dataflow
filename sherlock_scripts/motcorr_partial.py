@@ -2,7 +2,7 @@ import sys
 import os
 import nibabel as nib
 import numpy as np
-import BigBadBrain as bbb
+import bigbadbrain as bbb
 import warnings
 warnings.filterwarnings("ignore")
 
