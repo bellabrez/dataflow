@@ -3,7 +3,7 @@
 #SBATCH --partition=trc
 #SBATCH --time=0:05:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=3
 #SBATCH --output=./outputs_motcorr_partial/slurm-%j.out
 
 ml gcc/6.3.0
@@ -21,4 +21,4 @@ master_path_mean="$5"
 vol_start="$6"
 vol_end="$7"
 
-python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_partial.py "$directory" "$motcorr_directory" "$master_path" "$slave_path" "$master_path_mean" "$vol_start" "$vol_end"
+python3 -W ignore /home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_partial.py "$directory" "$motcorr_directory" "$master_path" "$slave_path" "$master_path_mean" "$vol_start" "$vol_end"
