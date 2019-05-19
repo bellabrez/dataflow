@@ -28,7 +28,7 @@ def main(args):
                           directory,
                           motcorr_directory,
                           meanbrain=mean_brain,
-                          suffix=str(vol_start))
+                          suffix='_'+str(vol_start))
 
 def load_partial_brain(file, start, stop):
     brain = nib.load(file).dataobj[:,:,:,start:stop]

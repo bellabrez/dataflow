@@ -26,19 +26,33 @@ def main(args):
     if not os.path.exists(motcorr_directory):
         os.makedirs(motcorr_directory)
 
-    #Start 10 motcorr_partial.sh, giving each the correct portion of data
-    for i in [0,10]:
-        vol_start = 0 + i
-        vol_end = 5 + i
+    # How many volumes?
+    num_vols = np.shape(master_brain)[-1]
+
+    #Start fleet of motcorr_partial.sh, giving each the correct portion of data
+    for i in range(0,num_vols,100):
+        vol_start = i
+        vol_end = i + 100
+
+        # handle last section
+        if vol_end > num_vols:
+            vol_end = num_vols
+
+        ### SUBMIT JOB ###
         jobid = subprocess.check_output('sbatch motcorr_partial.sh {} {} {} {} {} {} {}'.format(
             path,
             motcorr_directory,
             master_brain_path,
             slave_brain_path,
             master_brain_mean_file,
-            vol_start, vol_end),
+            vol_start,
+            vol_end),
             shell=True)
         print('jobid: {}'.format(jobid))
+
+    # extract jobids
+
+    # start motcorr_stitcher.sh with dependences on all jobs above finishing
 
     #os.system("sbatch motcorr_partial.sh {} {} {} {} {} {} {}".format(p
 
