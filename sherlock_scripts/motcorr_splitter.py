@@ -2,6 +2,7 @@ import os
 import sys
 import bigbadbrain as bbb
 import subprocess
+import numpy as np
 
 def main(args):
     '''
