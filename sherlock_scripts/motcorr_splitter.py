@@ -38,6 +38,7 @@ def main(args):
             master_brain_mean_file,
             vol_start, vol_end),
             shell=True)
+        print('jobid: {}'.format(jobid))
 
     #os.system("sbatch motcorr_partial.sh {} {} {} {} {} {} {}".format(p
 
