@@ -1,6 +1,7 @@
 import os
 import sys
 import bigbadbrain as bbb
+import subprocess
 
 def main(args):
     '''
@@ -26,9 +27,19 @@ def main(args):
         os.makedirs(motcorr_directory)
 
     #Start 10 motcorr_partial.sh, giving each the correct portion of data
-    vol_start = 0
-    vol_end = 5
-    os.system("sbatch motcorr_partial.sh {} {} {} {} {} {} {}".format(path, motcorr_directory, master_brain_path, slave_brain_path, master_brain_mean_file, vol_start, vol_end))
+    for i in [0,10]:
+        vol_start = 0 + i
+        vol_end = 5 + i
+        jobid = subprocess.check_output('sbatch motcorr_partial.sh {} {} {} {} {} {} {}'.format(
+            path,
+            motcorr_directory,
+            master_brain_path,
+            slave_brain_path,
+            master_brain_mean_file,
+            vol_start, vol_end),
+            shell=True)
+
+    #os.system("sbatch motcorr_partial.sh {} {} {} {} {} {} {}".format(p
 
 if __name__ == '__main__':
     main(sys.argv[1:])

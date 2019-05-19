@@ -23,4 +23,4 @@ vol_start="$6"
 vol_end="$7"
 #SBATCH --output=./outputs_motcorr_partial/slurm-%j.out
 
-python3 -W ignore /home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_partial.py "$directory" "$motcorr_directory" "$master_path" "$slave_path" "$master_path_mean" "$vol_start" "$vol_end"
+python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_partial.py "$directory" "$motcorr_directory" "$master_path" "$slave_path" "$master_path_mean" "$vol_start" "$vol_end"

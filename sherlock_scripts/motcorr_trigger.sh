@@ -7,10 +7,6 @@
 #SBATCH --output=slurm_all.out
 #SBATCH --open-mode=append
 
-
-
-
-
 ml gcc/6.3.0
 ml python/3.6.1
 ml py-numpy/1.14.3_py36
