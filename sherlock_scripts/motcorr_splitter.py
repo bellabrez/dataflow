@@ -53,8 +53,10 @@ def main(args):
             vol_start,
             vol_end),
             shell=True)
+
+        # Get job ids so we can use them as dependencies
         jobid_str = jobid.decode('utf-8')
-        jobid_str = [x for x in jobid_str.split() if x.isdigit()]
+        jobid_str = [x for x in jobid_str.split() if x.isdigit()][0]
         print('jobid: {}'.format(jobid_str))
         job_ids.append(jobid_str)
 
@@ -62,7 +64,7 @@ def main(args):
     # Create weird job string slurm wants
     job_ids_colons = ':'.join(job_ids)
     print('Colons: {}'.format(job_ids_colons))
-    os.system('sbatch --dependency=after:{} motcorr_stitcher.sh'.format(job_ids_colons))
+    os.system('sbatch --dependency=afterany:{} motcorr_stitcher.sh'.format(job_ids_colons))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
