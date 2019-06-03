@@ -14,6 +14,7 @@ def main(args):
     reds = []
     greens = []
     for item in os.listdir(directory):
+        print('looking at: {}'.format(item))
         # sanity check that it is .nii
         if '.nii' in item:
             if 'red' in item:  
