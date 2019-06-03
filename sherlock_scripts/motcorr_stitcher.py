@@ -23,18 +23,12 @@ def main(args):
                 greens.append(item)
 
     # need to order correctly for correct stitching
-    print('reds: {}'.format(reds))
-    print('greens: {}'.format(greens))
     sort_nicely(greens)
     sort_nicely(reds)
-    print('reds: {}'.format(reds))
-    print('greens: {}'.format(greens))
     
     # add directory path
     reds = [os.path.join(directory, x) for x in reds]
     greens = [os.path.join(directory, x) for x in greens]
-    print('reds: {}'.format(reds))
-    print('greens: {}'.format(greens))
 
     # load brains
     channels = [reds]
@@ -43,13 +37,14 @@ def main(args):
         for brain_file in channel:
             brains.append(bbb.load_numpy_brain(brain_file))
         #brains = np.asarray(brains)
-        print('brains shape: {}'.format(brains))
+        print('brains len: {}'.format(len(brains)))
+        print('shape of first brain: {}'.format(np.shape(brains[0])))
         #x = np.shape(brains)[1]
         #y = np.shape(brains)[2]
         #z = np.shape(brains)[3]
         #stitched_brain = np.reshape(brains, (x, y, z, -1))
         stitched_brain = np.concatenate(brains, axis=-1)
-        print('stitched_brain shape: {}'.format(stitched_brain))
+        print('stitched_brain shape: {}'.format(np.shape(stitched_brain)))
         save_file = os.path.join(directory, 'stitched_brain.nii')
         bbb.save_brain(save_file, stitched_brain)
 
