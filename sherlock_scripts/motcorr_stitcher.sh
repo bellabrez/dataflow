@@ -14,4 +14,6 @@ ml py-pandas/0.23.0_py36
 ml viz
 ml py-scikit-learn/0.19.1_py36
 
-python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_stitcher.py
+directory="$1"
+
+python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/motcorr_stitcher.py "$directory"

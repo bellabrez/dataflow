@@ -32,12 +32,12 @@ def main(args):
 
     #Start fleet of motcorr_partial.sh, giving each the correct portion of data
 
-    num_vols = 10 ###### FOR TESTING; REMOVE. ######
+    num_vols = 20 ###### FOR TESTING; REMOVE. ######
     step = 10 ###### put back to 100 ######
     job_ids = []
     for i in range(0,num_vols,step):
         vol_start = i
-        vol_end = i + 100
+        vol_end = i + step
 
         # handle last section
         if vol_end > num_vols:
@@ -64,7 +64,7 @@ def main(args):
     # Create weird job string slurm wants
     job_ids_colons = ':'.join(job_ids)
     print('Colons: {}'.format(job_ids_colons))
-    os.system('sbatch --dependency=afterany:{} motcorr_stitcher.sh'.format(job_ids_colons))
+    os.system('sbatch --dependency=afterany:{} motcorr_stitcher.sh {}'.format(job_ids_colons, motcorr_directory))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
