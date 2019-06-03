@@ -2,6 +2,7 @@ import os
 import sys
 import bigbadbrain as bbb
 import numpy as np
+import re
 
 def main(args):
     print('Stitcher started.')
