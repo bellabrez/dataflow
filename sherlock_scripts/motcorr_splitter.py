@@ -31,6 +31,8 @@ def main(args):
     num_vols = np.shape(master_brain)[-1]
 
     #Start fleet of motcorr_partial.sh, giving each the correct portion of data
+
+    num_vols = 100 ###### FOR TESTING; REMOVE. ######
     for i in range(0,num_vols,100):
         vol_start = i
         vol_end = i + 100
@@ -49,7 +51,8 @@ def main(args):
             vol_start,
             vol_end),
             shell=True)
-        print('jobid: {}'.format(jobid))
+        jobid_str = jobid.decode('utf-8')
+        print('jobid: {}'.format(jobid_str))
 
     # extract jobids
 
