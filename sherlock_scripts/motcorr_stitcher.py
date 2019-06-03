@@ -25,8 +25,8 @@ def main(args):
     # need to order correctly for correct stitching
     print('reds: {}'.format(reds))
     print('greens: {}'.format(greens))
-    greens = sort_nicely(greens)
-    reds = sort_nicely(reds)
+    sort_nicely(greens)
+    sort_nicely(reds)
     print('reds: {}'.format(reds))
     print('greens: {}'.format(greens))
     
