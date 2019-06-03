@@ -31,22 +31,22 @@ def main(args):
     greens = [os.path.join(directory, x) for x in greens]
 
     # load brains
-    channels = [reds]
-    for channel in channels:
+    channels = [reds, greens]
+    colors = ['red', 'green']
+    for channel, i in enumerate(channels):
         brains = []
         for brain_file in channel:
             brains.append(bbb.load_numpy_brain(brain_file))
-        #brains = np.asarray(brains)
         print('brains len: {}'.format(len(brains)))
         print('shape of first brain: {}'.format(np.shape(brains[0])))
-        #x = np.shape(brains)[1]
-        #y = np.shape(brains)[2]
-        #z = np.shape(brains)[3]
-        #stitched_brain = np.reshape(brains, (x, y, z, -1))
         stitched_brain = np.concatenate(brains, axis=-1)
         print('stitched_brain shape: {}'.format(np.shape(stitched_brain)))
-        save_file = os.path.join(directory, 'stitched_brain.nii')
+        save_file = os.path.join(directory, 'stitched_brain_{}.nii'.format(colors[i]))
         bbb.save_brain(save_file, stitched_brain)
+
+        # delete partial brains
+        [os.remove(file) for file in channel]
+        
 
 def alphanum_key(s):
     """ Tries to change strs to ints. """
