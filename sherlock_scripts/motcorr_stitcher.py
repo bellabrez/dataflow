@@ -7,6 +7,7 @@ import re
 def main(args):
     print('Stitcher started.')
     directory = args[0]
+    print('directory: {}'.format(directory))
 
     # directory will contain motcorr_green_x.nii and motcorr_red_x.nii
     # get list of reds and greens
@@ -38,12 +39,13 @@ def main(args):
         brains = []
         for brain_file in channel:
             brains.append(bbb.load_numpy_brain(brain_file))
-        brains = np.asarray(brains)
+        #brains = np.asarray(brains)
         print('brains shape: {}'.format(brains))
-        x = np.shape(brains)[1]
-        y = np.shape(brains)[2]
-        z = np.shape(brains)[3]
-        stitched_brain = np.reshape(brains, (x, y, z, -1))        
+        #x = np.shape(brains)[1]
+        #y = np.shape(brains)[2]
+        #z = np.shape(brains)[3]
+        #stitched_brain = np.reshape(brains, (x, y, z, -1))
+        stitched_brain = np.concatenate(brains, axis=-1)
         print('stitched_brain shape: {}'.format(stitched_brain))
         save_file = os.path.join(directory, 'stitched_brain.nii')
         bbb.save_brain(save_file, stitched_brain)
