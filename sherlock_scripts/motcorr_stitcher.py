@@ -38,6 +38,11 @@ def main(args):
             brains.append(bbb.load_numpy_brain(brain_file))
         print('brains len: {}'.format(len(brains)))
         print('shape of first brain: {}'.format(np.shape(brains[0])))
+
+        # Handle edgecase of single volume brain
+        if len(np.shape(brain)) == 3:
+            brain = brain[:,:,:,np.newaxis]
+            
         stitched_brain = np.concatenate(brains, axis=-1)
         print('stitched_brain shape: {}'.format(np.shape(stitched_brain)))
         save_file = os.path.join(directory, 'stitched_brain_{}.nii'.format(colors[i]))
