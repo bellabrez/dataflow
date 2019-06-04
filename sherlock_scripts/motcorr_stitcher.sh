@@ -4,7 +4,7 @@
 #SBATCH --time=0:30:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --output=slurm_all.out
+#SBATCH --output=slurm_moco.out
 #SBATCH --open-mode=append
 
 ml gcc/6.3.0
