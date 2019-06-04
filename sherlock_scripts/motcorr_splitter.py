@@ -32,8 +32,8 @@ def main(args):
 
     #Start fleet of motcorr_partial.sh, giving each the correct portion of data
 
-    num_vols = 11 ###### FOR TESTING; REMOVE. ######
-    step = 3 ###### put back to 100 ######
+    num_vols = 5 ###### FOR TESTING; REMOVE. ######
+    step = 2 ###### put back to 100 ######
     job_ids = []
     for i in range(0,num_vols,step):
         vol_start = i
@@ -42,7 +42,7 @@ def main(args):
         # handle last section
         if vol_end > num_vols:
             vol_end = num_vols
-
+        
         ### SUBMIT JOB ###
         jobid = subprocess.check_output('sbatch motcorr_partial.sh {} {} {} {} {} {} {}'.format(
             path,

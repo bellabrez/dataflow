@@ -14,7 +14,6 @@ def main(args):
     reds = []
     greens = []
     for item in os.listdir(directory):
-        print('looking at: {}'.format(item))
         # sanity check that it is .nii
         if '.nii' in item:
             if 'red' in item:  
@@ -33,7 +32,7 @@ def main(args):
     # load brains
     channels = [reds, greens]
     colors = ['red', 'green']
-    for channel, i in enumerate(channels):
+    for i, channel in enumerate(channels):
         brains = []
         for brain_file in channel:
             brains.append(bbb.load_numpy_brain(brain_file))

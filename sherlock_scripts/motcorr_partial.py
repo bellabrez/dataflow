@@ -33,6 +33,9 @@ def main(args):
 def load_partial_brain(file, start, stop):
     brain = nib.load(file).dataobj[:,:,:,start:stop]
     brain = ants.from_numpy(np.asarray(np.squeeze(brain), 'float64'))
+    # always keep 4 axes:
+    if len(np.shape(brain)) == 3:
+      brain = brain[:,:,:,np.newaxis]
     return brain
 
 if __name__ == '__main__':
