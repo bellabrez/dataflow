@@ -3,7 +3,7 @@
 #SBATCH --partition=trc
 #SBATCH --time=0:30:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --output=slurm_moco.out
 #SBATCH --open-mode=append
 

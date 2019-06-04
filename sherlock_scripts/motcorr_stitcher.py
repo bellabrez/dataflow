@@ -65,5 +65,7 @@ def main(args):
         zbrain_file = os.path.join(os.path.split(directory)[0], 'brain_zscored_{}.nii'.format(colors[i]))
         bbb.save_brain(zbrain_file, brain)
 
+    # Finally, stitch motcorr params and create motcorr graph
+    save_motion_figure(transform_matrix, directory, motcorr_directory)
 if __name__ == '__main__':
     main(sys.argv[1:])

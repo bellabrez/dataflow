@@ -25,10 +25,11 @@ def main():
     # Get new destination fly number by looking at last 2 char of current flies
     current_fly_number = get_new_fly_number(target_path)
 
+    # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_directory)
+    likely_fly_folders = bbb.sort_nicely(likely_fly_folders)
 
-
-    for likely_fly_folder in os.listdir(flagged_directory): #NEED TO SORT THESE FLIES BY NUMBER
+    for likely_fly_folder in likely_fly_folders: 
         if 'fly' in likely_fly_folder:
             print('This fly will be number : {}'.format(current_fly_number))
 
