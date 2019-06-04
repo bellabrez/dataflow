@@ -70,6 +70,9 @@ def main(args):
         motcorr_params.append(np.load(file))
 
     stitched_params = np.concatenate(motcorr_params, axis=0)
+    save_file = os.path.join(directory, 'motcorr_params_stitched')
+    np.save(save_file, stitched_params)
+    [os.remove(file) for file in motcorr_param_files]
     bbb.save_motion_figure(stitched_params, os.path.split(directory)[0], directory)
 
     ### START Z-SCORING ###

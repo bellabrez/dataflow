@@ -6,15 +6,12 @@ from shutil import copyfile
 from xml.etree import ElementTree as ET
 import bigbadbrain as bbb
 
-def main():
+def main(args):
     ### Move folders from imports to fly dataset - need to restructure folders ###
+
+    flagged_directory = args[0]
     imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports'
     target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-    done_flag = '__done__'
-
-    # Will look for and get folder that contains __done__
-    # If multiple done folders, will get the oldest one (based on alphanumeric sorting)
-    flagged_directory = check_for_done_flag(imports_path, done_flag)
 
     # Assume this folder contains fly_1 etc
     # This folder may (or may not) contain separate areas # False, now enforcing experiment subfolders
@@ -274,20 +271,5 @@ def get_new_fly_number(target_path):
     current_fly_number = oldest_fly + 1
     return current_fly_number
 
-def check_for_done_flag(imports_path, done_flag):
-    print('Checking for done flag.')
-    done_folders = []
-    for item in os.listdir(imports_path):
-        if done_flag in item:
-            print('Found flagged directory {}'.format(item))
-            item_path = os.path.join(imports_path, item)
-            done_folders.append(item_path)
-    if len(done_folders) == 0:
-        raise SystemExit
-    else:
-        bbb.sort_nicely(done_folders)
-        return done_folders[0]
-    
-
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

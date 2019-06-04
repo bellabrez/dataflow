@@ -7,5 +7,7 @@
 
 ml python/3.6.1
 
+directory="$1"
+
 echo "Bash - building fly."
-python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/fly_builder.py
+python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/fly_builder.py "$directory"
