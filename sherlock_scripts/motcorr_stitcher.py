@@ -50,22 +50,10 @@ def main(args):
         print('stitched_brain shape: {}'.format(np.shape(stitched_brain)))
         save_file = os.path.join(directory, 'stitched_brain_{}.nii'.format(colors[i]))
         bbb.save_brain(save_file, stitched_brain)
+        stitched_brain = None
 
         # delete partial brains
         [os.remove(file) for file in channel]
 
-        ##### Perform bleaching correction and z-scoring #####
-
-        # Bleaching correction (per voxel)
-        brain = bbb.bleaching_correction(stitched_brain)
-        stitched_brain = None
-
-        # Z-score brain
-        brain = bbb.z_score_brain(brain)
-        zbrain_file = os.path.join(os.path.split(directory)[0], 'brain_zscored_{}.nii'.format(colors[i]))
-        bbb.save_brain(zbrain_file, brain)
-
-    # Finally, stitch motcorr params and create motcorr graph
-    save_motion_figure(transform_matrix, directory, motcorr_directory)
 if __name__ == '__main__':
     main(sys.argv[1:])
