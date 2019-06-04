@@ -55,5 +55,25 @@ def main(args):
         # delete partial brains
         [os.remove(file) for file in channel]
 
+    ### Stitch motcorr params and create motcorr graph
+    # get motcorr param files
+    morcorr_param_files = []
+    for item in os.listdir(directory):
+        if '.npy' in item:
+            file = os.path.join(directory, item)
+            motcorr_param_files.append(file)
+    bbb.sort_nicely(motcorr_param_files)
+    
+    # Load motcorr param files (needed to sort first)
+    motcorr_params = []
+    for file in motcorr_param_files:
+        motcorr_params.append(np.load(file))
+
+    stitched_params = np.concatenate(motcorr_params, axis=0)
+    bbb.save_motion_figure(stitched_params, os.path.split(directory)[0], directory)
+
+    ### START Z-SCORING ###
+    os.system("sbatch zscore.sh {}".format(directory))
+
 if __name__ == '__main__':
     main(sys.argv[1:])
