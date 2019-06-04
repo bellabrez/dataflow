@@ -29,20 +29,23 @@ def main(args):
     reds = [os.path.join(directory, x) for x in reds]
     greens = [os.path.join(directory, x) for x in greens]
 
-    # load brains
+    ### load brains ###
     channels = [reds, greens]
     colors = ['red', 'green']
+
+    # Do for red and green
     for i, channel in enumerate(channels):
         brains = []
         for brain_file in channel:
-            brains.append(bbb.load_numpy_brain(brain_file))
-        print('brains len: {}'.format(len(brains)))
-        print('shape of first brain: {}'.format(np.shape(brains[0])))
+            brain = bbb.load_numpy_brain(brain_file)
 
-        # Handle edgecase of single volume brain
-        if len(np.shape(brain)) == 3:
-            brain = brain[:,:,:,np.newaxis]
-            
+            # Handle edgecase of single volume brain
+            if len(np.shape(brain)) == 3:
+                brain = brain[:,:,:,np.newaxis]
+            print('shape of partial brain: {}'.format(np.shape(brain)))
+            brains.append(brain)
+
+        print('brains len: {}'.format(len(brains)))
         stitched_brain = np.concatenate(brains, axis=-1)
         print('stitched_brain shape: {}'.format(np.shape(stitched_brain)))
         save_file = os.path.join(directory, 'stitched_brain_{}.nii'.format(colors[i]))
@@ -51,7 +54,6 @@ def main(args):
         # delete partial brains
         [os.remove(file) for file in channel]
         
-
 def alphanum_key(s):
     """ Tries to change strs to ints. """
     return [tryint(c) for c in re.split('([0-9]+)', s)]
