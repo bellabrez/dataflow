@@ -53,6 +53,17 @@ def main(args):
 
         # delete partial brains
         [os.remove(file) for file in channel]
+
+        ##### Perform bleaching correction and z-scoring #####
+
+        # Bleaching correction (per voxel)
+        brain = bleaching_correction(stitched_brain)
+        stitched_brain = None
+
+        # Z-score brain
+        brain = z_score_brain(brain)
+        zbrain_file = os.path.join(os.path.split(directory)[0], 'brain_zscored_{}.nii'.format(colors[i]))
+        save_brain(zbrain_file, brain)
         
 def alphanum_key(s):
     """ Tries to change strs to ints. """
