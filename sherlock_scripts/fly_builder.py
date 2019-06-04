@@ -25,11 +25,13 @@ def main(args):
 
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_directory)
+    print('Found fly folders: {}'.format(likely_fly_folders))
     likely_fly_folders = bbb.sort_nicely(likely_fly_folders)
 
     for likely_fly_folder in likely_fly_folders: 
         if 'fly' in likely_fly_folder:
             print('This fly will be number : {}'.format(current_fly_number))
+            print('Creating fly from directory {}'.format(likely_fly_folder))
 
             # Define source fly directory
             source_fly = os.path.join(flagged_directory, likely_fly_folder)

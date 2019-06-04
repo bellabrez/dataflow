@@ -1,6 +1,7 @@
 import os
 import sys
 import bigbadbrain as bbb
+from time import sleep
 
 def main():
     # Will look for and get folder that contains __done__
@@ -22,6 +23,7 @@ def main():
         # strip flag and pass directory name
         folder_stripped = done_folders[0].strip(done_flag)
         os.rename(done_folders[0], folder_stripped)
+        sleep(20) # sleep to give system time to rename folder.
         os.system('sbatch build_fly.sh {}'.format(folder_stripped))
 
 if __name__ == '__main__':
