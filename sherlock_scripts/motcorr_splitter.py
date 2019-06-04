@@ -30,10 +30,11 @@ def main(args):
     # How many volumes?
     num_vols = np.shape(master_brain)[-1]
 
-    #Start fleet of motcorr_partial.sh, giving each the correct portion of data
 
-    #num_vols = 5 ###### FOR TESTING; REMOVE. ######
-    step = 100 ###### put back to 100 ######
+    ### Start fleet of motcorr_partial.sh, giving each the correct portion of data
+
+    #num_vols = 5 can do this to test
+    step = 100 # can reduce this for testing
     job_ids = []
     for i in range(0,num_vols,step):
         vol_start = i
