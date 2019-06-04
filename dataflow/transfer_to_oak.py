@@ -40,14 +40,15 @@ def start_oak_transfer(directory_from, oak_target, allowable_extensions, add_fla
     directory_to = os.path.join(oak_target, os.path.split(directory_from)[-1])
     try:
         os.mkdir(directory_to)
-        print('Moving from  {}'.format(directory_from))
-        print('Moving to  {}'.format(directory_to))
-        transfer_to_oak(directory_from, directory_to, allowable_extensions)
-        print('Copy completed.')
-        if add_flag:
-            os.rename(directory_to, directory_to + '__done__')
-            print('Added __done__ flag')
-
     except FileExistsError:
         print('WARNING: Directory already exists  {}'.format(directory_to))
-        print('Skipping directory.')
+        #print('Skipping directory.')
+
+    print('Moving from  {}'.format(directory_from))
+    print('Moving to  {}'.format(directory_to))
+    transfer_to_oak(directory_from, directory_to, allowable_extensions)
+    print('Copy completed.')
+    if add_flag:
+        os.rename(directory_to, directory_to + '__done__')
+        print('Added __done__ flag')
+

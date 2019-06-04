@@ -30,7 +30,7 @@ def connect_to_ftp(ip, username, passwd):
 def start_copy_recursive_ftp(*args):
     copy_recursive_ftp(*args)
 
-def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd): 
+def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd, skip_existing_directories=False): 
     for item in ftp_host.listdir(source):
         ftp_host = ftputil.FTPHost(ip, username, passwd)
 
@@ -45,7 +45,8 @@ def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd):
                 os.mkdir(target_path)
             except FileExistsError:
                 print('Directory already exists  {}'.format(target_path))
-            copy_recursive_ftp(ftp_host, source_path, target_path, ip, username, passwd)
+            if not skip_existing_directories:
+                copy_recursive_ftp(ftp_host, source_path, target_path, ip, username, passwd)
 
         # If the item is a file
         else:
