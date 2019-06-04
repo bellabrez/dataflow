@@ -10,6 +10,7 @@ def main(args):
     ### Move folders from imports to fly dataset - need to restructure folders ###
 
     flagged_directory = args[0]
+    print('Building fly from directory {}'.format(flagged_directory))
     imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports'
     target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 

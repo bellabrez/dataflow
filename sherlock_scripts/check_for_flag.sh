@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=check_transfer
+#SBATCH --job-name=flag_check
 #SBATCH --partition=trc
 #SBATCH --time=0:05:00
 #SBATCH --ntasks=1
