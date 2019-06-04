@@ -22,8 +22,8 @@ def main(args):
                 greens.append(item)
 
     # need to order correctly for correct stitching
-    sort_nicely(greens)
-    sort_nicely(reds)
+    bbb.sort_nicely(greens)
+    bbb.sort_nicely(reds)
     
     # add directory path
     reds = [os.path.join(directory, x) for x in reds]
@@ -64,30 +64,6 @@ def main(args):
         brain = bbb.z_score_brain(brain)
         zbrain_file = os.path.join(os.path.split(directory)[0], 'brain_zscored_{}.nii'.format(colors[i]))
         bbb.save_brain(zbrain_file, brain)
-        
-def alphanum_key(s):
-    """ Tries to change strs to ints. """
-    return [tryint(c) for c in re.split('([0-9]+)', s)]
-
-def sort_nicely(x):
-    """
-
-    Parameters
-    ----------
-
-    Returns
-    -------
-
-    """
-    x.sort(key=alphanum_key)
-    
-def tryint(s):
-    """ Tries to change a single str to an int. """
-
-    try:
-        return int(s)
-    except:
-        return s
 
 if __name__ == '__main__':
     main(sys.argv[1:])

@@ -32,8 +32,8 @@ def main(args):
 
     #Start fleet of motcorr_partial.sh, giving each the correct portion of data
 
-    num_vols = 5 ###### FOR TESTING; REMOVE. ######
-    step = 2 ###### put back to 100 ######
+    #num_vols = 5 ###### FOR TESTING; REMOVE. ######
+    step = 100 ###### put back to 100 ######
     job_ids = []
     for i in range(0,num_vols,step):
         vol_start = i

@@ -4,6 +4,7 @@ import numpy as np
 from time import strftime
 from shutil import copyfile
 from xml.etree import ElementTree as ET
+import bigbadbrain as bbb
 
 def main():
     ### Move folders from imports to fly dataset - need to restructure folders ###
@@ -12,10 +13,11 @@ def main():
     done_flag = '__done__'
 
     # Will look for and get folder that contains __done__
+    # If multiple done folders, will get the oldest one (based on alphanumeric sorting)
     flagged_directory = check_for_done_flag(imports_path, done_flag)
 
     # Assume this folder contains fly_1 etc
-    # This folder may (or may not) contain separate areas
+    # This folder may (or may not) contain separate areas # False, now enforcing experiment subfolders
     # Each area will have a T and a Z
     # Avoid grabbing other weird xml files, reference folder etc.
     # Need to move into fly_X folder that reflects it's date
@@ -24,7 +26,7 @@ def main():
     current_fly_number = get_new_fly_number(target_path)
 
     likely_fly_folders = os.listdir(flagged_directory)
-    
+
 
     for likely_fly_folder in os.listdir(flagged_directory): #NEED TO SORT THESE FLIES BY NUMBER
         if 'fly' in likely_fly_folder:
@@ -273,12 +275,18 @@ def get_new_fly_number(target_path):
 
 def check_for_done_flag(imports_path, done_flag):
     print('Checking for done flag.')
+    done_folders = []
     for item in os.listdir(imports_path):
         if done_flag in item:
             print('Found flagged directory {}'.format(item))
             item_path = os.path.join(imports_path, item)
-            return item_path
-    raise SystemExit
+            done_folders.append(item_path)
+    if len(done_folders) == 0:
+        raise SystemExit
+    else:
+        bbb.sort_nicely(done_folders)
+        return done_folders[0]
+    
 
 if __name__ == '__main__':
     main()
