@@ -139,7 +139,7 @@ def copy_visual(destination_region):
     os.mkdir(visual_destination)
     source_folder = os.path.join(visual_folder, correct_folder[0])
     print('Copying from: {}'.format(source_folder))
-    for file in source_folder:
+    for file in os.listdir(source_folder):
         target_path = os.path.join(visual_destination, file)
         source_path = os.path.join(source_folder, file)
         print('Transfering from {} to {}'.format(source_path, target_path))
