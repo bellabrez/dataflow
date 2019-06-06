@@ -72,7 +72,7 @@ def copy_fly(source_fly, destination_fly):
         destination_region = os.path.join(destination_fly, region)
         os.mkdir(destination_region)
         print('Created region directory: {}'.format(destination_region))
-        imaging_destination = os.path.join(destination, 'imaging')
+        imaging_destination = os.path.join(destination_region, 'imaging')
         os.mkdir(imaging_destination)
         copy_bruker_data(source_region, imaging_destination)
         copy_fictrac(destination_region)
