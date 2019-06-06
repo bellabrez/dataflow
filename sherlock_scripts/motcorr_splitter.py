@@ -16,6 +16,7 @@ def main(args):
     imaging_path = os.path.join(path, 'imaging')
     master_brain_path = os.path.join(imaging_path, 'functional_channel_1.nii')
     slave_brain_path = os.path.join(imaging_path, 'functional_channel_2.nii')
+    print('Using master brain {}'.format(master_brain_path))
     master_brain = bbb.load_numpy_brain(master_brain_path)
     master_brain_mean = bbb.make_meanbrain(master_brain)
     master_brain_mean_file = os.path.join(imaging_path, 'functional_channel_1_mean.nii')
