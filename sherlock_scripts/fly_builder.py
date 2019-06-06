@@ -102,7 +102,7 @@ def copy_visual(destination_region):
     visual_destination = os.path.join(destination_region, 'visual')
 
     # Find time of experiment based on functional.xml
-    true_ymd, true_total_seconds = get_expt_time(destination_region)
+    true_ymd, true_total_seconds = get_expt_time(os.path.join(destination_region,'imaging'))
 
     # Find visual folder that has the closest datetime
     # First find all folders with correct date, and about the correct time
@@ -148,7 +148,7 @@ def copy_fictrac(destination_region):
     fictrac_destination = os.path.join(destination_region, 'fictrac')
 
     # Find time of experiment based on functional.xml
-    true_ymd, true_total_seconds = get_expt_time(destination_region)
+    true_ymd, true_total_seconds = get_expt_time(os.path.join(destination_region,'imaging'))
 
     # Find .dat file of 1) correct-ish time, 2) correct-ish size
     for file in os.listdir(fictrac_folder):
