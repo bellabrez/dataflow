@@ -139,7 +139,7 @@ def copy_visual(destination_region):
     os.mkdir(visual_destination)
     for file in os.path.join(visual_folder, correct_folder[0]):
         target_path = os.path.join(destination_region, file)
-        source_path = os.path.join(fictrac_folder, file)
+        source_path = os.path.join(visual_folder, file)
         print('Transfering {}'.format(target_path))
         copyfile(source_path, target_path)
 
