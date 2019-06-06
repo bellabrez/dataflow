@@ -137,10 +137,12 @@ def copy_visual(destination_region):
     # now that we have the correct folder, copy it's contents
     print('Found correct visual stimulus folder: {}'.format(correct_folder[0]))
     os.mkdir(visual_destination)
-    for file in os.path.join(visual_folder, correct_folder[0]):
+    source_folder = os.path.join(visual_folder, correct_folder[0])
+    print('Copying from: {}'.format(source_folder))
+    for file in source_folder:
         target_path = os.path.join(visual_destination, file)
-        source_path = os.path.join(visual_folder, file)
-        print('Transfering {}'.format(target_path))
+        source_path = os.path.join(source_folder, file)
+        print('Transfering from {} to {}'.format(source_path, target_path))
         copyfile(source_path, target_path)
 
 def copy_fictrac(destination_region):
