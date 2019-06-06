@@ -13,11 +13,12 @@ def main(args):
     path = args[0]
 
     ### Create mean brain
-    master_brain_path = os.path.join(path, 'functional_channel_1.nii')
-    slave_brain_path = os.path.join(path, 'functional_channel_2.nii')
+    imaging_path = os.path.join(path, 'imaging')
+    master_brain_path = os.path.join(imaging_path, 'functional_channel_1.nii')
+    slave_brain_path = os.path.join(imaging_path, 'functional_channel_2.nii')
     master_brain = bbb.load_numpy_brain(master_brain_path)
     master_brain_mean = bbb.make_meanbrain(master_brain)
-    master_brain_mean_file = os.path.join(path, 'functional_channel_1_mean.nii')
+    master_brain_mean_file = os.path.join(imaging_path, 'functional_channel_1_mean.nii')
     bbb.save_brain(master_brain_mean_file, master_brain_mean)
     print('Saved mean brain {}'.format(master_brain_mean_file))
 
