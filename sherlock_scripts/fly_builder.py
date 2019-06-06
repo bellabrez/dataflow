@@ -72,16 +72,18 @@ def copy_fly(source_fly, destination_fly):
         destination_region = os.path.join(destination_fly, region)
         os.mkdir(destination_region)
         print('Created region directory: {}'.format(destination_region))
-        copy_bruker_data(source_region, destination_region)
+        imaging_destination = os.path.join(destination, 'imaging')
+        os.mkdir(imaging_destination)
+        copy_bruker_data(source_region, imaging_destination)
         copy_fictrac(destination_region)
+        copy_visual(destination_region)
 
         ###################################
         ### START MOTCORR ON EXPERIMENT ###
         ###################################
         os.system("sbatch motcorr_trigger.sh {}".format(destination_region))
 
-def copy_fictrac(destination_region):
-    fictrac_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/fictrac'
+def get_expt_time(destination_region):
     # Find time of experiment based on functional.xml
     xml_file = os.path.join(destination_region, 'functional.xml')
     _, _, datetime_dict = get_datetime_from_xml(xml_file)
@@ -93,7 +95,60 @@ def copy_fictrac(destination_region):
     print('dict: {}'.format(datetime_dict))
     print('true_ymd: {}'.format(true_ymd))
     print('true_total_seconds: {}'.format(true_total_seconds))
+    return true_ymd, true_total_seconds
 
+def copy_visual(destination_region):
+    visual_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/visual'
+    visual_destination = os.path.join(destination_region, 'visual')
+
+    # Find time of experiment based on functional.xml
+    true_ymd, true_total_seconds = get_expt_time(destination_region)
+
+    # Find visual folder that has the closest datetime
+    # First find all folders with correct date, and about the correct time
+    folders = []
+    for folder in os.listdir(visual_folder):
+        test_ymd = folder.split('-')[1]
+        test_time = folder.split('-')[2]
+        test_hour = test_time[0:2]
+        test_minute = test_time[2:4]
+        test_second = test_time[4:6]
+        test_total_seconds = int(test_hour) * 60 * 60 + \
+                             int(test_minute) * 60 + \
+                             int(test_second)
+
+        if test_ymd == true_ymd:
+            time_difference = np.abs(true_total_seconds - test_total_seconds)
+            if time_difference < 3 * 60:
+                folders.append([folder, test_total_seconds])
+                print('Found reasonable visual folder: {}'.format(folder))
+
+    if len(folders) == 1:
+        pass
+    #if more than 1 folder, use the oldest folder
+    else:
+        print('Found more than 1 visual stimulus folder within 3min of expt. Picking oldest.')
+        correct_folder = folders[0] # set default to first folder
+        for folder in folders:
+            # look at test_total_seconds entry. If larger, call this the correct folder.
+            if folder[-1] > correct_folder[-1]:
+                correct_folder = folder
+
+    # now that we have the correct folder, copy it's contents
+    print('Found correct visual stimulus folder: {}'.format(correct_folder[0]))
+    os.mkdir(visual_destination)
+    for file in os.path.join(visual_folder, correct_folder[0]):
+        target_path = os.path.join(destination_region, file)
+        source_path = os.path.join(fictrac_folder, file)
+        print('Transfering {}'.format(target_path))
+        copyfile(source_path, target_path)
+
+def copy_fictrac(destination_region):
+    fictrac_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/fictrac'
+    fictrac_destination = os.path.join(destination_region, 'fictrac')
+
+    # Find time of experiment based on functional.xml
+    true_ymd, true_total_seconds = get_expt_time(destination_region)
 
     # Find .dat file of 1) correct-ish time, 2) correct-ish size
     for file in os.listdir(fictrac_folder):
@@ -137,6 +192,7 @@ def copy_fictrac(destination_region):
     print('Found these files with correct times: {}'.format(correct_time_files))
 
     # Now transfer these 4 files to the fly
+    os.mkdir(fictrac_destination)
     for file in correct_time_files:
         target_path = os.path.join(destination_region, file)
         source_path = os.path.join(fictrac_folder, file)
@@ -175,6 +231,9 @@ def copy_bruker_data(source, destination):
                 item = 'anatomy.xml'
             if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
                 item = 'functional.xml'
+            if 'SingleImage' in item:
+                # don't copy these files
+                continue
 
             target_path = destination + '/' + item
             print('Transfering file {}'.format(target_path))
@@ -250,7 +309,6 @@ def get_datetime_from_xml(xml_file):
         day = '0' + day
     if len(hour) == 1:
         hour = '0' + hour
-
 
     # Combine
     datetime_str = year + month + day + '-' + hour + minute + second
