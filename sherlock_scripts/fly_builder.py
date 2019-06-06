@@ -122,10 +122,10 @@ def copy_visual(destination_region):
             if time_difference < 3 * 60:
                 folders.append([folder, test_total_seconds])
                 print('Found reasonable visual folder: {}'.format(folder))
-
-    if len(folders) == 1:
-        pass
+    
     #if more than 1 folder, use the oldest folder
+    if len(folders) == 1:
+        correct_folder = folders[0]
     else:
         print('Found more than 1 visual stimulus folder within 3min of expt. Picking oldest.')
         correct_folder = folders[0] # set default to first folder
