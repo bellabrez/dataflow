@@ -64,8 +64,8 @@ def copy_fly(source_fly, destination_fly):
 
     for item in os.listdir(source_fly):
         print('Currently looking at item: {}'.format(item))
-        # First handle folders
-        if os.path.isdir(item):
+        # Handle folders
+        if os.path.isdir(os.path.join(source_fly, item)):
             source_sub_folder = os.path.join(source_fly, item)
             fly_sub_folder = os.path.join(destination_fly, item)
             os.mkdir(fly_sub_folder)
@@ -86,15 +86,18 @@ def copy_fly(source_fly, destination_fly):
                 os.system("sbatch motcorr_trigger.sh {}".format(fly_sub_folder))
 
             else:
-                print('Invalid item type in fly folder: {}'.format(item))
-        # Now handle my xml files for metadata management
+                print('Invalid directory in fly folder: {}'.format(item))
+        
+        # Handle fly xml file for metadata management
         else:
             if item == 'fly.xml':
+                print('found fly xml file')
                 source_path = os.path.join(source_fly, item)
                 target_path = os.path.join(destination_fly, item)
+                print('Will copy from {} to {}'.format(source_path, target_path))
                 copyfile(source_path, target_path)
             else:
-                print('Invalid item type in fly folder: {}'.format(item))
+                print('Invalid file in fly folder: {}'.format(item))
 
 def get_expt_time(destination_region):
     # Find time of experiment based on functional.xml
