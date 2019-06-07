@@ -4,6 +4,7 @@ import numpy as np
 from time import strftime
 from shutil import copyfile
 from xml.etree import ElementTree as ET
+from lxml import etree, objectify
 import bigbadbrain as bbb
 
 def main(args):
@@ -53,35 +54,46 @@ def main(args):
 
 ### Pull fictrac and visual from stim computer via ftp ###
 def copy_fly(source_fly, destination_fly):
-    # Check if the source fly has folders for brain areas:
-    # Switching to assuming there are brain regions!!!
-    #has_brain_regions = True
-    #for item in os.listdir(source_fly):
-    #    full_item = os.path.join(source_fly, item)
-    #    # If any items are not directories, must not contain brain regions.
-    #    if 'TSeries' in full_item or 'ZSeries' in full_item:
-    #        has_brain_regions = False
 
-    #print('Has brain regions: {}'.format(has_brain_regions))
+    ''' There will be two types of folders in a fly folder.
+    1) functional folder
+    2) anatomy folder
+    For functional folders, need to copy fictrac and visual as well
+    For anatomy folders, only copy folder. There will also be
+    3) fly xml data '''
 
-    # If brain regions, copy files for each region
-    # if has_brain_regions:
-    # Assuming flies contain region folders
-    for region in os.listdir(source_fly):
-        source_region = os.path.join(source_fly, region)
-        destination_region = os.path.join(destination_fly, region)
-        os.mkdir(destination_region)
-        print('Created region directory: {}'.format(destination_region))
-        imaging_destination = os.path.join(destination_region, 'imaging')
-        os.mkdir(imaging_destination)
-        copy_bruker_data(source_region, imaging_destination)
-        copy_fictrac(destination_region)
-        copy_visual(destination_region)
+    for item in os.listdir(source_fly):
+        # First handle folders
+        if os.path.isdir(item):
+            source_sub_folder = os.path.join(source_fly, item)
+            fly_sub_folder = os.path.join(destination_fly, item)
+            os.mkdir(fly_sub_folder)
+            print('Created directory: {}'.format(fly_sub_folder))
 
-        ###################################
-        ### START MOTCORR ON EXPERIMENT ###
-        ###################################
-        os.system("sbatch motcorr_trigger.sh {}".format(destination_region))
+            if 'anatomy' in item:
+                copy_bruker_data(source_sub_folder, fly_sub_folder)
+            elif 'functional' in item:
+                imaging_destination = os.path.join(fly_sub_folder, 'imaging')
+                os.mkdir(imaging_destination)
+                copy_bruker_data(source_sub_folder, imaging_destination)
+                copy_fictrac(fly_sub_folder)
+                copy_visual(fly_sub_folder)
+
+                ###################################
+                ### START MOTCORR ON FUNCTIONAL ###
+                ###################################
+                os.system("sbatch motcorr_trigger.sh {}".format(fly_sub_folder))
+
+            else:
+                print('Invalid item type in fly folder: {}'.format(item))
+        # Now handle my xml files for metadata management
+        else:
+            if item == 'fly.xml':
+                source_path = os.path.join(source_fly, item)
+                target_path = os.path.join(destination_fly, item)
+                copyfile(source_path, target_path)
+            else:
+                print('Invalid item type in fly folder: {}'.format(item))
 
 def get_expt_time(destination_region):
     # Find time of experiment based on functional.xml
@@ -136,7 +148,10 @@ def copy_visual(destination_region):
 
     # now that we have the correct folder, copy it's contents
     print('Found correct visual stimulus folder: {}'.format(correct_folder[0]))
-    os.mkdir(visual_destination)
+    try:
+        os.mkdir(visual_destination)
+    except:
+        print('{} already exists'.format(visual_destination))
     source_folder = os.path.join(visual_folder, correct_folder[0])
     print('Copying from: {}'.format(source_folder))
     for file in os.listdir(source_folder):
@@ -144,6 +159,21 @@ def copy_visual(destination_region):
         source_path = os.path.join(source_folder, file)
         print('Transfering from {} to {}'.format(source_path, target_path))
         copyfile(source_path, target_path)
+
+    ### Create xml
+    # Update this later
+    # Get unique stimuli
+    stimuli, unique_stimuli = load_visual_stimuli_data(visual_destination)
+    print('Unique stimuli: {}'.format(unique_stimuli))
+    root = etree.Element('root')
+    visual = objectify.Element('visual')
+    visual.unique_stimuli = unique_stimuli
+    root.append(visual)
+    objectify.deannotate(root)
+    etree.cleanup_namespaces(root)
+    tree = etree.ElementTree(visual)
+    with open(os.path.join(visual_destination, 'visual.xml'), 'wb') as file:
+        tree.write(file, pretty_print=True)
 
 def copy_fictrac(destination_region):
     fictrac_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/fictrac'
@@ -201,6 +231,17 @@ def copy_fictrac(destination_region):
         print('Transfering {}'.format(target_path))
         copyfile(source_path, target_path)
 
+    ### Create empty xml file.
+    # Update this later
+    root = etree.Element('root')
+    fictrac = objectify.Element('fictrac')
+    root.append(fictrac)
+    objectify.deannotate(root)
+    etree.cleanup_namespaces(root)
+    tree = etree.ElementTree(fictrac)
+    with open(os.path.join(fictrac_destination, 'fictrac.xml'), 'wb') as file:
+        tree.write(file, pretty_print=True)
+
 def datetime_from_fictrac(file):
     datetime = file.split('-')[1]
     if '.dat' in datetime or '.log' in datetime:
@@ -228,19 +269,87 @@ def copy_bruker_data(source, destination):
             if '.nii' in item and 'ZSeries' in item:
                 item = 'anatomy_' + item.split('_')[1] + '_' + item.split('_')[2]
             if '.csv' in item:
+                # Special copy for photodiode since it goes in visual folder
                 item = 'photodiode.csv'
+                try:
+                    visual_folder = os.path.join(os.path.split(destination)[0], 'visual')
+                    os.mkdir(visual_folder)
+                except:
+                    print('{} already exists'.format(visual_folder))
+                target_path = os.path.join(os.path.split(destination)[0], 'visual', item)
+                print('Transfering file {}'.format(target_path))
+                copyfile(source_path, target_path)
+                continue
             if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:
                 item = 'anatomy.xml'
             if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
                 item = 'functional.xml'
+                # Here, use this file to create my own simplified xml
+                create_imaging_xml(os.path.join(source_path, item))
+
             if 'SingleImage' in item:
                 # don't copy these files
                 continue
 
             target_path = destination + '/' + item
             print('Transfering file {}'.format(target_path))
-
             copyfile(source_path, target_path)
+
+def create_imaging_xml(xml_source_file):
+    tree = objectify.parse(xml_source_file)
+    source = tree.getroot()
+
+    class Source_data:
+        def __init__(self):
+            pass
+    source_data = Source_data()
+    
+    # Get data
+    statevalues = source.findall('PVStateShard')[0].findall('PVStateValue')
+    for statevalue in statevalues:
+        key = statevalue.get('key')
+        if key == 'micronsPerPixel':
+            indices = statevalue.findall('IndexedValue')
+            for index in indices:
+                axis = index.get('index')
+                if axis == 'XAxis':
+                    source_data.x = float(index.get('value'))
+                elif axis == 'YAxis':
+                    source_data.y = float(index.get('value'))
+                elif axis == 'ZAxis':
+                    source_data.z = float(index.get('value'))
+        if key == 'laserPower':
+            # I think this is the maximum power if set to vary by z depth
+            indices = statevalue.findall('IndexedValue')
+            source_data.laser_power = indices[0].get('value')
+        if key == 'pmtGain':
+            indices = statevalue.findall('IndexedValue')
+            for index in indices:
+                index_num = index.get('index')
+                if index_num == '0':
+                    source_data.PMT_red = index.get('value')
+                if index_num == '1':
+                    source_data.PMT_green = index.get('value')
+
+    # Save data
+    root = etree.Element('root')
+
+    scan = objectify.Element('scan')
+    scan.power = source_data.laser_power
+    scan.PMT_green = source_data.PMT_green
+    scan.PMT_red = source_data.PMT_red
+    #scan.rate = # should add
+    scan.x_voxel_size = source_data.x
+    scan.y_voxel_size = source_data.y
+    scan.z_voxel_size = source_data.z
+
+    root.append(scan)
+    objectify.deannotate(root)
+    etree.cleanup_namespaces(root)
+    tree = etree.ElementTree(scan)
+    with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.xml'), 'wb') as file:
+        tree.write(file, pretty_print=True)
+
 
 def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time

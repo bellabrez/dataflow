@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=zscore
 #SBATCH --partition=trc
-#SBATCH --time=0:30:00
+#SBATCH --time=1:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --output=slurm_moco.out
