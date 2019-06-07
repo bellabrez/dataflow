@@ -63,6 +63,7 @@ def copy_fly(source_fly, destination_fly):
     3) fly xml data '''
 
     for item in os.listdir(source_fly):
+        print('Currently looking at item: {}'.format(item))
         # First handle folders
         if os.path.isdir(item):
             source_sub_folder = os.path.join(source_fly, item)
