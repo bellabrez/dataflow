@@ -385,12 +385,13 @@ def get_xml_files(fly_folder, xml_files):
         if os.path.isdir(full_path):
             xml_files = get_xml_files(full_path, xml_files)
         else:
-            if '.xml' in item and '_Cycle' not in item and 'fly.xml' not in item:
+            if '.xml' in item and '_Cycle' not in item and 'fly.xml' not in item and 'scan' not in item:
                 xml_files.append(full_path)
                 print('Found xml file: {}'.format(full_path))
     return xml_files
 
 def get_datetime_from_xml(xml_file):
+    print('Getting datetime from {}'.format(xml_file))
     tree = ET.parse(xml_file)
     root = tree.getroot()
     datetime = root.get('date')
