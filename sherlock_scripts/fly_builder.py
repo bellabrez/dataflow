@@ -289,7 +289,7 @@ def copy_bruker_data(source, destination):
             if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
                 item = 'functional.xml'
                 # Here, use this file to create my own simplified xml
-                create_imaging_xml(os.path.join(source_path, item))
+                create_imaging_xml(os.path.join(source_path))
 
             if 'SingleImage' in item:
                 # don't copy these files
