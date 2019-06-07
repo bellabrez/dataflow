@@ -1,11 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=moco_partial
 #SBATCH --partition=trc
-#SBATCH --time=0:15:00
+#SBATCH --time=0:20:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --output=slurm_moco.out
-#SBATCH --open-mode=append
 
 ml gcc/6.3.0
 ml python/3.6.1
