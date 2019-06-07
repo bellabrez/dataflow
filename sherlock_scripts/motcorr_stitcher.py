@@ -69,12 +69,15 @@ def main(args):
     for file in motcorr_param_files:
         motcorr_params.append(np.load(file))
 
-    stitched_params = np.concatenate(motcorr_params, axis=0)
-    save_file = os.path.join(directory, 'motcorr_params_stitched')
-    np.save(save_file, stitched_params)
-    [os.remove(file) for file in motcorr_param_files]
-    xml_dir = os.path.join(os.path.split(directory)[0], 'imaging')
-    bbb.save_motion_figure(stitched_params, xml_dir, directory)
+    if len(motcorr_params) > 0:
+        stitched_params = np.concatenate(motcorr_params, axis=0)
+        save_file = os.path.join(directory, 'motcorr_params_stitched')
+        np.save(save_file, stitched_params)
+        [os.remove(file) for file in motcorr_param_files]
+        xml_dir = os.path.join(os.path.split(directory)[0], 'imaging')
+        bbb.save_motion_figure(stitched_params, xml_dir, directory)
+    else:
+        print('Empty motcorr params - skipping saving moco figure.')
 
     ### START Z-SCORING ###
     os.system("sbatch zscore.sh {}".format(directory))
