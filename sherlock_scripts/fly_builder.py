@@ -167,7 +167,7 @@ def copy_visual(destination_region):
     ### Create xml
     # Update this later
     # Get unique stimuli
-    stimuli, unique_stimuli = load_visual_stimuli_data(visual_destination)
+    stimuli, unique_stimuli = bbb.load_visual_stimuli_data(visual_destination)
     print('Unique stimuli: {}'.format(unique_stimuli))
     root = etree.Element('root')
     visual = objectify.Element('visual')
