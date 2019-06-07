@@ -356,6 +356,8 @@ def get_fly_time(fly_folder):
     # find all xml files
     xml_files = []
     xml_files = get_xml_files(fly_folder, xml_files)
+    
+
     print('found xml files: {}'.format(xml_files))
     datetimes_str = []
     datetimes_int = []
@@ -379,7 +381,7 @@ def get_xml_files(fly_folder, xml_files):
         if os.path.isdir(full_path):
             xml_files = get_xml_files(full_path, xml_files)
         else:
-            if '.xml' in item and '_Cycle' not in item:
+            if '.xml' in item and '_Cycle' not in item and 'fly.xml' not in item:
                 xml_files.append(full_path)
                 print('Found xml file: {}'.format(full_path))
     return xml_files
