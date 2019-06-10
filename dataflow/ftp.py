@@ -27,8 +27,8 @@ def connect_to_ftp(ip, username, passwd):
     return ftp_host
 
 @timing
-def start_copy_recursive_ftp(*args):
-    copy_recursive_ftp(*args)
+def start_copy_recursive_ftp(*args, **kwargs):
+    copy_recursive_ftp(*args, **kwargs)
 
 def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd, skip_existing_directories=False): 
     for item in ftp_host.listdir(source):
