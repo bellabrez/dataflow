@@ -315,11 +315,17 @@ def copy_bruker_data(source, destination):
             if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:
                 item = 'anatomy.xml'
                 create_imaging_xml(os.path.join(source_path))
+
             if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
                 item = 'functional.xml'
                 # Use this file to create my own simplified xml
                 create_imaging_xml(os.path.join(source_path))
-
+            if 'expt.xml' in item:
+                target_path = os.path.join(os.path.split(destination)[0], item)
+                print('Transfering file {}'.format(target_path))
+                sys.stdout.flush()
+                copyfile(source_path, target_path)
+                continue
             if 'SingleImage' in item:
                 # don't copy these files
                 continue
