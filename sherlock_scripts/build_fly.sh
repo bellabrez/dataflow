@@ -4,8 +4,7 @@
 #SBATCH --time=0:30:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --output=slurm_fly_builder.out
-#SBATCH --open-mode=append
+#SBATCH --output=./outputs_build_fly/slurm-%j.out
 
 ml gcc/6.3.0
 ml python/3.6.1

@@ -4,8 +4,7 @@
 #SBATCH --time=0:20:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
-#SBATCH --output=slurm_moco.out
-#SBATCH --open-mode=truncate
+#SBATCH --output=./outputs_moco_trigger/slurm-%j.out
 
 ml gcc/6.3.0
 ml python/3.6.1

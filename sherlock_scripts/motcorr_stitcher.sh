@@ -4,8 +4,8 @@
 #SBATCH --time=0:15:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --output=slurm_stitcher.out
-#SBATCH --open-mode=append
+#SBATCH --output=./outputs_moco_stitcher/slurm-%j.out
+
 
 ml gcc/6.3.0
 ml python/3.6.1
