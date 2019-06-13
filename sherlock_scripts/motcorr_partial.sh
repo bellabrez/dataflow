@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=moco_partial
 #SBATCH --partition=trc
-#SBATCH --time=0:20:00
+#SBATCH --time=1:30:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=./outputs_moco_partial/slurm-%j.out
@@ -12,6 +12,8 @@ ml py-numpy/1.14.3_py36
 ml py-pandas/0.23.0_py36
 ml viz
 ml py-scikit-learn/0.19.1_py36
+
+#time used to be 20:00
 
 directory="$1"
 motcorr_directory="$2"
