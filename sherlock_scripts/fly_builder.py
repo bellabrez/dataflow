@@ -6,6 +6,7 @@ from shutil import copyfile
 from xml.etree import ElementTree as ET
 from lxml import etree, objectify
 import bigbadbrain as bbb
+import pandas as pd
 
 def main(args):
     ### Move folders from imports to fly dataset - need to restructure folders ###
