@@ -3,7 +3,7 @@
 #SBATCH --partition=trc
 #SBATCH --time=0:15:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=18
 #SBATCH --output=./outputs_moco_stitcher/slurm-%j.out
 
 
