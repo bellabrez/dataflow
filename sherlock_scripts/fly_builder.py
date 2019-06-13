@@ -12,6 +12,7 @@ def main(args):
 
     flagged_directory = args[0]
     print('Building fly from directory {}'.format(flagged_directory))
+    sys.stdout.flush()
     imports_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports'
     target_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 
@@ -27,12 +28,14 @@ def main(args):
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_directory)
     print('Found fly folders: {}'.format(likely_fly_folders))
+    sys.stdout.flush()
     bbb.sort_nicely(likely_fly_folders)
 
     for likely_fly_folder in likely_fly_folders: 
         if 'fly' in likely_fly_folder:
             print('This fly will be number : {}'.format(current_fly_number))
             print('Creating fly from directory {}'.format(likely_fly_folder))
+            sys.stdout.flush()
 
             # Define source fly directory
             source_fly = os.path.join(flagged_directory, likely_fly_folder)
@@ -43,6 +46,7 @@ def main(args):
             destination_fly = os.path.join(target_path, new_fly_folder)
             os.mkdir(destination_fly)
             print('Created fly directory: {}'.format(destination_fly))
+            sys.stdout.flush()
 
             # Copy fly data
             copy_fly(source_fly, destination_fly)
@@ -67,12 +71,14 @@ def copy_fly(source_fly, destination_fly):
 
     for item in os.listdir(source_fly):
         print('Currently looking at item: {}'.format(item))
+        sys.stdout.flush()
         # Handle folders
         if os.path.isdir(os.path.join(source_fly, item)):
             source_sub_folder = os.path.join(source_fly, item)
             fly_sub_folder = os.path.join(destination_fly, item)
             os.mkdir(fly_sub_folder)
             print('Created directory: {}'.format(fly_sub_folder))
+            sys.stdout.flush()
 
             if 'anatomy' in item:
                 copy_bruker_data(source_sub_folder, fly_sub_folder)
@@ -90,17 +96,21 @@ def copy_fly(source_fly, destination_fly):
 
             else:
                 print('Invalid directory in fly folder: {}'.format(item))
+                sys.stdout.flush()
         
         # Handle fly xml file for metadata management
         else:
             if item == 'fly.xml':
                 print('found fly xml file')
+                sys.stdout.flush()
                 source_path = os.path.join(source_fly, item)
                 target_path = os.path.join(destination_fly, item)
                 print('Will copy from {} to {}'.format(source_path, target_path))
+                sys.stdout.flush()
                 copyfile(source_path, target_path)
             else:
                 print('Invalid file in fly folder: {}'.format(item))
+                sys.stdout.flush()
 
 def get_expt_time(destination_region):
     # Find time of experiment based on functional.xml
@@ -114,6 +124,7 @@ def get_expt_time(destination_region):
     print('dict: {}'.format(datetime_dict))
     print('true_ymd: {}'.format(true_ymd))
     print('true_total_seconds: {}'.format(true_total_seconds))
+    sys.stdout.flush()
     return true_ymd, true_total_seconds
 
 def copy_visual(destination_region):
@@ -147,6 +158,7 @@ def copy_visual(destination_region):
         correct_folder = folders[0]
     else:
         print('Found more than 1 visual stimulus folder within 3min of expt. Picking oldest.')
+        sys.stdout.flush()
         correct_folder = folders[0] # set default to first folder
         for folder in folders:
             # look at test_total_seconds entry. If larger, call this the correct folder.
@@ -155,16 +167,19 @@ def copy_visual(destination_region):
 
     # now that we have the correct folder, copy it's contents
     print('Found correct visual stimulus folder: {}'.format(correct_folder[0]))
+    sys.stdout.flush()
     try:
         os.mkdir(visual_destination)
     except:
         print('{} already exists'.format(visual_destination))
     source_folder = os.path.join(visual_folder, correct_folder[0])
     print('Copying from: {}'.format(source_folder))
+    sys.stdout.flush()
     for file in os.listdir(source_folder):
         target_path = os.path.join(visual_destination, file)
         source_path = os.path.join(source_folder, file)
         print('Transfering from {} to {}'.format(source_path, target_path))
+        sys.stdout.flush()
         copyfile(source_path, target_path)
 
     ### Create xml
@@ -172,6 +187,7 @@ def copy_visual(destination_region):
     # Get unique stimuli
     stimuli, unique_stimuli = bbb.load_visual_stimuli_data(visual_destination)
     print('Unique stimuli: {}'.format(unique_stimuli))
+    sys.stdout.flush()
     root = etree.Element('root')
     visual = objectify.Element('visual')
     visual.unique_stimuli = str(unique_stimuli)
@@ -194,6 +210,7 @@ def copy_fictrac(destination_region):
         # Get datetime from file name
         datetime = datetime_from_fictrac(file)
         print('datetime: {}'.format(datetime))
+        sys.stdout.flush()
         test_ymd = datetime.split('_')[0]
         test_time = datetime.split('_')[1]
         test_hour = test_time[0:2]
@@ -206,21 +223,25 @@ def copy_fictrac(destination_region):
         # Year/month/day must be exact
         if true_ymd == test_ymd:
             print('Found file from same day: {}'.format(file))
+            sys.stdout.flush()
             # Must be within 3 minutes
             time_difference = np.abs(true_total_seconds - test_total_seconds)
             if time_difference < 3 * 60:
                 print('Found fictrac file that matches time.')
+                sys.stdout.flush()
                 # Must be correct size
                 if file[-4:] == '.dat':
                     fp = os.path.join(fictrac_folder, file)
                     file_size = os.path.getsize(fp)
                     if file_size > 30000000:
                         print('Found correct .dat file: {}'.format(file))
+                        sys.stdout.flush()
                         datetime_correct = datetime
                         break
 
     # Now collect the 4 files with correct datetime
     print('Correct datetime: {}'.format(datetime_correct))
+    sys.stdout.flush()
     correct_time_files = []
     for file in os.listdir(fictrac_folder):
         datetime = datetime_from_fictrac(file)
@@ -229,6 +250,7 @@ def copy_fictrac(destination_region):
             correct_time_files.append(file)
 
     print('Found these files with correct times: {}'.format(correct_time_files))
+    sys.stdout.flush()
 
     # Now transfer these 4 files to the fly
     os.mkdir(fictrac_destination)
@@ -236,6 +258,7 @@ def copy_fictrac(destination_region):
         target_path = os.path.join(fictrac_destination, file)
         source_path = os.path.join(fictrac_folder, file)
         print('Transfering {}'.format(target_path))
+        sys.stdout.flush()
         copyfile(source_path, target_path)
 
     ### Create empty xml file.
@@ -265,6 +288,7 @@ def copy_bruker_data(source, destination):
         if os.path.isdir(source_path):
             # Do not update destination - download all files into that destination
             print('copy data is recursing.')
+            sys.stdout.flush()
             copy_bruker_data(source_path, destination)
             
         # If the item is a file
@@ -285,6 +309,7 @@ def copy_bruker_data(source, destination):
                     print('{} already exists'.format(visual_folder))
                 target_path = os.path.join(os.path.split(destination)[0], 'visual', item)
                 print('Transfering file {}'.format(target_path))
+                sys.stdout.flush()
                 copyfile(source_path, target_path)
                 continue
             if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:
@@ -301,6 +326,7 @@ def copy_bruker_data(source, destination):
 
             target_path = destination + '/' + item
             print('Transfering file {}'.format(target_path))
+            sys.stdout.flush()
             copyfile(source_path, target_path)
 
 def create_imaging_xml(xml_source_file):
@@ -367,6 +393,7 @@ def get_fly_time(fly_folder):
     
 
     print('found xml files: {}'.format(xml_files))
+    sys.stdout.flush()
     datetimes_str = []
     datetimes_int = []
     for xml_file in xml_files:
@@ -377,9 +404,11 @@ def get_fly_time(fly_folder):
     # Now pick the oldest datetime
     datetimes_int = np.asarray(datetimes_int)
     print('Found datetimes: {}'.format(datetimes_str))
+    sys.stdout.flush()
     index_min = np.argmin(datetimes_int)
     datetime = datetimes_str[index_min]
     print('Found oldest datetime: {}'.format(datetime))
+    sys.stdout.flush()
     return datetime
 
 def get_xml_files(fly_folder, xml_files):
@@ -392,10 +421,12 @@ def get_xml_files(fly_folder, xml_files):
             if '.xml' in item and '_Cycle' not in item and 'fly.xml' not in item and 'scan' not in item:
                 xml_files.append(full_path)
                 print('Found xml file: {}'.format(full_path))
+                sys.stdout.flush()
     return xml_files
 
 def get_datetime_from_xml(xml_file):
     print('Getting datetime from {}'.format(xml_file))
+    sys.stdout.flush()
     tree = ET.parse(xml_file)
     root = tree.getroot()
     datetime = root.get('date')
@@ -479,6 +510,7 @@ def order_expts(fly_folder, expts):
     # For each expt, get it's time
     datetimes = []
     print('expts pre-sort: {}'.format(expts))
+    sys.stdout.flush()
     for expt in expts:
         if 'anatomy' in expt:
             xml_file = os.path.join(fly_folder, expt, 'anatomy.xml')
@@ -492,6 +524,7 @@ def order_expts(fly_folder, expts):
     print('expts_sorted: {}'.format(expts_sorted))
     datetimes_sorted = sorted(datetimes)
     print('datetimes_sorted: {}'.format(datetimes_sorted))
+    sys.stdout.flush()
     return expts_sorted, datetimes_sorted
 
 def add_expt_to_metadata(fly, expt_folder, datetime, expt_id):    
@@ -506,6 +539,7 @@ def add_expt_to_metadata(fly, expt_folder, datetime, expt_id):
     except:
         visual = None
         print('Visual metadata not found.')
+        sys.stdout.flush()
     
     # Load fictrac metadata
     try:
@@ -517,6 +551,7 @@ def add_expt_to_metadata(fly, expt_folder, datetime, expt_id):
     except:
         fictrac = None
         print('Fictrac metadata not found.')
+        sys.stdout.flush()
     
     # Load scan metadata
     # First try to load from imaging folder (in the case of functional)
