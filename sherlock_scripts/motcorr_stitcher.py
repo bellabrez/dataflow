@@ -32,7 +32,6 @@ def main(args):
     ### load brains ###
     channels = [reds, greens]
     colors = ['red', 'green']
-
     # Do for red and green
     for i, channel in enumerate(channels):
         brains = []
@@ -75,6 +74,9 @@ def main(args):
         np.save(save_file, stitched_params)
         [os.remove(file) for file in motcorr_param_files]
         xml_dir = os.path.join(os.path.split(directory)[0], 'imaging')
+        print('directory: {}'.format(directory))
+        print('xml_dir: {}'.format(xml_dir))
+        sys.stdout.flush()
         bbb.save_motion_figure(stitched_params, xml_dir, directory)
     else:
         print('Empty motcorr params - skipping saving moco figure.')
