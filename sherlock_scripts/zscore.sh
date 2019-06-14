@@ -1,42 +1,44 @@
 #!/bin/bash
 
-POSITIONAL=()
-while [[ $# -gt 0 ]]
-do
-key="$1"
+directory="$1"
+echo "$directory"
+# POSITIONAL=()
+# while [[ $# -gt 0 ]]
+# do
+# key="$1"
 
-case $key in
-    -d|--datadir)
-    DATADIR="$2"
-    shift # past argument
-    shift # past value
-    ;;
-    -c|--channels)
-    CHANNELS="$2"
-    shift # past argument
-    shift # past value
-    ;;
-    -l|--lib)
-    LIBPATH="$2"
-    shift # past argument
-    shift # past value
-    ;;
-    --default)
-    DEFAULT=YES
-    shift # past argument
-    ;;
-    *)    # unknown option
-    POSITIONAL+=("$1") # save it in an array for later
-    shift # past argument
-    ;;
-esac
-done
-set -- "${POSITIONAL[@]}" # restore positional parameters
+# case $key in
+#     -d|--datadir)
+#     DATADIR="$2"
+#     shift # past argument
+#     shift # past value
+#     ;;
+#     -c|--channels)
+#     CHANNELS="$2"
+#     shift # past argument
+#     shift # past value
+#     ;;
+#     -l|--lib)
+#     LIBPATH="$2"
+#     shift # past argument
+#     shift # past value
+#     ;;
+#     --default)
+#     DEFAULT=YES
+#     shift # past argument
+#     ;;
+#     *)    # unknown option
+#     POSITIONAL+=("$1") # save it in an array for later
+#     shift # past argument
+#     ;;
+# esac
+# done
+# set -- "${POSITIONAL[@]}" # restore positional parameters
 
-echo DATADIR         = "${DATADIR}"
-echo CHANNELS        = "${CHANNELS}"
-echo LIBRARY PATH    = "${LIBPATH}"
-echo DEFAULT         = "${DEFAULT}"
+# echo DATADIR         = "${DATADIR}"
+# echo CHANNELS        = "${CHANNELS}"
+# echo LIBRARY PATH    = "${LIBPATH}"
+# echo DEFAULT         = "${DEFAULT}"
 
 #ml gcc/6.3.0
 #ml python/3.6.1
