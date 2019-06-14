@@ -8,6 +8,9 @@ import datadir_appender
 ##### Perform bleaching correction and z-scoring #####
 
 def main(args):
+    print('args.directory: {}'.format(args.directory))
+    print('args.channels: {}'.format(args.channels))
+
     directory = args.directory
     if args.datadir:
         directory = datadir_appender.datadir_appender(directory)
