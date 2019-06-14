@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=zscore
 #SBATCH --partition=trc
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=23
 #SBATCH --output=slurm_moco.out
-#SBATCH --open-mode=append
+#SBATCH --open-mode=truncate
 
 ml gcc/6.3.0
 ml python/3.6.1

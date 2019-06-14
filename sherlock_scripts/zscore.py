@@ -2,13 +2,25 @@ import os
 import sys
 import bigbadbrain as bbb
 import numpy as np
+import argparse
+import datadir_appender
 
 ##### Perform bleaching correction and z-scoring #####
 
 def main(args):
-    directory = args[0]
-    # this motcorr directory will contain stitched_brain_red.nii and green
-    colors = ['red', 'green']
+    directory = args.directory
+    if args.datadir:
+        directory = datadir_appender.datadir_appender(directory)
+    if args.channels == 'rg':
+        colors = ['red', 'green']
+        print('Using red and green channels.')
+    elif args.channels == 'r':
+        colors = ['red']
+        print('Using red channel.')
+    elif args.channels == 'g':
+        colors = ['green']
+        print('Using green channel.')
+    
     for color in colors:
         brain = bbb.load_numpy_brain(os.path.join(directory, 'stitched_brain_{}.nii'.format(color)))
 
@@ -21,4 +33,11 @@ def main(args):
         bbb.save_brain(zbrain_file, brain)
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('directory', help='moco directory containing brains to z_score')
+    parser.add_argument('-c', '--channels', choices=['r','g','rg'],
+                        help="which brain channels to use", type=str)
+    parser.add_argument('--datadir', action='store_true',
+                        help='append supplied directory to Lukes data directory')
+    args = parser.parse_args()
+    main(args)
