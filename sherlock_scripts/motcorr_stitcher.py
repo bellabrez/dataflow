@@ -13,18 +13,6 @@ def main(args):
 
     if args.datadir:
         directory = datadir_appender.datadir_appender(directory)
-    if args.channels == 'rg':
-        colors = ['red', 'green']
-        channels = [reds, greens]
-        print('Using red and green channels.')
-    elif args.channels == 'r':
-        colors = ['red']
-        channels = [reds]
-        print('Using red channel.')
-    elif args.channels == 'g':
-        colors = ['green']
-        channels = [greens]
-        print('Using green channel.')
 
     # directory will contain motcorr_green_x.nii and motcorr_red_x.nii
     # get list of reds and greens
@@ -45,6 +33,19 @@ def main(args):
     # add directory path
     reds = [os.path.join(directory, x) for x in reds]
     greens = [os.path.join(directory, x) for x in greens]
+
+    if args.channels == 'rg':
+        colors = ['red', 'green']
+        channels = [reds, greens]
+        print('Using red and green channels.')
+    elif args.channels == 'r':
+        colors = ['red']
+        channels = [reds]
+        print('Using red channel.')
+    elif args.channels == 'g':
+        colors = ['green']
+        channels = [greens]
+        print('Using green channel.')
 
     ### load brains ###
     # This part in based on the input argparse
