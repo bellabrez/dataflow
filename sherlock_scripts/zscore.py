@@ -23,6 +23,9 @@ def main(args):
     elif args.channels == 'g':
         colors = ['green']
         print('Using green channel.')
+    elif args.channels is None:
+        colors = ['red', 'green']
+        print('Using red and green channels.')
     
     for color in colors:
         brain = bbb.load_numpy_brain(os.path.join(directory, 'stitched_brain_{}.nii'.format(color)))
