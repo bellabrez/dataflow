@@ -3,11 +3,28 @@ import sys
 import bigbadbrain as bbb
 import numpy as np
 import re
+import argparse
+import datadir_appender
 
 def main(args):
     print('Stitcher started.')
-    directory = args[0]
+    directory = args.directory
     print('directory: {}'.format(directory))
+
+    if args.datadir:
+        directory = datadir_appender.datadir_appender(directory)
+    if args.channels == 'rg':
+        colors = ['red', 'green']
+        channels = [reds, greens]
+        print('Using red and green channels.')
+    elif args.channels == 'r':
+        colors = ['red']
+        channels = [reds]
+        print('Using red channel.')
+    elif args.channels == 'g':
+        colors = ['green']
+        channels = [greens]
+        print('Using green channel.')
 
     # directory will contain motcorr_green_x.nii and motcorr_red_x.nii
     # get list of reds and greens
@@ -30,9 +47,7 @@ def main(args):
     greens = [os.path.join(directory, x) for x in greens]
 
     ### load brains ###
-    channels = [reds, greens]
-    colors = ['red', 'green']
-    # Do for red and green
+    # This part in based on the input argparse
     for i, channel in enumerate(channels):
         brains = []
         for brain_file in channel:
@@ -85,4 +100,11 @@ def main(args):
     os.system("sbatch zscore.sh {}".format(directory))
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('directory', help='moco directory containing brains to z_score')
+    parser.add_argument('-c', '--channels', choices=['r','g','rg'],
+                        help="which brain channels to use", type=str)
+    parser.add_argument('--datadir', action='store_true',
+                        help='append supplied directory to Lukes data directory')
+    args = parser.parse_args()
+    main(args)
