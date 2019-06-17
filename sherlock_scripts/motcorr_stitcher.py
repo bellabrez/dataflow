@@ -46,6 +46,10 @@ def main(args):
         colors = ['green']
         channels = [greens]
         print('Using green channel.')
+    elif arg.channels is None:
+        colors = ['red', 'green']
+        channels = [reds, greens]
+        print('Using red and green channels.')
 
     ### load brains ###
     # This part in based on the input argparse
