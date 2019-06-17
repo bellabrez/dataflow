@@ -46,7 +46,7 @@ def main(args):
         colors = ['green']
         channels = [greens]
         print('Using green channel.')
-    elif arg.channels is None:
+    elif args.channels is None:
         colors = ['red', 'green']
         channels = [reds, greens]
         print('Using red and green channels.')
