@@ -207,6 +207,7 @@ def copy_fictrac(destination_region):
     true_ymd, true_total_seconds = get_expt_time(os.path.join(destination_region,'imaging'))
 
     # Find .dat file of 1) correct-ish time, 2) correct-ish size
+    datetime_correct = None
     for file in os.listdir(fictrac_folder):
         # Get datetime from file name
         datetime = datetime_from_fictrac(file)
@@ -239,6 +240,10 @@ def copy_fictrac(destination_region):
                         sys.stdout.flush()
                         datetime_correct = datetime
                         break
+
+    if datetime_correct is None:
+        print('No correct fictrac data found.')
+        return
 
     # Now collect the 4 files with correct datetime
     print('Correct datetime: {}'.format(datetime_correct))
