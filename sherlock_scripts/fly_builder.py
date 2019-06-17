@@ -334,6 +334,8 @@ def copy_bruker_data(source, destination):
             if 'SingleImage' in item:
                 # don't copy these files
                 continue
+            if 'functional.xml' in item or 'anatomy.xml' in item:
+                create_imaging_xml(os.path.join(source_path))
 
             target_path = destination + '/' + item
             print('Transfering file {}'.format(target_path))
