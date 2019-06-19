@@ -13,8 +13,13 @@ mylist = [{'name': 'SineGrating', 'angle': 90, 'period': 40, 'rate': 100, 'color
 {'name': 'SineGrating', 'angle': 270, 'period': 40, 'rate': 100, 'color': 1},
 {'name': 'SineGrating', 'angle': 180, 'period': 40, 'rate': 100, 'color': 1}]
 
-with open('result.json', 'w') as fp:
-    json.dump(mylist, fp, indent=4)
+#with open('result.json', 'w') as fp:
+#    json.dump(mylist, fp, indent=4)
 
-with open('result.json', 'w') as fp:
-    json.dump(mylist, fp, indent=4)
+
+with open('result.json', 'r+') as f:
+    metadata = json.load(f)
+    metadata.append(mydict)
+    f.seek(0)
+    json.dump(metadata, f, indent=4)
+    f.truncate()
