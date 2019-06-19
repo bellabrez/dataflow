@@ -1,0 +1,30 @@
+[
+    {
+        "name": "SineGrating",
+        "angle": 90,
+        "period": 40,
+        "rate": 100,
+        "color": 1
+    },
+    {
+        "name": "SineGrating",
+        "angle": 0,
+        "period": 40,
+        "rate": 100,
+        "color": 1
+    },
+    {
+        "name": "SineGrating",
+        "angle": 270,
+        "period": 40,
+        "rate": 100,
+        "color": 1
+    },
+    {
+        "name": "SineGrating",
+        "angle": 180,
+        "period": 40,
+        "rate": 100,
+        "color": 1
+    }
+]
