@@ -321,11 +321,10 @@ def copy_bruker_data(source, destination):
                 continue
             if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:
                 item = 'anatomy.xml'
-                create_imaging_xml(os.path.join(source_path))
             if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
                 item = 'functional.xml'
                 # Use this file to create my own simplified xml
-                create_imaging_xml(os.path.join(source_path))
+                create_imaging_json(os.path.join(source_path))
             if 'expt.xml' in item and 'anatomy' not in os.path.split(destination)[-1]:
                 target_path = os.path.join(os.path.split(destination)[0], item)
                 print('Transfering file {}'.format(target_path))
@@ -335,24 +334,21 @@ def copy_bruker_data(source, destination):
             if 'SingleImage' in item:
                 # don't copy these files
                 continue
+            # added this one just incase I already changed the name for some reason
             if 'functional.xml' in item or 'anatomy.xml' in item:
-                create_imaging_xml(os.path.join(source_path))
+                create_imaging_json(os.path.join(source_path))
 
             target_path = destination + '/' + item
             print('Transfering file {}'.format(target_path))
             sys.stdout.flush()
             copyfile(source_path, target_path)
 
-def create_imaging_xml(xml_source_file):
+def create_imaging_json(xml_source_file):
     tree = objectify.parse(xml_source_file)
     source = tree.getroot()
-
-    class Source_data:
-        def __init__(self):
-            pass
-    source_data = Source_data()
     
     # Get data
+    source_data {}
     statevalues = source.findall('PVStateShard')[0].findall('PVStateValue')
     for statevalue in statevalues:
         key = statevalue.get('key')
@@ -361,43 +357,27 @@ def create_imaging_xml(xml_source_file):
             for index in indices:
                 axis = index.get('index')
                 if axis == 'XAxis':
-                    source_data.x = float(index.get('value'))
+                    source_data['x_voxel_size'] = float(index.get('value'))
                 elif axis == 'YAxis':
-                    source_data.y = float(index.get('value'))
+                    source_data['y_voxel_size'] = float(index.get('value'))
                 elif axis == 'ZAxis':
-                    source_data.z = float(index.get('value'))
+                    source_data['z_voxel_size'] = float(index.get('value'))
         if key == 'laserPower':
             # I think this is the maximum power if set to vary by z depth
             indices = statevalue.findall('IndexedValue')
-            source_data.laser_power = indices[0].get('value')
+            source_data['laser_power'] = indices[0].get('value')
         if key == 'pmtGain':
             indices = statevalue.findall('IndexedValue')
             for index in indices:
                 index_num = index.get('index')
                 if index_num == '0':
-                    source_data.PMT_red = index.get('value')
+                    source_data['PMT_red'] = index.get('value')
                 if index_num == '1':
-                    source_data.PMT_green = index.get('value')
+                    source_data['PMT_green'] = index.get('value')
 
     # Save data
-    root = etree.Element('root')
-
-    scan = objectify.Element('scan')
-    scan.power = source_data.laser_power
-    scan.PMT_green = source_data.PMT_green
-    scan.PMT_red = source_data.PMT_red
-    #scan.rate = # should add
-    scan.x_voxel_size = source_data.x
-    scan.y_voxel_size = source_data.y
-    scan.z_voxel_size = source_data.z
-
-    root.append(scan)
-    objectify.deannotate(root)
-    etree.cleanup_namespaces(root)
-    tree = etree.ElementTree(scan)
-    with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.xml'), 'wb') as file:
-        tree.write(file, pretty_print=True)
-
+    with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:
+        json.dump(source_data, f, indent=4)
 
 def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time
