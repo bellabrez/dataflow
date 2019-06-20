@@ -184,21 +184,15 @@ def copy_visual(destination_region):
         sys.stdout.flush()
         copyfile(source_path, target_path)
 
-    ### Create xml
+    ### Create json metadata
     # Update this later
     # Get unique stimuli
     stimuli, unique_stimuli = bbb.load_visual_stimuli_data(visual_destination)
     print('Unique stimuli: {}'.format(unique_stimuli))
     sys.stdout.flush()
-    root = etree.Element('root')
-    visual = objectify.Element('visual')
-    visual.unique_stimuli = str(unique_stimuli)
-    root.append(visual)
-    objectify.deannotate(root)
-    etree.cleanup_namespaces(root)
-    tree = etree.ElementTree(visual)
-    with open(os.path.join(visual_destination, 'visual.xml'), 'wb') as file:
-        tree.write(file, pretty_print=True)
+
+    with open(os.path.join(visual_destination, 'visual.json'), 'w') as f:
+        json.dump(unique_stimuli, f, indent=4)
 
 def copy_fictrac(destination_region):
     fictrac_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/fictrac'
