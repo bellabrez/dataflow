@@ -12,7 +12,7 @@ import bigbadbrain as bbb
 
 def main():
     root_directory = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-    fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x and int(x.split('_')[-1]) not in [31,32]]
+    fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x and int(x.split('_')[-1]) in [1,2,3,4,5,6,7,8,9]]
     bbb.sort_nicely(fly_folders)
     fly_folders = fly_folders[::-1]
     #fly_folders = [os.path.join(root_directory, 'fly_1')]
