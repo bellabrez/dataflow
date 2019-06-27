@@ -15,6 +15,7 @@ def add_fly_to_metadata(fly_num):
     root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset'
     fly_folder = os.path.join(root_path, 'fly_' + str(fly_num))
     fly_file = os.path.join(fly_folder, 'fly.json')
+    print('fly_file: {}'.format(fly_file))
     fly_data = load_json(fly_file)
     
     # Add each experiment
