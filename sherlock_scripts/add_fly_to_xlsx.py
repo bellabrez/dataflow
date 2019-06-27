@@ -22,7 +22,7 @@ ws = wb.active
 #ws['A1'] = 42
 
 # Rows can also be appended
-fly_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_1'
+fly_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_36'
 fly_file = os.path.join(fly_folder, 'fly.json')
 fly_data = load_json(fly_file)
 
@@ -32,6 +32,9 @@ expt_data = load_json(expt_file)
 
 scan_file = os.path.join(expt_folder, 'imaging', 'scan.json')
 scan_data = load_json(scan_file)
+
+visual_file = os.path.join(expt_folder, 'visual', 'visual.json')
+visual_data = load_json(visual_file)
 
 # Get fly_id
 fly_folder = os.path.split(os.path.split(expt_folder)[0])[-1]
@@ -46,7 +49,7 @@ new_row = [int(fly_id),
            fly_data['date'],
            expt_data['brain_area'],
            fly_data['genotype'],
-           0,
+           visual_data[0]['name'],
            fly_data['notes'],
            expt_data['notes'],
            expt_data['time'],
