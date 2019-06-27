@@ -8,10 +8,12 @@ def load_json(file):
         data = json.load(f)
     return data
 
-def add_fly_to_metadata(fly_folder):
+def add_fly_to_metadata(fly_num):
     # For each fly, need to handle multiple experiments
     
     # Load fly metadata
+    root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset'
+    fly_folder = os.path.join(root_path, 'fly_' + str(fly_num))
     fly_file = os.path.join(fly_folder, 'fly.json')
     fly_data = load_json(fly_file)
     
@@ -95,8 +97,8 @@ def add_expt_to_metadata(fly_data, expt_folder):
     master_expt.to_pickle(master_expt_path)
 
 def main(args):
-  fly_folder = args[0]
-  add_fly_to_metadata(fly_folder)
+  fly_num = args[0]
+  add_fly_to_metadata(fly_num)
 
 if __name__ == '__main__':
   main(sys.argv[1:])
