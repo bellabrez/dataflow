@@ -26,10 +26,11 @@ fly_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking
 fly_file = os.path.join(fly_folder, 'fly.json')
 fly_data = load_json(fly_file)
 
-expt_file = os.path.join(fly_folder, 'func_0', 'expt.json')
+expt_folder = os.path.join(fly_folder, 'func_0')
+expt_file = os.path.join(expt_folder, 'expt.json')
 expt_data = load_json(expt_file)
 
-scan_file = os.path.join(fly_folder, 'func_0', 'imaging', 'scan.json')
+scan_file = os.path.join(expt_folder, 'imaging', 'scan.json')
 scan_data = load_json(scan_file)
 
 # Get fly_id
