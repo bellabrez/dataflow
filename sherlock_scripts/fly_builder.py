@@ -184,13 +184,8 @@ def copy_visual(destination_region):
         sys.stdout.flush()
         copyfile(source_path, target_path)
 
-    ### Create json metadata
-    # Update this later
-    # Get unique stimuli
-    stimuli, unique_stimuli = bbb.load_visual_stimuli_data(visual_destination)
-    print('Unique stimuli: {}'.format(unique_stimuli))
-    sys.stdout.flush()
-
+    ### Create json metadata ###
+    unique_stimuli = bbb.get_stimuli(visual_destination)
     with open(os.path.join(visual_destination, 'visual.json'), 'w') as f:
         json.dump(unique_stimuli, f, indent=4)
 
