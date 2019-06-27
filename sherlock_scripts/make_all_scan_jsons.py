@@ -52,15 +52,15 @@ def create_imaging_json(xml_source_file):
         if key == 'laserPower':
             # I think this is the maximum power if set to vary by z depth
             indices = statevalue.findall('IndexedValue')
-            source_data['laser_power'] = indices[0].get('value')
+            source_data['laser_power'] = int(indices[0].get('value'))
         if key == 'pmtGain':
             indices = statevalue.findall('IndexedValue')
             for index in indices:
                 index_num = index.get('index')
                 if index_num == '0':
-                    source_data['PMT_red'] = index.get('value')
+                    source_data['PMT_red'] = int(index.get('value'))
                 if index_num == '1':
-                    source_data['PMT_green'] = index.get('value')
+                    source_data['PMT_green'] = int(index.get('value'))
         if key == 'pixelsPerLine':
             source_data['x_dim'] = int(statevalue.get('value'))
         if key == 'linesPerFrame':
