@@ -11,8 +11,8 @@ import json
 
 def main():
     root_directory = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-    #fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
-    fly_folders = [os.path.join(root_directory, 'fly_1')]
+    fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
+    #fly_folders = [os.path.join(root_directory, 'fly_1')]
     for fly in fly_folders:
         expt_folders = []
         expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
