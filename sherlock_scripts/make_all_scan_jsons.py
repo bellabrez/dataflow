@@ -14,10 +14,12 @@ def main():
     #fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
     fly_folders = [os.path.join(root_directory, 'fly_1')]
     for fly in fly_folders:
+        expt_folders = []
         expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
-        for expt_folder in expt_folders:
-            xml_file = os.path.join(expt_folder, 'imaging', 'functional.xml')
-            create_imaging_json(xml_file)
+        if len(expt_folders) > 0:
+            for expt_folder in expt_folders:
+                xml_file = os.path.join(expt_folder, 'imaging', 'functional.xml')
+                create_imaging_json(xml_file)
 
 def create_imaging_json(xml_source_file):
 
@@ -59,6 +61,13 @@ def create_imaging_json(xml_source_file):
                     source_data['PMT_red'] = index.get('value')
                 if index_num == '1':
                     source_data['PMT_green'] = index.get('value')
+        if key == 'pixelsPerLine':
+            source_data['width'] = int(statevalue.get('value'))
+        if key == 'linesPerFrame':
+            source_data['height'] = int(statevalue.get('value'))
+    sequence = root.findall('Sequence')[0]
+    last_frame = sequence.findall('Frame')[-1]
+    source_data['depth'] = last_frame.get('index')
 
     # Save data
     with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:
