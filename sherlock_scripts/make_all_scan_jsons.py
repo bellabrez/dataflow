@@ -65,7 +65,7 @@ def create_imaging_json(xml_source_file):
             source_data['width'] = int(statevalue.get('value'))
         if key == 'linesPerFrame':
             source_data['height'] = int(statevalue.get('value'))
-    sequence = root.findall('Sequence')[0]
+    sequence = source.findall('Sequence')[0]
     last_frame = sequence.findall('Frame')[-1]
     source_data['depth'] = last_frame.get('index')
 
