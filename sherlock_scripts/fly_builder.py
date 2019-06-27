@@ -35,16 +35,16 @@ def main(args):
 
     for likely_fly_folder in likely_fly_folders: 
         if 'fly' in likely_fly_folder:
-            print('This fly will be number : {}'.format(current_fly_number))
-            print('Creating fly from directory {}'.format(likely_fly_folder))
+            print('This fly will be number: {}'.format(current_fly_number))
+            print('Creating fly from directory: {}'.format(likely_fly_folder))
             sys.stdout.flush()
 
             # Define source fly directory
             source_fly = os.path.join(flagged_directory, likely_fly_folder)
 
             # Define destination fly directory
-            fly_time = get_fly_time(source_fly)
-            new_fly_folder = 'fly_' + fly_time + '_' + str(current_fly_number)
+            #fly_time = get_fly_time(source_fly)
+            new_fly_folder = 'fly_' + str(current_fly_number)
             destination_fly = os.path.join(target_path, new_fly_folder)
             os.mkdir(destination_fly)
             print('Created fly directory: {}'.format(destination_fly))
@@ -53,57 +53,92 @@ def main(args):
             # Copy fly data
             copy_fly(source_fly, destination_fly)
 
-            # Add xml metadata to master pandas dataframe
+            # Add date to fly.json file
+            add_date_to_fly(destination_fly)
+
+            # Add json metadata to master dataset
             add_fly_to_metadata(destination_fly)
 
             # Get new fly number
             current_fly_number += 1
 
-# Delete these remaining files
+def add_date_to_fly(destination_fly):
+    ''' get date from xml file and add to fly.json'''
 
-### Pull fictrac and visual from stim computer via ftp ###
+    ### Get date
+    # Get func folders
+    func_folders = [os.path.join(destination_fly,x) for x in os.listdir(destination_fly) if 'func' in x]
+    # Just pick first for convenience
+    func_folder = func_folders[0]
+    # Get full xml file path
+    xml_file = os.path.join(func_folder, 'imaging', 'functional.xml')
+    # Extract datetime
+    datetime_str, _, _ = get_datetime_from_xml(xml_file)
+    # Get just date
+    date = datetime_str.split('-')[0]
+
+    ### Add to fly.json
+    json_file = os.path.join(destination_fly, 'fly.json')
+
+    # Add to glm.json
+    with open(json_file, 'r+') as f:
+        metadata = json.load(f)
+        metadata['date'] = date
+        f.seek(0)
+        json.dump(metadata, f, indent=4)
+        f.truncate()
+
 def copy_fly(source_fly, destination_fly):
 
     ''' There will be two types of folders in a fly folder.
-    1) functional folder
-    2) anatomy folder
+    1) func_x folder
+    2) anat_x folder
     For functional folders, need to copy fictrac and visual as well
     For anatomy folders, only copy folder. There will also be
-    3) fly xml data '''
+    3) fly json data '''
 
+    # look at every item in source fly folder
     for item in os.listdir(source_fly):
         print('Currently looking at item: {}'.format(item))
         sys.stdout.flush()
+
         # Handle folders
         if os.path.isdir(os.path.join(source_fly, item)):
-            source_sub_folder = os.path.join(source_fly, item)
-            fly_sub_folder = os.path.join(destination_fly, item)
-            os.mkdir(fly_sub_folder)
-            print('Created directory: {}'.format(fly_sub_folder))
+            # Call this folder source expt folder
+            source_expt_folder = os.path.join(source_fly, item)
+            # Make the same folder in destination fly folder
+            expt_folder = os.path.join(destination_fly, item)
+            os.mkdir(expt_folder)
+            print('Created directory: {}'.format(expt_folder))
             sys.stdout.flush()
 
-            if 'anatomy' in item:
-                copy_bruker_data(source_sub_folder, fly_sub_folder)
-            elif 'functional' in item:
-                imaging_destination = os.path.join(fly_sub_folder, 'imaging')
+            # Is this folder an anatomy or functional folder?
+            if 'anat' in item:
+                # If anatomy folder, just copy everything
+                copy_bruker_data(source_expt_folder, expt_folder)
+            elif 'func' in item:
+                # Make imaging folder and copy 
+                imaging_destination = os.path.join(expt_folder, 'imaging')
                 os.mkdir(imaging_destination)
-                copy_bruker_data(source_sub_folder, imaging_destination)
-                copy_fictrac(fly_sub_folder)
-                copy_visual(fly_sub_folder)
+                copy_bruker_data(source_expt_folder, imaging_destination)
+                # Copt fictrac data based on timestamps
+                copy_fictrac(expt_folder)
+                # Copy visual data based on timestamps, and create visual.json
+                copy_visual(expt_folder)
 
                 ###################################
                 ### START MOTCORR ON FUNCTIONAL ###
                 ###################################
-                os.system("sbatch motcorr_trigger.sh {}".format(fly_sub_folder))
+                os.system("sbatch motcorr_trigger.sh {}".format(expt_folder))
 
             else:
                 print('Invalid directory in fly folder: {}'.format(item))
                 sys.stdout.flush()
         
-        # Handle fly xml file for metadata management
+        # Copy fly.json file
         else:
-            if item == 'fly.xml':
-                print('found fly xml file')
+            if item == 'fly.json':
+                print('found fly json file')
                 sys.stdout.flush()
                 source_path = os.path.join(source_fly, item)
                 target_path = os.path.join(destination_fly, item)
@@ -114,20 +149,65 @@ def copy_fly(source_fly, destination_fly):
                 print('Invalid file in fly folder: {}'.format(item))
                 sys.stdout.flush()
 
-def get_expt_time(destination_region):
-    # Find time of experiment based on functional.xml
-    xml_file = os.path.join(destination_region, 'functional.xml')
-    _, _, datetime_dict = get_datetime_from_xml(xml_file)
-    true_ymd = datetime_dict['year'] + datetime_dict['month'] + datetime_dict['day']
-    true_total_seconds = int(datetime_dict['hour']) * 60 * 60 + \
-                         int(datetime_dict['minute']) * 60 + \
-                         int(datetime_dict['second'])
-    
-    print('dict: {}'.format(datetime_dict))
-    print('true_ymd: {}'.format(true_ymd))
-    print('true_total_seconds: {}'.format(true_total_seconds))
+def copy_bruker_data(source, destination):
+    # Do not update destination - download all files into that destination
+    for item in os.listdir(source):
+        # Create full path to item
+        source_item = os.path.join(source, item)
+
+        # Check if item is a directory
+        if os.path.isdir(source_item):
+            # Do not update destination - download all files into that destination
+            print('copy data is recursing.')
+            sys.stdout.flush()
+            copy_bruker_data(source_item, destination)
+            
+        # If the item is a file
+        else:
+            ### Change file names and filter various files
+            # Rename functional file to functional_channel_x.nii
+            if '.nii' in item and 'TSeries' in item:
+                # '_' is from channel numbers my tiff to nii adds
+                item = 'functional_' + item.split('_')[1] + '_' + item.split('_')[2]
+            # Rename anatomy file to anatomy_channel_x.nii
+            if '.nii' in item and 'ZSeries' in item:
+                item = 'anatomy_' + item.split('_')[1] + '_' + item.split('_')[2]
+            # Special copy for photodiode since it goes in visual folder
+            if '.csv' in item:
+                item = 'photodiode.csv'
+                try:
+                    visual_folder = os.path.join(os.path.split(destination)[0], 'visual')
+                    os.mkdir(visual_folder)
+                except:
+                    print('{} already exists'.format(visual_folder))
+                target_item = os.path.join(os.path.split(destination)[0], 'visual', item)
+                print('Transfering file {}'.format(target_item))
+                sys.stdout.flush()
+                copyfile(source_item, target_item)
+                continue
+            # Rename to anatomy.xml if appropriate
+            if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:
+                item = 'anatomy.xml'
+            # Rename to functional.xml if appropriate, copy immediately, then make scan.json
+            if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
+                item = 'functional.xml'
+                target_item = os.path.join(destination, item)
+                copy_file(source_item, target_item)
+                # Create json file
+                create_imaging_json(target_item)
+                continue
+            # Don't copy these files
+            if 'SingleImage' in item:
+                continue
+
+            # Actually copy the file
+            target_item = os.path.join(destination, item)
+            copy_file(source_item, target_item)
+
+def copy_file(source, target):
+    print('Transfering file {}'.format(target))
     sys.stdout.flush()
-    return true_ymd, true_total_seconds
+    copyfile(source, target)
 
 def copy_visual(destination_region):
     visual_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/visual'
@@ -184,7 +264,7 @@ def copy_visual(destination_region):
         sys.stdout.flush()
         copyfile(source_path, target_path)
 
-    ### Create json metadata ###
+    # Create visual.json metadata
     unique_stimuli = bbb.get_stimuli(visual_destination)
     with open(os.path.join(visual_destination, 'visual.json'), 'w') as f:
         json.dump(unique_stimuli, f, indent=4)
@@ -268,76 +348,21 @@ def copy_fictrac(destination_region):
     with open(os.path.join(fictrac_destination, 'fictrac.xml'), 'wb') as file:
         tree.write(file, pretty_print=True)
 
-def datetime_from_fictrac(file):
-    datetime = file.split('-')[1]
-    if '.dat' in datetime or '.log' in datetime:
-        datetime = datetime[:-4]
-    return datetime
-
-def copy_bruker_data(source, destination):
-    # Do not update destination - download all files into that destination
-    for item in os.listdir(source):
-        # Create full path to item
-        source_path = source + '/' + item
-
-        # Check if item is a directory
-        if os.path.isdir(source_path):
-            # Do not update destination - download all files into that destination
-            print('copy data is recursing.')
-            sys.stdout.flush()
-            copy_bruker_data(source_path, destination)
-            
-        # If the item is a file
-        else:
-            ### Change file names
-            if '.nii' in item and 'TSeries' in item:
-                # '_' is from channel numbers my tiff to nii adds
-                item = 'functional_' + item.split('_')[1] + '_' + item.split('_')[2]
-            if '.nii' in item and 'ZSeries' in item:
-                item = 'anatomy_' + item.split('_')[1] + '_' + item.split('_')[2]
-            if '.csv' in item:
-                # Special copy for photodiode since it goes in visual folder
-                item = 'photodiode.csv'
-                try:
-                    visual_folder = os.path.join(os.path.split(destination)[0], 'visual')
-                    os.mkdir(visual_folder)
-                except:
-                    print('{} already exists'.format(visual_folder))
-                target_path = os.path.join(os.path.split(destination)[0], 'visual', item)
-                print('Transfering file {}'.format(target_path))
-                sys.stdout.flush()
-                copyfile(source_path, target_path)
-                continue
-            if '.xml' in item and 'ZSeries' in item and 'Voltage' not in item:
-                item = 'anatomy.xml'
-            if '.xml' in item and 'TSeries' in item and 'Voltage' not in item:
-                item = 'functional.xml'
-                # Use this file to create my own simplified xml
-                create_imaging_json(os.path.join(source_path))
-            if 'expt.xml' in item and 'anatomy' not in os.path.split(destination)[-1]:
-                target_path = os.path.join(os.path.split(destination)[0], item)
-                print('Transfering file {}'.format(target_path))
-                sys.stdout.flush()
-                copyfile(source_path, target_path)
-                continue
-            if 'SingleImage' in item:
-                # don't copy these files
-                continue
-            # added this one just incase I already changed the name for some reason
-            if 'functional.xml' in item or 'anatomy.xml' in item:
-                create_imaging_json(os.path.join(source_path))
-
-            target_path = destination + '/' + item
-            print('Transfering file {}'.format(target_path))
-            sys.stdout.flush()
-            copyfile(source_path, target_path)
-
 def create_imaging_json(xml_source_file):
+
+    # Make empty dict
+    source_data = {}
+
+    # Get datetime
+    datetime_str, _, _ = get_datetime_from_xml(xml_source_file)
+    date = datetime_str.split('-')[0]
+    time = datetime_str.split('-')[1]
+    source_data['date'] = str(date)
+    source_data['time'] = str(time)
+
+    # Get rest of data
     tree = objectify.parse(xml_source_file)
     source = tree.getroot()
-    
-    # Get data
-    source_data {}
     statevalues = source.findall('PVStateShard')[0].findall('PVStateValue')
     for statevalue in statevalues:
         key = statevalue.get('key')
@@ -368,12 +393,32 @@ def create_imaging_json(xml_source_file):
     with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:
         json.dump(source_data, f, indent=4)
 
+def datetime_from_fictrac(file):
+    datetime = file.split('-')[1]
+    if '.dat' in datetime or '.log' in datetime:
+        datetime = datetime[:-4]
+    return datetime
+
+def get_expt_time(directory):
+    ''' Finds time of experiment based on functional.xml '''
+    xml_file = os.path.join(directory, 'functional.xml')
+    _, _, datetime_dict = get_datetime_from_xml(xml_file)
+    true_ymd = datetime_dict['year'] + datetime_dict['month'] + datetime_dict['day']
+    true_total_seconds = int(datetime_dict['hour']) * 60 * 60 + \
+                         int(datetime_dict['minute']) * 60 + \
+                         int(datetime_dict['second'])
+    
+    print('dict: {}'.format(datetime_dict))
+    print('true_ymd: {}'.format(true_ymd))
+    print('true_total_seconds: {}'.format(true_total_seconds))
+    sys.stdout.flush()
+    return true_ymd, true_total_seconds
+
 def get_fly_time(fly_folder):
     # need to read all xml files and pick oldest time
     # find all xml files
     xml_files = []
     xml_files = get_xml_files(fly_folder, xml_files)
-    
 
     print('found xml files: {}'.format(xml_files))
     sys.stdout.flush()
@@ -567,6 +612,13 @@ def load_xml(file):
     tree = objectify.parse(file)
     root = tree.getroot()
     return root
+
+def add_times_to_jsons(destination_fly):
+    ''' Deprecated '''
+    # Do for each func_x folder
+    func_folders = [os.path.join(destination_fly,x) for x in os.listdir(destination_fly) if 'func' in x]
+    for func_folder in func_folders:
+        pass
 
 if __name__ == '__main__':
     main(sys.argv[1:])
