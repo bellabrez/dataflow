@@ -34,7 +34,11 @@ scan_file = os.path.join(expt_folder, 'imaging', 'scan.json')
 scan_data = load_json(scan_file)
 
 visual_file = os.path.join(expt_folder, 'visual', 'visual.json')
-visual_data = load_json(visual_file)
+try:
+    visual_data = load_json(visual_file)
+    visual_input = visual_data[0]['name'] + '_{} modes'.format(len(visual_data))
+except:
+    visual_input = None
 
 # Get fly_id
 fly_folder = os.path.split(os.path.split(expt_folder)[0])[-1]
@@ -49,7 +53,7 @@ new_row = [int(fly_id),
            fly_data['date'],
            expt_data['brain_area'],
            fly_data['genotype'],
-           visual_data[0]['name'],
+           visual_input,
            fly_data['notes'],
            expt_data['notes'],
            expt_data['time'],
