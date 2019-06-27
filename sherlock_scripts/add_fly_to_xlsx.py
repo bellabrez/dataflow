@@ -41,8 +41,8 @@ fly_id = fly_folder.split('_')[-1]
 expt_id = expt_folder.split('_')[-1]
 
 # Append the new row
-new_row = [fly_id,
-           expt_id,
+new_row = [int(fly_id),
+           int(expt_id),
            fly_data['date'],
            expt_data['brain_area'],
            fly_data['genotype'],
