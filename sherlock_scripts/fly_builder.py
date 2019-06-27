@@ -83,7 +83,7 @@ def add_date_to_fly(destination_fly):
     # Add to glm.json
     with open(json_file, 'r+') as f:
         metadata = json.load(f)
-        metadata['date'] = date
+        metadata['date'] = str(date)
         f.seek(0)
         json.dump(metadata, f, indent=4)
         f.truncate()
@@ -379,15 +379,22 @@ def create_imaging_json(xml_source_file):
         if key == 'laserPower':
             # I think this is the maximum power if set to vary by z depth
             indices = statevalue.findall('IndexedValue')
-            source_data['laser_power'] = indices[0].get('value')
+            source_data['laser_power'] = int(indices[0].get('value'))
         if key == 'pmtGain':
             indices = statevalue.findall('IndexedValue')
             for index in indices:
                 index_num = index.get('index')
                 if index_num == '0':
-                    source_data['PMT_red'] = index.get('value')
+                    source_data['PMT_red'] = int(index.get('value'))
                 if index_num == '1':
-                    source_data['PMT_green'] = index.get('value')
+                    source_data['PMT_green'] = int(index.get('value'))
+        if key == 'pixelsPerLine':
+            source_data['x_dim'] = int(statevalue.get('value'))
+        if key == 'linesPerFrame':
+            source_data['y_dim'] = int(statevalue.get('value'))
+    sequence = source.findall('Sequence')[0]
+    last_frame = sequence.findall('Frame')[-1]
+    source_data['z_dim'] = int(last_frame.get('index'))
 
     # Save data
     with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:

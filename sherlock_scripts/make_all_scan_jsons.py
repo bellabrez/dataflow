@@ -8,10 +8,13 @@ from lxml import etree, objectify
 import bigbadbrain as bbb
 import pandas as pd
 import json
+import bigbadbrain as bbb
 
 def main():
     root_directory = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-    fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
+    fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x and x.split('_')[-1] not in [31,32]]
+    bbb.sort_nicely(fly_folders)
+    fly_folders = fly_folders[::-1]
     #fly_folders = [os.path.join(root_directory, 'fly_1')]
     for fly in fly_folders:
         expt_folders = []
