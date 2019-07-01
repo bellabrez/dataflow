@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import Font, Fill
 import json
 import os
+import sys
 import bigbadbrain as bbb
 
 def load_json(file):
@@ -10,18 +11,10 @@ def load_json(file):
         data = json.load(f)
     return data
 
-def main():
+def main(args):
     filename='/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/master_2P.xlsx'
     wb = load_workbook(filename=filename, read_only=False)
     ws = wb.active
-    #ws = wb['big_data']
-    #wb = Workbook()
-    #wb = wb.load()
-    # grab the active worksheet
-    #col = ws.column_dimensions['B']
-    #col.font = Font(bold=True)
-    # Data can be assigned directly to cells
-    #ws['A1'] = 42
 
     root_directory = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
     fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
@@ -111,7 +104,7 @@ def main():
             ws.append(new_row)
 
     # Save the file
-    filename='/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/master_2P_new.xlsx'
+    filename='/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/master_2P.xlsx'
     wb.save(filename)
 
 if __name__ == '__main__':
