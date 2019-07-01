@@ -11,7 +11,7 @@ def load_json(file):
         data = json.load(f)
     return data
 
-def main(args):
+def main():
     filename='/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/master_2P.xlsx'
     wb = load_workbook(filename=filename, read_only=False)
     ws = wb.active
