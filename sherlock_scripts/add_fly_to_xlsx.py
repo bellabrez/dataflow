@@ -48,6 +48,9 @@ def main():
             try:
                 scan_file = os.path.join(expt_folder, 'imaging', 'scan.json')
                 scan_data = load_json(scan_file)
+                scan_data['x_voxel_size'] = '{:.1f}'.format(scan_data['x_voxel_size']),
+                scan_data['y_voxel_size'] = '{:.1f}'.format(scan_data['y_voxel_size']),
+                scan_data['z_voxel_size'] = '{:.1f}'.format(scan_data['z_voxel_size'])
             except:
                 scan_data['laser_power'] = None
                 scan_data['PMT_green'] = None
@@ -95,9 +98,9 @@ def main():
                        scan_data['x_dim'],
                        scan_data['y_dim'],
                        scan_data['z_dim'],
-                       '{:.1f}'.format(scan_data['x_voxel_size']),
-                       '{:.1f}'.format(scan_data['y_voxel_size']),
-                       '{:.1f}'.format(scan_data['z_voxel_size'])]
+                       scan_data['x_voxel_size'],
+                       scan_data['y_voxel_size'],
+                       scan_data['z_voxel_size']]
 
             #if visual_data is not None:
             #    new_row['visual_stimuli'] = visual_data
