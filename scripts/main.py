@@ -12,7 +12,7 @@ target = 'F:/ftp_imports' # Where on this computer it goes
 flag = '__flag__' #flag = '__flag__'
 #user = 'luke' # folder to look in E: drive in Bruker
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
-extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
+extensions_for_oak_transfer = ['.nii', '.csv', '.xml','.json']
 convert_to = '.nii' # Currently unsused
 quit_if_local_target_exists = False
 
