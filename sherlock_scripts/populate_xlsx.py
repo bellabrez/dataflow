@@ -17,9 +17,9 @@ def main():
     ws = wb.active
 
     root_directory = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-    fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
-    bbb.sort_nicely(fly_folders)
-    #fly_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_36'
+    #fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
+    #bbb.sort_nicely(fly_folders)
+    fly_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_37'
     for fly_folder in fly_folders:
         print(fly_folder)
         # If no fly.json, just skip (atleast one fly in empty for some reason)
