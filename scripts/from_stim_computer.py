@@ -29,6 +29,7 @@ def main():
 
     # Should download all fictrac files
     # today = datetime.today().strftime('%Y%m%d')
+
     for file in all_fictrac_files:
         if file[-4:] in allowable_extensions:
             target_path = fictrac_target + '/' + file
@@ -40,7 +41,7 @@ def main():
                 ftp_host.download(source_path, target_path)
 
     # Copy from visual
-    flow.start_copy_recursive_ftp(ftp_host, visual_source, visual_target, ip, username, passwd, skip_existing_directories=True)
+    flow.start_copy_recursive_ftp(ftp_host, visual_source, visual_target, ip, username, passwd)
 
     # Send fictrac files to oak
     flow.start_oak_transfer(fictrac_target, oak_target, allowable_extensions=None, add_flag=False)
