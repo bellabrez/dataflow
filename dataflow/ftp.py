@@ -45,6 +45,7 @@ def copy_recursive_ftp(ftp_host, source, target, ip, username, passwd, skip_exis
                 os.mkdir(target_path)
             except FileExistsError:
                 print('Directory already exists  {}'.format(target_path))
+                continue
             if not skip_existing_directories:
                 copy_recursive_ftp(ftp_host, source_path, target_path, ip, username, passwd)
 

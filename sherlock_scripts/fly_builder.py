@@ -554,7 +554,7 @@ def add_fly_to_xlsx(fly_folder):
         fly_file = os.path.join(fly_folder, 'fly.json')
         fly_data = load_json(fly_file)
     except:
-        continue
+        return
 
     expt_folders = []
     expt_folders = [os.path.join(fly_folder,x) for x in os.listdir(fly_folder) if 'func' in x]

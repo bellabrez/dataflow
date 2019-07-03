@@ -12,7 +12,7 @@ target = 'F:/ftp_imports' # Where on this computer it goes
 flag = '__flag__' #flag = '__flag__'
 #user = 'luke' # folder to look in E: drive in Bruker
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
-extensions_for_oak_transfer = ['.nii', '.csv', '.xml','.json']
+extensions_for_oak_transfer = ['.nii', '.csv', '.xml','json'] # needs to be 4 char
 convert_to = '.nii' # Currently unsused
 quit_if_local_target_exists = False
 
@@ -21,7 +21,7 @@ ip ='171.65.18.54'
 username = 'user'
 passwd = 'flyeye'
 
-delete_local = True
+delete_local = False
 
 ##################################
 ### Transfer files from Bruker ###
