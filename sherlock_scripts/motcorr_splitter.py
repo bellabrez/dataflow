@@ -3,6 +3,7 @@ import sys
 import bigbadbrain as bbb
 import subprocess
 import numpy as np
+import time
 
 def main(args):
     '''
@@ -22,6 +23,12 @@ def main(args):
     master_brain_mean_file = os.path.join(imaging_path, 'functional_channel_1_mean.nii')
     bbb.save_brain(master_brain_mean_file, master_brain_mean)
     print('Saved mean brain {}'.format(master_brain_mean_file))
+
+    # Clear memory
+    master_brain = None
+    master_brain_mean = None
+    time.sleep(5)
+
 
     ### Make subfolder if it doesn't exist
     subfolder = 'motcorr'
