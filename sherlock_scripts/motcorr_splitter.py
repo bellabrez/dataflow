@@ -3,6 +3,7 @@ import sys
 import bigbadbrain as bbb
 import subprocess
 import numpy as np
+import time
 
 def main(args):
     '''
@@ -23,14 +24,20 @@ def main(args):
     bbb.save_brain(master_brain_mean_file, master_brain_mean)
     print('Saved mean brain {}'.format(master_brain_mean_file))
 
+    # How many volumes?
+    num_vols = np.shape(master_brain)[-1]
+
+    # Clear memory
+    master_brain = None
+    master_brain_mean = None
+    time.sleep(5)
+
+
     ### Make subfolder if it doesn't exist
     subfolder = 'motcorr'
     motcorr_directory = os.path.join(path, subfolder)
     if not os.path.exists(motcorr_directory):
         os.makedirs(motcorr_directory)
-
-    # How many volumes?
-    num_vols = np.shape(master_brain)[-1]
 
 
     ### Start fleet of motcorr_partial.sh, giving each the correct portion of data
