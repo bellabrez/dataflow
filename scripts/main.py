@@ -12,8 +12,8 @@ target = 'F:/ftp_imports' # Where on this computer it goes
 flag = '__flag__' #flag = '__flag__'
 #user = 'luke' # folder to look in E: drive in Bruker
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
-extensions_for_oak_transfer = ['.nii', '.csv', '.xml','json'] # needs to be 4 char
-convert_to = '.nii' # Currently unsused
+extensions_for_oak_transfer = ['.nii', '.csv', '.xml', 'json', 'tiff'] # needs to be 4 char
+convert_to = None # Currently unsused
 quit_if_local_target_exists = False
 
 # For Bruker computer
@@ -38,6 +38,8 @@ bruker_folder = user + '/' + folder
 oak_target = metadata['oak_target']
 delete_bruker = metadata['delete_source']
 email = metadata['email']
+convert_to = metadata['convert_to']
+
 try:
     transfer_stim_computer = metadata['transfer_stim_computer']
 except:
@@ -85,11 +87,16 @@ flow.send_email(subject='Dataflow bruker transfer complete', message='Safe to tu
 
 flow.convert_raw_to_tiff(full_target)
 
-###########################
-### Convert tiff to nii ###
-###########################
+#########################################
+### Convert tiff to nii or tiff stack ###
+#########################################
 
-flow.start_convert_tiff_collections(full_target)
+if convert_to in ['.nii', 'nii', 'nifti']:
+    flow.start_convert_tiff_collections(full_target)
+elif convert_to in ['.tiff', 'tiff', '.tif', 'tif']:
+    flow.convert_tiff_collections_to_stack(directory)
+else:
+    print('{} is an invalid convert_to variable from metadata.'.format(convert_to))
 
 #######################
 ### Transfer to Oak ###

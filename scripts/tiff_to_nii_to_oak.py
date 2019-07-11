@@ -11,7 +11,7 @@ def main(args):
     oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
     extensions_for_oak_transfer = ['.nii', '.csv', '.xml', 'json'] # needs to for 4 char
 
-    full_target = os.path.join('F:/FTP_IMPORTS', folder)
+    full_target = os.path.join('F:/ftp_imports', folder)
     if mode == 'tiff_to_nii':
         flow.start_convert_tiff_collections(full_target)
     elif mode == 'to_oak':
