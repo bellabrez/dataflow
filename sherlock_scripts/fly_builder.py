@@ -266,7 +266,11 @@ def copy_visual(destination_region):
         copyfile(source_path, target_path)
 
     # Create visual.json metadata
-    unique_stimuli = bbb.get_stimuli(visual_destination)
+    # Try block to prevent quiting if visual stimuli timing is wonky (likely went too long)
+    try:
+        unique_stimuli = bbb.get_stimuli(visual_destination)
+    except:
+        unique_stimuli = 'bbb.get_stimuli failed'
     with open(os.path.join(visual_destination, 'visual.json'), 'w') as f:
         json.dump(unique_stimuli, f, indent=4)
 
