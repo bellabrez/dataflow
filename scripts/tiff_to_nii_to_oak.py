@@ -7,17 +7,23 @@ def main(args):
     '''
 
     mode = args[0]
-    folder = args[1]
+    output = args[1]
+    folder = args[2]
     oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
-    extensions_for_oak_transfer = ['.nii', '.csv', '.xml', 'json'] # needs to for 4 char
+    extensions_for_oak_transfer = ['.nii', '.csv', '.xml', 'json', 'tiff'] # needs to for 4 char
 
-    full_target = os.path.join('F:/FTP_IMPORTS', folder)
+    full_target = os.path.join('F:/ftp_imports', folder)
     if mode == 'tiff_to_nii':
         flow.start_convert_tiff_collections(full_target)
     elif mode == 'to_oak':
         flow.start_oak_transfer(full_target, oak_target, extensions_for_oak_transfer)
     elif mode == 'tiff_to_nii_to_oak':
-        flow.start_convert_tiff_collections(full_target)
+        if output == 'tiff':
+            flow.convert_tiff_collections_to_stack(full_target)
+        elif output == 'nii':
+            flow.start_convert_tiff_collections(full_target)
+        else:
+            print('Invalid mode')
         flow.start_oak_transfer(full_target, oak_target, extensions_for_oak_transfer)
     elif mode == 'raw_to_oak':
         flow.convert_raw_to_tiff(full_target)
