@@ -11,15 +11,19 @@ def load_json(file):
         data = json.load(f)
     return data
 
-def main():
+def main(args):
     filename='/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/master_2P.xlsx'
     wb = load_workbook(filename=filename, read_only=False)
     ws = wb.active
 
     root_directory = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-    #fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
-    #bbb.sort_nicely(fly_folders)
-    fly_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_37'
+
+    if args[0] == 'all':
+        fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
+        bbb.sort_nicely(fly_folders)
+    else:
+        fly_folders = [os.path.join(root_directory, 'fly_' + str(args[0]))]
+
     for fly_folder in fly_folders:
         print(fly_folder)
         # If no fly.json, just skip (atleast one fly in empty for some reason)
@@ -108,4 +112,4 @@ def main():
     wb.save(filename)
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
