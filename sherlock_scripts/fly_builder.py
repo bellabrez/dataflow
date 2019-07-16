@@ -197,6 +197,13 @@ def copy_bruker_data(source, destination):
                 # Create json file
                 create_imaging_json(target_item)
                 continue
+            # Special copy for expt.json
+            if 'expt.json' in item:
+                target_item = os.path.join(os.path.split(destination)[0], item)
+                print('Transfering file {}'.format(target_item))
+                sys.stdout.flush()
+                copyfile(source_item, target_item)
+                continue
             # Don't copy these files
             if 'SingleImage' in item:
                 continue
