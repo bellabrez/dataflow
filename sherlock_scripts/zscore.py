@@ -14,6 +14,7 @@ def main(args):
     directory = args.directory
     if args.datadir:
         directory = datadir_appender.datadir_appender(directory)
+        print('datadir_appender made directory into: {}'.format(directory))
     if args.channels == 'rg':
         colors = ['red', 'green']
         print('Using red and green channels.')
@@ -28,6 +29,7 @@ def main(args):
         print('Using red and green channels.')
     
     for color in colors:
+        print('loading brain from {}'.format(directory))
         brain = bbb.load_numpy_brain(os.path.join(directory, 'stitched_brain_{}.nii'.format(color)))
 
         # Bleaching correction (per voxel)
