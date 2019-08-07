@@ -218,6 +218,7 @@ def copy_file(source, target):
     copyfile(source, target)
 
 def copy_visual(destination_region):
+    print('Starting copy_visual')
     visual_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/visual'
     visual_destination = os.path.join(destination_region, 'visual')
 
@@ -246,6 +247,10 @@ def copy_visual(destination_region):
     #if more than 1 folder, use the oldest folder
     if len(folders) == 1:
         correct_folder = folders[0]
+    #if no matching folder, 
+    elif len(folders) == 0:
+        print('No matching visual folders found - continuing without visual data.')
+        return
     else:
         print('Found more than 1 visual stimulus folder within 3min of expt. Picking oldest.')
         sys.stdout.flush()
