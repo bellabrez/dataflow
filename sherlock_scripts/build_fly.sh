@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=build_fly
 #SBATCH --partition=trc
-#SBATCH --time=0:30:00
+#SBATCH --time=2:00:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=4
 #SBATCH --output=./outputs_build_fly/slurm-%j.out
 
 ml gcc/6.3.0
