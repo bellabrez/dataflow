@@ -380,16 +380,20 @@ def create_imaging_json(xml_source_file):
     source_data = {}
 
     # Get datetime
+    print('Trying to get datetime from xml')
     datetime_str, _, _ = get_datetime_from_xml(xml_source_file)
+    print('Success')
     date = datetime_str.split('-')[0]
     time = datetime_str.split('-')[1]
     source_data['date'] = str(date)
     source_data['time'] = str(time)
 
     # Get rest of data
+    print('Trying to parse xml')
     tree = objectify.parse(xml_source_file)
     source = tree.getroot()
     statevalues = source.findall('PVStateShard')[0].findall('PVStateValue')
+    print('Success.')
     for statevalue in statevalues:
         key = statevalue.get('key')
         if key == 'micronsPerPixel':
@@ -430,8 +434,10 @@ def create_imaging_json(xml_source_file):
     source_data['laser_power_max'] = int(last_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
 
     # Save data
+    print('Trying to save scan.json')
     with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:
         json.dump(source_data, f, indent=4)
+    print('Success.')
 
 def datetime_from_fictrac(file):
     datetime = file.split('-')[1]
