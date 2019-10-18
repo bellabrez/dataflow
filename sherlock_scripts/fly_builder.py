@@ -68,23 +68,32 @@ def add_date_to_fly(destination_fly):
     ''' get date from xml file and add to fly.json'''
 
     ### Get date
-    # Get func folders
-    func_folders = [os.path.join(destination_fly,x) for x in os.listdir(destination_fly) if 'func' in x]
-    # Just pick first for convenience
-    func_folder = func_folders[0]
-    # Get full xml file path
-    xml_file = os.path.join(func_folder, 'imaging', 'functional.xml')
+    try: # Check if there are func folders
+        # Get func folders
+        func_folders = [os.path.join(destination_fly,x) for x in os.listdir(destination_fly) if 'func' in x]
+        bbb.sort_nicely(func_folders)
+        func_folder = func_folders[0]
+        # Get full xml file path
+        xml_file = os.path.join(func_folder, 'imaging', 'functional.xml')
+    except: # Use anatomy folder
+        # Get anat folders
+        anat_folders = [os.path.join(destination_fly,x) for x in os.listdir(destination_fly) if 'anat' in x]
+        bbb.sort_nicely(anat_folders)
+        anat_folder = anat_folders[0]
+        # Get full xml file path
+        xml_file = os.path.join(anat_folder, 'anatomy.xml')
     # Extract datetime
     datetime_str,_,_ = get_datetime_from_xml(xml_file)
     # Get just date
     date = datetime_str.split('-')[0]
+    time = datetime_str.split('-')[1]
 
     ### Add to fly.json
     json_file = os.path.join(destination_fly, 'fly.json')
-
     with open(json_file, 'r+') as f:
         metadata = json.load(f)
         metadata['date'] = str(date)
+        metadata['time'] = str(time)
         f.seek(0)
         json.dump(metadata, f, indent=4)
         f.truncate()
