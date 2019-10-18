@@ -25,3 +25,6 @@ def main():
             for expt_folder in expt_folders:
                 create_imaging_json(os.path.join(expt_folder, 'imaging', 'functional.xml'))
                 #bbb.perform_bleaching_analysis(expt_folder)
+
+if __name__ == '__main__':
+    main()
