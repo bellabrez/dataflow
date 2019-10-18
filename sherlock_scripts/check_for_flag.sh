@@ -14,3 +14,6 @@ ml viz
 ml py-scikit-learn/0.19.1_py36
 
 python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py
+## Resubmit job
+sleep 10m
+sbatch $0
