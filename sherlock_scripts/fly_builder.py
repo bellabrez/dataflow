@@ -427,11 +427,17 @@ def create_imaging_json(xml_source_file):
     source_data['z_dim'] = int(last_frame.get('index'))
 
     # Get laser power of first and last frames
-    first_frame = sequence.findall('Frame')[0]
     last_frame = sequence.findall('Frame')[-1]
-
-    source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
     source_data['laser_power_max'] = int(last_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+
+    # Need this try block since sometimes first 1 or 2 frames don't have laser info...
+    try:
+        first_frame = sequence.findall('Frame')[0]
+        source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+    except:
+        first_frame = sequence.findall('Frame')[2]
+        source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+        print('Took min laser data from frame 3, not frame 1, due to bruker metadata error.')
 
     # Save data
     print('Trying to save scan.json')
