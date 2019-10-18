@@ -17,17 +17,18 @@ def main():
     fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
     bbb.sort_nicely(fly_folders)
     fly_folders = fly_folders[::-1]
-    #fly_folders = [os.path.join(root_directory, 'fly_54')]
+    fly_folders = [os.path.join(root_directory, 'fly_52')]
     for fly in fly_folders:
         expt_folders = []
         expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
         if len(expt_folders) > 0:
             for expt_folder in expt_folders:
-                try:
-                    create_imaging_json(os.path.join(expt_folder, 'imaging', 'functional.xml'))
-                    print('SUCCESS: {}'.format(expt_folder))
-                except:
-                    print('FAILED: {}'.format(expt_folder))
+                create_imaging_json(os.path.join(expt_folder, 'imaging', 'functional.xml'))
+                #try:
+                #    create_imaging_json(os.path.join(expt_folder, 'imaging', 'functional.xml'))
+                #    print('SUCCESS: {}'.format(expt_folder))
+                #except:
+                #    print('FAILED: {}'.format(expt_folder))
                 #bbb.perform_bleaching_analysis(expt_folder)
 
 if __name__ == '__main__':
