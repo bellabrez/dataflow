@@ -402,10 +402,10 @@ def create_imaging_json(xml_source_file):
                     source_data['y_voxel_size'] = float(index.get('value'))
                 elif axis == 'ZAxis':
                     source_data['z_voxel_size'] = float(index.get('value'))
-        if key == 'laserPower':
-            # I think this is the maximum power if set to vary by z depth
-            indices = statevalue.findall('IndexedValue')
-            source_data['laser_power'] = int(float(indices[0].get('value')))
+        #if key == 'laserPower':
+            # I think this is the maximum power if set to vary by z depth - WRONG
+            #indices = statevalue.findall('IndexedValue')
+            #source_data['laser_power'] = int(float(indices[0].get('value')))
         if key == 'pmtGain':
             indices = statevalue.findall('IndexedValue')
             for index in indices:
@@ -421,6 +421,13 @@ def create_imaging_json(xml_source_file):
     sequence = source.findall('Sequence')[0]
     last_frame = sequence.findall('Frame')[-1]
     source_data['z_dim'] = int(last_frame.get('index'))
+
+    # Get laser power of first and last frames
+    first_frame = sequence.findall('Frame')[0]
+    last_frame = sequence.findall('Frame')[-1]
+
+    source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+    source_data['laser_power_max'] = int(last_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
 
     # Save data
     with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:
