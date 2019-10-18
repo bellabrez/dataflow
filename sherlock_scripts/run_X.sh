@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=run_X
 #SBATCH --partition=trc
-#SBATCH --time=0:05:00
+#SBATCH --time=4:00:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=5
+#SBATCH --cpus-per-task=10
 #SBATCH --output=./output/slurm-%j.out
 
 ml gcc/6.3.0
