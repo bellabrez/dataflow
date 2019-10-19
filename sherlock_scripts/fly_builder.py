@@ -422,12 +422,11 @@ def create_imaging_json(xml_source_file):
     last_frame = sequence.findall('Frame')[-1]
     source_data['z_dim'] = int(last_frame.get('index'))
 
-    # Get laser power of first and last frames
-    last_frame = sequence.findall('Frame')[-1]
-    source_data['laser_power_max'] = int(last_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
-
     # Need this try block since sometimes first 1 or 2 frames don't have laser info...
     try:
+        # Get laser power of first and last frames
+        last_frame = sequence.findall('Frame')[-1]
+        source_data['laser_power_max'] = int(last_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
         first_frame = sequence.findall('Frame')[0]
         source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
     except:
