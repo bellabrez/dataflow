@@ -380,7 +380,11 @@ def create_imaging_json(xml_source_file):
     source_data = {}
 
     # Get datetime
-    datetime_str, _, _ = get_datetime_from_xml(xml_source_file)
+    try:
+        datetime_str, _, _ = get_datetime_from_xml(xml_source_file)
+    except:
+        print('No xml or cannot read.')
+        return
     date = datetime_str.split('-')[0]
     time = datetime_str.split('-')[1]
     source_data['date'] = str(date)
