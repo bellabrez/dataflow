@@ -380,20 +380,16 @@ def create_imaging_json(xml_source_file):
     source_data = {}
 
     # Get datetime
-    print('Trying to get datetime from xml')
     datetime_str, _, _ = get_datetime_from_xml(xml_source_file)
-    print('Success')
     date = datetime_str.split('-')[0]
     time = datetime_str.split('-')[1]
     source_data['date'] = str(date)
     source_data['time'] = str(time)
 
     # Get rest of data
-    print('Trying to parse xml')
     tree = objectify.parse(xml_source_file)
     source = tree.getroot()
     statevalues = source.findall('PVStateShard')[0].findall('PVStateValue')
-    print('Success.')
     for statevalue in statevalues:
         key = statevalue.get('key')
         if key == 'micronsPerPixel':
@@ -406,10 +402,10 @@ def create_imaging_json(xml_source_file):
                     source_data['y_voxel_size'] = float(index.get('value'))
                 elif axis == 'ZAxis':
                     source_data['z_voxel_size'] = float(index.get('value'))
-        #if key == 'laserPower':
+        if key == 'laserPower':
             # I think this is the maximum power if set to vary by z depth - WRONG
-            #indices = statevalue.findall('IndexedValue')
-            #source_data['laser_power'] = int(float(indices[0].get('value')))
+            indices = statevalue.findall('IndexedValue')
+            laser_power_overall = int(float(indices[0].get('value')))
         if key == 'pmtGain':
             indices = statevalue.findall('IndexedValue')
             for index in indices:
@@ -435,15 +431,20 @@ def create_imaging_json(xml_source_file):
         first_frame = sequence.findall('Frame')[0]
         source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
     except:
-        first_frame = sequence.findall('Frame')[2]
-        source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
-        print('Took min laser data from frame 3, not frame 1, due to bruker metadata error.')
+        try:
+            first_frame = sequence.findall('Frame')[2]
+            source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+            print('Took min laser data from frame 3, not frame 1, due to bruker metadata error.')
+        # Apparently sometimes the metadata will only include the
+        # laser value at the very beginning
+        except:
+            source_data['laser_power_min'] = laser_power_overall
+            source_data['laser_power_max'] = laser_power_overall
+            print('Used overall laser power.')
 
     # Save data
-    print('Trying to save scan.json')
     with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:
         json.dump(source_data, f, indent=4)
-    print('Success.')
 
 def datetime_from_fictrac(file):
     datetime = file.split('-')[1]
