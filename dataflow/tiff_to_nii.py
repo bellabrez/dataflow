@@ -75,6 +75,8 @@ def tiff_to_nii(xml_file):
         volumes_img = np.moveaxis(volumes_img,0,-1) # Now x,y,z,t
         volumes_img = np.swapaxes(volumes_img,0,1) # Now y,x,z,t
 
+        #### SAVE TIFF STACK HERE ####
+
         aff = np.eye(4)
         save_name = xml_file[:-4] + '_channel_{}'.format(channel+1) + '.nii'
         img = nib.Nifti1Image(volumes_img, aff)

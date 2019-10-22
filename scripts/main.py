@@ -85,6 +85,7 @@ flow.send_email(subject='Dataflow bruker transfer complete', message='Safe to tu
 ### Convert from raw to tiffs ###
 #################################
 
+### ARNALDO ###
 flow.convert_raw_to_tiff(full_target)
 
 #########################################
