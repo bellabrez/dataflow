@@ -49,6 +49,11 @@ def start_oak_transfer(directory_from, oak_target, allowable_extensions, add_fla
     transfer_to_oak(directory_from, directory_to, allowable_extensions)
     print('Copy completed.')
     if add_flag:
-        os.rename(directory_to, directory_to + '__done__')
-        print('Added __done__ flag')
+        folder = os.path.split(directory_to)[-1]
+        queue_file = os.path.join(oak_target, 'build_queue', folder)
+        file = open(queue_file,'w+')
+        file.close()
+        print('Added {} to build queue.'.format(folder))
+        #os.rename(directory_to, directory_to + '__done__')
+        #print('Added __done__ flag')
 

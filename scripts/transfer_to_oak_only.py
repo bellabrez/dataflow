@@ -6,7 +6,7 @@ def main(folder):
 	
 	full_target = 'F:/FTP_IMPORTS' + '/' + folder
 	oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
-	extensions_for_oak_transfer = ['.nii', '.csv', '.xml']
+	extensions_for_oak_transfer = ['.nii', '.csv', '.xml', 'json'] # last 4 chars
 
 	flow.start_oak_transfer(full_target, oak_target, extensions_for_oak_transfer)
 
