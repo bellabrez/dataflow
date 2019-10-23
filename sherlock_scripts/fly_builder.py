@@ -662,7 +662,7 @@ def add_fly_to_xlsx(fly_folder):
                    fly_data['gender'],
                    fly_data['age'],
                    fly_data['temp'],
-                   scan_data['laser_power'],
+                   scan_data['laser_power_max'],
                    scan_data['PMT_green'],
                    scan_data['PMT_red'],
                    scan_data['x_dim'],
