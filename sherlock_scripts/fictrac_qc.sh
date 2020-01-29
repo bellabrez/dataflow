@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=zscore
+#SBATCH --job-name=fictrac_qc
 #SBATCH --partition=trc
 #SBATCH --time=0:10:00
 #SBATCH --ntasks=1
