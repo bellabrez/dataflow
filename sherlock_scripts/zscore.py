@@ -7,6 +7,8 @@ import datadir_appender
 
 ##### Perform bleaching correction and z-scoring #####
 
+##### THEN, LAUNCHES QC SCRIPTS #####
+
 def main(args):
     print('args.directory: {}'.format(args.directory))
     print('args.channels: {}'.format(args.channels))
@@ -39,6 +41,11 @@ def main(args):
         brain = bbb.z_score_brain(brain)
         zbrain_file = os.path.join(os.path.split(directory)[0], 'brain_zscored_{}.nii'.format(color))
         bbb.save_brain(zbrain_file, brain)
+
+    ################################
+    ### Create bleaching figures ###
+    ################################
+    os.system("sbatch bleaching_qc.sh {}".format(os.path.split(directory)[0]))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
