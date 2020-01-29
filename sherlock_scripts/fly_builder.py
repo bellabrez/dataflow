@@ -141,6 +141,11 @@ def copy_fly(source_fly, destination_fly):
                 ###################################
                 os.system("sbatch motcorr_trigger.sh {}".format(expt_folder))
 
+                ##################################
+                ### PRODUCE FICTRAC QC FIGURES ###
+                ##################################
+                os.system("sbatch fictrac_qc.sh {}".format(expt_folder))
+
             else:
                 print('Invalid directory in fly folder: {}'.format(item))
                 sys.stdout.flush()
