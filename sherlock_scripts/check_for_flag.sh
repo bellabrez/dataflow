@@ -5,6 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=./outputs_check_for_flag/slurm-%j.out
+#SBATCH --begin=now+600
 
 ml gcc/6.3.0
 ml python/3.6.1
@@ -15,5 +16,4 @@ ml py-scikit-learn/0.19.1_py36
 
 python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py
 ## Resubmit job
-sleep 10m
 sbatch $0
