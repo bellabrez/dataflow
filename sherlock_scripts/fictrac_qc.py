@@ -26,7 +26,7 @@ def main(directory):
 
     make_2d_hist(fictrac, fictrac_folder, full_id, save=True, fixed_crop=True)
     make_2d_hist(fictrac, fictrac_folder, full_id, save=True, fixed_crop=False)
-    make_velocity_trace(fictrac, fictrac_folder, full_id, save=True)
+    make_velocity_trace(fictrac, fictrac_folder, full_id, xnew, save=True)
 
     return None
 
@@ -47,7 +47,7 @@ def make_2d_hist(fictrac, fictrac_folder, full_id, save=True, fixed_crop=True):
             fname = os.path.join(fictrac_folder, name)
             plt.savefig(fname,dpi=100,bbox_inches='tight')
             
-def make_velocity_trace(fictrac, fictrac_folder, full_id, save=True):
+def make_velocity_trace(fictrac, fictrac_folder, full_id, xnew, save=True):
     plt.figure(figsize=(10,10))
     plt.plot(xnew/1000,fictrac['Y'],color='xkcd:dusk')
     plt.ylabel('forward velocity mm/sec')
