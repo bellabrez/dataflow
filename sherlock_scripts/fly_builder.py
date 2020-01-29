@@ -416,13 +416,13 @@ def create_imaging_json(xml_source_file):
             for index in indices:
                 index_num = index.get('index')
                 if index_num == '0':
-                    source_data['PMT_red'] = int(index.get('value'))
+                    source_data['PMT_red'] = int(float(index.get('value')))
                 if index_num == '1':
-                    source_data['PMT_green'] = int(index.get('value'))
+                    source_data['PMT_green'] = int(float(index.get('value')))
         if key == 'pixelsPerLine':
-            source_data['x_dim'] = int(statevalue.get('value'))
+            source_data['x_dim'] = int(float(statevalue.get('value')))
         if key == 'linesPerFrame':
-            source_data['y_dim'] = int(statevalue.get('value'))
+            source_data['y_dim'] = int(float(statevalue.get('value')))
     sequence = source.findall('Sequence')[0]
     last_frame = sequence.findall('Frame')[-1]
     source_data['z_dim'] = int(last_frame.get('index'))
