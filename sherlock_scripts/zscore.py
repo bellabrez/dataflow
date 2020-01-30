@@ -4,6 +4,7 @@ import bigbadbrain as bbb
 import numpy as np
 import argparse
 import datadir_appender
+import subprocess
 
 ##### Perform bleaching correction and z-scoring #####
 
@@ -46,6 +47,25 @@ def main(args):
     ### Create bleaching figures ###
     ################################
     os.system("sbatch bleaching_qc.sh {}".format(os.path.split(directory)[0]))
+
+    ###################
+    ### Perform PCA ###
+    ###################
+    jobid = subprocess.check_output('sbatch pca.sh {}'.format(os.path.split(directory)[0]),shell=True)
+    # Get job ids so we can use them as dependencies
+    jobid_str = jobid.decode('utf-8')
+    jobid_str = [x for x in jobid_str.split() if x.isdigit()][0]
+    print('jobid: {}'.format(jobid_str))
+    job_ids = []
+    job_ids.append(jobid_str)
+    # Create weird job string slurm wants
+    job_ids_colons = ':'.join(job_ids)
+    print('Colons: {}'.format(job_ids_colons))
+
+    ########################################
+    ### Once PCA done, perform quick GLM ###
+    ########################################
+    os.system("sbatch --dependency=afterany:{} quick_glm.sh {}".format(job_ids_colons, os.path.split(directory)[0]))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
