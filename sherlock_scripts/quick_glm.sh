@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=glm
 #SBATCH --partition=trc
-#SBATCH --time=0:30:00
+#SBATCH --time=1:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --output=./outputs_quick_glm/slurm-%j.out
