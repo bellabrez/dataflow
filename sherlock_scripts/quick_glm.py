@@ -17,7 +17,7 @@ def main(directory):
 
     ### Load fictrac
     fictrac_raw = bbb.load_fictrac(os.path.join(directory, 'fictrac'))
-    fictrac = bbb.smooth_and_interp_fictrac(fictrac_raw, fps=50, resolution=10, expt_len=1000*30*60, behavior='dRotLabY')
+    fictrac = bbb.smooth_and_interp_fictrac(fictrac_raw, fps=50, resolution=10, expt_len=1000*30*60, behavior='dRotLabY', timestamps=timestamps)
 
     ### Fit model
     num_pcs = 100
