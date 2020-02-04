@@ -1,10 +1,11 @@
 import dataflow as flow
 
 
-full_target = 'F:/ftp_imports/20200130'
+full_target = 'F:/ftp_imports/20200131-sez-RG'
 
 
-oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
+#oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
+oak_target = 'X:/data/Ashley2/imports'
 extensions_for_oak_transfer = ['.nii', '.csv', '.xml', 'json'] # last 4 chars
 
 flow.convert_raw_to_tiff(full_target)

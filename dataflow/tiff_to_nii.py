@@ -38,7 +38,7 @@ def tiff_to_nii(xml_file):
                 fullfile = os.path.join(data_dir, filename)
 
                 # Read in file
-                compress = True
+                compress = False
                 if compress:
                     starting_bit_depth = 2**13
                     desired_bit_depth = 2**8
