@@ -4,7 +4,7 @@
 #SBATCH --partition=trc
 #SBATCH --time=3:00:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=23
 #SBATCH --output=./outputs_pca/slurm-%j.out
 
 ml gcc/6.3.0

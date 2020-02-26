@@ -4,7 +4,7 @@
 #SBATCH --partition=trc
 #SBATCH --time=0:30:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=6
+#SBATCH --cpus-per-task=14
 #SBATCH --output=./outputs_bleaching_qc/slurm-%j.out
 
 ml gcc/6.3.0
