@@ -9,7 +9,8 @@ def main(args):
     mode = args[0]
     output = args[1]
     folder = args[2]
-    oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
+    #oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
+    oak_target = 'X:/data/Ashley2/imports'
     extensions_for_oak_transfer = ['.nii', '.csv', '.xml', 'json', 'tiff'] # needs to for 4 char
 
     full_target = os.path.join('F:/ftp_imports', folder)

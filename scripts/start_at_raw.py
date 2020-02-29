@@ -1,7 +1,7 @@
 import dataflow as flow
 
 
-full_target = 'F:/ftp_imports/20200131-sez-RG'
+full_target = 'F:/ftp_imports/20200212-sez'
 
 
 #oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
