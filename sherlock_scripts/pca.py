@@ -2,7 +2,7 @@ import numpy as np
 import os
 import sys
 import bigbadbrain as bbb
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, IncrementalPCA
 from time import time
 import psutil
 
@@ -17,12 +17,17 @@ def main(directory):
 
     t0 = time()
     X = brain.reshape(-1,brain.shape[-1]).T
+    #X = brain
+    #X.shape = (-1,brain.shape[-1])
+    #X = X.T
     print('X is time by voxels {}'.format(X.shape))
+    print('brain shape is {}'.format(brain.shape))
     print('Reshape duration: {}'.format(time()-t0))
     print_mem()
 
     t0 = time()
-    pca = PCA().fit(X)
+    #pca = PCA().fit(X)
+    pca = IncrementalPCA(n_components=X.shape[0], batch_size=1000).fit(X)
     print_mem()
     pca_scores = pca.components_
     print('Scores is PC by voxel {}'.format(pca_scores.shape))

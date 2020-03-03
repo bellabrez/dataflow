@@ -11,6 +11,7 @@ def main(directory):
     pca_spatial = np.load(save_file)
     save_file = os.path.join(directory, 'pca', 'loadings_(temporal).npy')
     pca_loadings = np.load(save_file)
+    print('pca_loadings_shape: {}'.format(pca_loadings.shape))
 
     ### Load timestamps
     timestamps = bbb.load_timestamps(os.path.join(directory, 'imaging'))
