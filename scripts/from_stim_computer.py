@@ -8,12 +8,12 @@ import dataflow as flow
 ip ='171.65.17.246'
 username = 'clandininlab'
 passwd = 'jointhelab@'
-fictrac_target = 'F:/ftp_imports/fictrac'
+fictrac_target = 'G:/ftp_imports/fictrac'
 fictrac_source = 'fictrac/bin'
 allowable_extensions = ['.log', '.avi', '.dat']
 
 visual_source = 'luke_data'
-visual_target = 'F:/ftp_imports/visual'
+visual_target = 'G:/ftp_imports/visual'
 
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
 

@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 sys.stdout = flow.Logger_stdout()
 sys.stderr = flow.Logger_stderr()
 
-target = 'F:/ftp_imports' # Where on this computer it goes
+target = 'G:/ftp_imports' # Where on this computer it goes
 flag = '__flag__' #flag = '__flag__'
 #user = 'luke' # folder to look in E: drive in Bruker
 oak_target = 'X:/data/Brezovec/2P_Imaging/imports'
