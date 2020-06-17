@@ -14,7 +14,7 @@ def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
-logfile = './logs/' + strftime("%Y%m%d-%H%M%S") + '.txt'
+logfile = './logs/' + time.strftime("%Y%m%d-%H%M%S") + '.txt'
 printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
 command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {} {}'.format(logfile, 'a')
