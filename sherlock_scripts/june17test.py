@@ -12,6 +12,8 @@ def sbatch(job_name, command, time=1, mem=1, dep=''):
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
+sys.stdout = open('hellotoyou.txt', 'w')
+
 command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py'
 job_id = sbatch('luke_test', command)
 
