@@ -1,6 +1,16 @@
 import subprocess
 import time
 import sys
+import fcntl
+
+class Printlog():
+    def __init__(self, logfile):
+        self.logfile = logfile
+    def print_to_log(self, message):
+        with open(self.logfile, 'a+') as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.write(message)
+            fcntl.flock(f, fcntl.LOCK_UN)
 
 def sbatch(job_name, command, time=1, mem=1, dep=''):
     if dep != '':
@@ -14,21 +24,22 @@ def sbatch(job_name, command, time=1, mem=1, dep=''):
 
 #sys.stdout = open('hellotoyou.txt', 'w')
 
+printlog_object = Printlog(logfile='tada.txt')
+printlog = getattr(printlog_object, 'print_to_log')
+
 command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {}'.format('a')
 job_id = sbatch('luke_test', command)
-print('job_id = {}'.format(job_id))
+printlog('job_id = {}'.format(job_id))
 
 #time.sleep(90)
 
 command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {}'.format('b')
 job_id = sbatch('luke_test', command)
-print('job_id = {}'.format(job_id))
+printlog('job_id = {}'.format(job_id))
 
 #time.sleep(90)
 
-# for i in range(20):
-#     test = subprocess.getoutput('sacct -X -j {} --format=State'.format(job_id))
-#     print('main says {}'.format(test))
-#     sys.stdout.flush()
-#     time.sleep(5)
-
+for i in range(20):
+    test = subprocess.getoutput('sacct -X -j {} --format=State'.format(job_id))
+    printlog('main says {}'.format(test))
+    time.sleep(5)
