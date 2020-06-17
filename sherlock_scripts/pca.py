@@ -27,7 +27,9 @@ def main(directory):
 
     t0 = time()
     #pca = PCA().fit(X)
-    pca = IncrementalPCA(n_components=X.shape[0], batch_size=1000).fit(X)
+    num_components = X.shape[0]
+    pca_ = IncrementalPCA(n_components=num_components, batch_size=100000)
+    pca = pca_.fit(X)
     print_mem()
     pca_scores = pca.components_
     print('Scores is PC by voxel {}'.format(pca_scores.shape))

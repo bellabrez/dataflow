@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=pca
 #SBATCH --partition=trc
-#SBATCH --time=3:00:00
+#SBATCH --time=10:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=23
 #SBATCH --output=./outputs_pca/slurm-%j.out
