@@ -4,10 +4,11 @@ import os
 import dataflow as flow
 
 def main(args):
-    printlog = getattr(flow.Printlog(logfile='tada.txt'), 'print_to_log')
+    logfile = args[0]
+    printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     for i in range(10):
-        printlog('minion says {} {}'.format(args[0], i))
+        printlog('minion says {} {}'.format(args[1], i))
         time.sleep(1)
         dfgkjh
 
