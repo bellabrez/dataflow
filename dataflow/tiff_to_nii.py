@@ -120,6 +120,14 @@ def tiff_to_nii_v2(xml_file):
     print('num_y: {}'.format(num_y))
     print('num_x: {}'.format(num_x))
 
+    # Check if bidirectional - will affect loading order
+    isBidirectionalZ = sequences[0].get('bidirectionalZ')
+    if isBidirectionalZ == 'True':
+    	isBidirectionalZ = True
+    else:
+    	isBidirectionalZ = False
+    print('BidirectionalZ is {}'.format(isBidirectionalZ))
+
     # loop over channels
     for channel in range(num_channels):
         last_num_z = None
@@ -130,6 +138,9 @@ def tiff_to_nii_v2(xml_file):
             print('{}/{}'.format(i+1, len(sequences)))
             # For a given volume, get all frames
             frames = sequence.findall('Frame')
+            # Flip frame order if a bidirectionalZ upstroke (odd i)
+            if isBidirectionalZ and (i%2 != 0):
+            	frames = frames[::-1]
             # loop over depth (z-dim)
             for j, frame in enumerate(frames):
                 # For a given frame, get filename
@@ -175,8 +186,9 @@ def tiff_to_nii_v2(xml_file):
         image_array = None # for memory
         print('Saving nii as {}'.format(save_name))
         img.to_filename(save_name)
-        print('Saved! sleeping for 30sec to help memory reconfigure')
-        time.sleep(30)
+        img = None # for memory
+        print('Saved! sleeping for 10 sec to help memory reconfigure...')
+        time.sleep(10)
         print('Sleep over')
 
 def get_num_channels(sequence):

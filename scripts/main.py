@@ -76,7 +76,9 @@ if delete_bruker in ['True', 'true', 'yes']:
     flow.delete_bruker_folder(ip, username, passwd, bruker_folder)
 else:
     # Strip flag from folder
-    flow.strip_bruker_flag(ip, username, passwd, bruker_folder, flag)
+    # temporarily passing on this since there is some ftp communication error for this step
+    pass
+    #flow.strip_bruker_flag(ip, username, passwd, bruker_folder, flag)
 
 # Send 'transfered' email
 flow.send_email(subject='Dataflow bruker transfer complete', message='Safe to turn off bruker', recipient=email)
