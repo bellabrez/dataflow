@@ -1,5 +1,6 @@
 import subprocess
 import time
+import sys
 
 def sbatch(job_name, command, time=1, mem=1, dep=''):
     if dep != '':
@@ -20,4 +21,5 @@ print('job_id = {}'.format(job_id))
 for i in range(20):
     test = subprocess.getoutput('sacct -X -j {} --format=State'.format(job_id))
     print('main says {}'.format(test))
+    sys.stdout.flush()
     time.sleep(5)
