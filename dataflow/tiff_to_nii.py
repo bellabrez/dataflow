@@ -8,6 +8,7 @@ from tqdm import tqdm
 from dataflow.utils import timing
 import psutil
 from PIL import Image
+import time
 
 def tiff_to_nii(xml_file):
     data_dir, _ = os.path.split(xml_file)
@@ -174,7 +175,9 @@ def tiff_to_nii_v2(xml_file):
         image_array = None # for memory
         print('Saving nii as {}'.format(save_name))
         img.to_filename(save_name)
-        print('Saved!')
+        print('Saved! sleeping for 30sec to help memory reconfigure')
+        time.sleep(30)
+        print('Sleep over')
 
 def get_num_channels(sequence):
     frame = sequence.findall('Frame')[0]
