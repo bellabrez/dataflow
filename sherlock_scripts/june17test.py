@@ -18,13 +18,13 @@ command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherl
 job_id = sbatch('luke_test', command)
 print('job_id = {}'.format(job_id))
 
-time.sleep(30)
+#time.sleep(90)
 
 command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {}'.format('b')
 job_id = sbatch('luke_test', command)
 print('job_id = {}'.format(job_id))
 
-time.sleep(30)
+#time.sleep(90)
 
 # for i in range(20):
 #     test = subprocess.getoutput('sacct -X -j {} --format=State'.format(job_id))
