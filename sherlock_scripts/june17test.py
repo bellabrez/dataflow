@@ -14,13 +14,13 @@ def sbatch(job_name, command, time=1, mem=1, dep=''):
 
 #sys.stdout = open('hellotoyou.txt', 'w')
 
-command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {} > tada.txt'.format('a')
+command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {}'.format('a')
 job_id = sbatch('luke_test', command)
 print('job_id = {}'.format(job_id))
 
 #time.sleep(90)
 
-command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {} > tada.txt'.format('b')
+command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {}'.format('b')
 job_id = sbatch('luke_test', command)
 print('job_id = {}'.format(job_id))
 
