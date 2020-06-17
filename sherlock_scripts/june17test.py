@@ -8,7 +8,8 @@ def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
         dep = '--dependency=afterok:{} --kill-on-invalid-dep=yes '.format(dep)
  
     #sbatch_command = "sbatch -J {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, time, mem, command, dep)
-    sbatch_command = "sbatch -J {} -o {}.out -e {}.err -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, logfile, logfile, time, mem, command, dep)
+    #sbatch_command = "sbatch -J {} -o {}.out -e {}.err -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, 'mainlog', 'mainlog', time, mem, command, dep)
+    sbatch_command = "sbatch -J {} -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, 'mainlog.out', time, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
     print(sbatch_response)
     job_id = sbatch_response.split(' ')[-1].strip()
