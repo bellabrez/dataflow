@@ -4,7 +4,8 @@
 #SBATCH --time=1:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBACTH -o thisisout.out
+#SBATCH --output=thisisout.out
+#SBATCH --open-mode=append
 
 ml python/3.6.1
 

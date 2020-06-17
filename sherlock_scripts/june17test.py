@@ -5,7 +5,7 @@ def sbatch(job_name, command, time=1, mem=1, dep=''):
     if dep != '':
         dep = '--dependency=afterok:{} --kill-on-invalid-dep=yes '.format(dep)
  
-    sbatch_command = "sbatch -J {} -o {}.out -e {}.err -t {}:00:00 --partition=trc --cpus-per-task={} --wrap='{}' {}".format(job_name, 'thisisout', job_name, time, mem, command, dep)
+    sbatch_command = "sbatch -J {} -o {}.out -e {}.err -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, 'thisisout', job_name, time, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
     print(sbatch_response) 
     job_id = sbatch_response.split(' ')[-1].strip()
