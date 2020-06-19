@@ -12,7 +12,12 @@ import numpy as np
 import nibabel as nib
 from scipy.ndimage import imread
 from xml.etree import ElementTree as ET
-import fcntl
+
+# only imports on linux, which is fine since only needed for sherlock
+try:
+    import fcntl
+except ImportError:
+    pass
 
 def get_json_data(file_path):
     with open(file_path) as f:  

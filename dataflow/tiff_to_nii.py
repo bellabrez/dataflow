@@ -229,6 +229,7 @@ def convert_tiff_collections(directory):
                     # not wanting to take the time to re-create the already made niis
                     for item in os.listdir(directory):
                         if item.endswith('.nii'):
+                            print('skipping nii containing folder: {}'.format(directory))
                             break
                     else:
                         tiff_to_nii_v2(new_path)
