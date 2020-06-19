@@ -14,11 +14,11 @@ class Logger_stderr(object):
 
     def write(self, message):
         #self.terminal.write(message)
-        self.logfile.write(message)  
-        # with open(self.logfile, 'a+') as f:
+        #self.logfile.write(message)  
+        with open(self.logfile, 'a+') as f:
         #     fcntl.flock(f, fcntl.LOCK_EX)
-        #     f.write(message)
-        #     f.write('\n')
+            f.write(message)
+            f.write('\n')
         #     fcntl.flock(f, fcntl.LOCK_UN)
 
     def flush(self):
