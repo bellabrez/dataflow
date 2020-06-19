@@ -3,6 +3,28 @@ import time
 import sys
 import dataflow as flow
 
+class Logger_stderr(object):
+    def __init__(self, logfile):
+        self.logfile = logfile
+        # self.terminal = sys.stderr
+        # log_folder = 'C:/Users/User/Desktop/dataflow_error'
+        # log_file = 'dataflow_log_' + strftime("%Y%m%d-%H%M%S") + '.txt'
+        # self.full_log_file = os.path.join(log_folder, log_file)
+        # self.log = open(self.full_log_file, "a")
+
+    def write(self, message):
+        with open(self.logfile, 'a+') as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.write(message)
+            f.write('\n')
+            fcntl.flock(f, fcntl.LOCK_UN)
+
+    def flush(self):
+        #this flush method is needed for python 3 compatibility.
+        #this handles the flush command by doing nothing.
+        #you might want to specify some extra behavior here.
+        pass
+
 def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
     if dep != '':
         dep = '--dependency=afterok:{} --kill-on-invalid-dep=yes '.format(dep)
@@ -11,12 +33,13 @@ def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
     #sbatch_command = "sbatch -J {} -o {}.out -e {}.err -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, 'mainlog', 'mainlog', time, mem, command, dep)
     sbatch_command = "sbatch -J {} -o {} -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, logfile, logfile, time, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
-    print(sbatch_response)
+    printlog(sbatch_response)
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
 logfile = './logs/' + time.strftime("%Y%m%d-%H%M%S") + '.txt'
 printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
+sys.stderr = Logger_stderr(logfile)
 
 command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {} {}'.format(logfile, 'a')
 job_id = sbatch('luke_test', command, logfile)
