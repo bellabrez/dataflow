@@ -113,6 +113,23 @@ class Logger_stderr(object):
         #you might want to specify some extra behavior here.
         pass
 
+class Logger_stderr_sherlock(object):
+    '''
+    for redirecting stderr to a central log file.
+    note, locking did not work fir fcntl, but seems to work fine without it
+    keep in mind it could be possible to get errors from not locking this
+    but I haven't seen anything, and apparently linux is "atomic" or some shit...
+    '''
+    def __init__(self, logfile):
+        self.logfile = logfile
+
+    def write(self, message):
+        with open(self.logfile, 'a+') as f:
+            f.write(message)
+
+    def flush(self):
+        pass
+
 class Printlog():
     '''
     for printing all processes into same log file on sherlock
