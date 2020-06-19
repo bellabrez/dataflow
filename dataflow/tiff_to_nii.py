@@ -97,6 +97,7 @@ def tiff_to_nii(xml_file):
         img.to_filename(save_name)
 
 def tiff_to_nii_v2(xml_file):
+    aborted = False
     data_dir, _ = os.path.split(xml_file)
     print('Converting tiffs to nii in directory: \n{}'.format(data_dir))
 
@@ -123,9 +124,9 @@ def tiff_to_nii_v2(xml_file):
     # Check if bidirectional - will affect loading order
     isBidirectionalZ = sequences[0].get('bidirectionalZ')
     if isBidirectionalZ == 'True':
-    	isBidirectionalZ = True
+        isBidirectionalZ = True
     else:
-    	isBidirectionalZ = False
+        isBidirectionalZ = False
     print('BidirectionalZ is {}'.format(isBidirectionalZ))
 
     # loop over channels
@@ -138,9 +139,20 @@ def tiff_to_nii_v2(xml_file):
             print('{}/{}'.format(i+1, len(sequences)))
             # For a given volume, get all frames
             frames = sequence.findall('Frame')
+
+            # Handle aborted scans
+            current_num_z = len(frames)
+            if last_num_z is not None:
+                if current_num_z != last_num_z:
+                    print('Inconsistent number of z-slices (scan aborted).')
+                    print('Tossing last volume.')
+                    aborted = True
+                    break
+            last_num_z = current_num_z
+
             # Flip frame order if a bidirectionalZ upstroke (odd i)
             if isBidirectionalZ and (i%2 != 0):
-            	frames = frames[::-1]
+                frames = frames[::-1]
             # loop over depth (z-dim)
             for j, frame in enumerate(frames):
                 # For a given frame, get filename
@@ -152,15 +164,6 @@ def tiff_to_nii_v2(xml_file):
                 img = imread(fullfile)
                 image_array[i,j,:,:] = img
                  
-            current_num_z = len(frames)
-        
-            if last_num_z is not None:
-                if current_num_z != last_num_z:
-                    print('Inconsistent number of z-slices (scan aborted).')
-                    print('Tossing last volume.')
-                    break
-            last_num_z = current_num_z
-
             if i%10 == 0:
                 memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
                 print('Current memory usage: {:.2f}GB'.format(memory_usage))
@@ -170,6 +173,10 @@ def tiff_to_nii_v2(xml_file):
         image_array = np.moveaxis(image_array,1,-1) # Now t,x,y,z
         image_array = np.moveaxis(image_array,0,-1) # Now x,y,z,t
         image_array = np.swapaxes(image_array,0,1) # Now y,x,z,t
+
+        # Toss last volume if aborted
+        if aborted:
+            image_array = image_array[:,:,:,:-1]
 
         memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
         print('Current memory usage: {:.2f}GB'.format(memory_usage))
@@ -216,4 +223,15 @@ def convert_tiff_collections(directory):
                 root = tree.getroot()
                 # If the item is an xml file with scan info
                 if root.tag == 'PVScan':
-                    tiff_to_nii_v2(new_path)
+
+                    # Also, verify that this folder doesn't already contain any .niis
+                    # This is useful if rebooting the pipeline due to some error, and
+                    # not wanting to take the time to re-create the already made niis
+                    for item in os.listdir(directory):
+                        if item.endswith('.nii'):
+                            print('skipping nii containing folder: {}'.format(directory))
+                            break
+                    else:
+                        tiff_to_nii_v2(new_path)
+
+                    
