@@ -12,6 +12,7 @@ import numpy as np
 import nibabel as nib
 from scipy.ndimage import imread
 from xml.etree import ElementTree as ET
+import fcntl
 
 def get_json_data(file_path):
     with open(file_path) as f:  
@@ -106,3 +107,16 @@ class Logger_stderr(object):
         #this handles the flush command by doing nothing.
         #you might want to specify some extra behavior here.
         pass
+
+class Printlog():
+    '''
+    for printing all processes into same log file on sherlock
+    '''
+    def __init__(self, logfile):
+        self.logfile = logfile
+    def print_to_log(self, message):
+        with open(self.logfile, 'a+') as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.write(message)
+            f.write('\n')
+            fcntl.flock(f, fcntl.LOCK_UN)
