@@ -9,9 +9,9 @@ class Logger_stderr(object):
 
     def write(self, message):
         with open(self.logfile, 'a+') as f:
-            fcntl.flock(f, fcntl.LOCK_EX)
+            #fcntl.flock(f, fcntl.LOCK_EX)
             f.write(message)
-            fcntl.flock(f, fcntl.LOCK_UN)
+            #fcntl.flock(f, fcntl.LOCK_UN)
 
     def flush(self):
         pass
