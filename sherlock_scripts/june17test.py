@@ -6,25 +6,14 @@ import dataflow as flow
 class Logger_stderr(object):
     def __init__(self, logfile):
         self.logfile = logfile
-        # self.terminal = sys.stderr
-        # log_folder = 'C:/Users/User/Desktop/dataflow_error'
-        # log_file = 'dataflow_log_' + strftime("%Y%m%d-%H%M%S") + '.txt'
-        # self.full_log_file = os.path.join(log_folder, log_file)
-        # self.log = open(self.full_log_file, "a")
 
     def write(self, message):
-        #self.terminal.write(message)
-        #self.logfile.write(message)  
         with open(self.logfile, 'a+') as f:
-        #     fcntl.flock(f, fcntl.LOCK_EX)
+            fcntl.flock(f, fcntl.LOCK_EX)
             f.write(message)
-            f.write('\n')
-        #     fcntl.flock(f, fcntl.LOCK_UN)
+            fcntl.flock(f, fcntl.LOCK_UN)
 
     def flush(self):
-        #this flush method is needed for python 3 compatibility.
-        #this handles the flush command by doing nothing.
-        #you might want to specify some extra behavior here.
         pass
 
 def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
