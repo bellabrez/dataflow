@@ -10,7 +10,6 @@ def main(args):
     for i in range(10):
         printlog('minion says {} {}'.format(args[1], i))
         time.sleep(1)
-        dfgkjh
-
+        
 if __name__ == '__main__':
     main(sys.argv[1:])
