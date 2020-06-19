@@ -13,11 +13,13 @@ class Logger_stderr(object):
         # self.log = open(self.full_log_file, "a")
 
     def write(self, message):
-        with open(self.logfile, 'a+') as f:
-            fcntl.flock(f, fcntl.LOCK_EX)
-            f.write(message)
-            f.write('\n')
-            fcntl.flock(f, fcntl.LOCK_UN)
+        #self.terminal.write(message)
+        self.logfile.write(message)  
+        # with open(self.logfile, 'a+') as f:
+        #     fcntl.flock(f, fcntl.LOCK_EX)
+        #     f.write(message)
+        #     f.write('\n')
+        #     fcntl.flock(f, fcntl.LOCK_UN)
 
     def flush(self):
         #this flush method is needed for python 3 compatibility.
