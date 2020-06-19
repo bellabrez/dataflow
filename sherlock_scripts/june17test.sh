@@ -8,7 +8,5 @@
 #SBATCH --open-mode=append
 
 ml python/3.6.1
-
 date
-echo "Hello from bash script!"
 python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test.py
