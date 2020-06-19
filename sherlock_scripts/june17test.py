@@ -22,6 +22,8 @@ command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherl
 job_id = sbatch('luke_test', command, logfile)
 printlog('job_id = {}'.format(job_id))
 
+asdfdf
+
 command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {} {}'.format(logfile, 'b')
 job_id = sbatch('luke_test', command, logfile)
 printlog('job_id = {}'.format(job_id))
