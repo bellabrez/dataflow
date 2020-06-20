@@ -19,8 +19,8 @@ job_id = flow.sbatch('luke_test', command, printlog, logfile)
 
 flow.wait_for_job(job_id, printlog)
 
-command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {} {}'.format(logfile, 'b')
-job_id = flow.sbatch('luke_test', command, logfile, logfile)
+command = 'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/june17test_minion.py {} {}'.format(printlog, 'b')
+job_id = flow.sbatch('luke_test', command, printlog, logfile)
 
 flow.wait_for_job(job_id, printlog)
 
