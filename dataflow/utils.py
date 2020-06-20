@@ -144,13 +144,13 @@ class Printlog():
             f.write('\n')
             fcntl.flock(f, fcntl.LOCK_UN)
 
-def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
+def sbatch(job_name, command, logger, logfile, time=1, mem=1, dep=''):
     if dep != '':
         dep = '--dependency=afterok:{} --kill-on-invalid-dep=yes '.format(dep)
  
     sbatch_command = "sbatch -J {} -o {} -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, logfile, logfile, time, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
-    printlog(sbatch_response)
+    logger(sbatch_response)
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
