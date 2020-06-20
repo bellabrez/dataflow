@@ -154,7 +154,7 @@ def sbatch(job_name, command, logger, logfile, time=1, mem=1, dep=''):
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
-def get_job_status(job_id, should_print=False):
+def get_job_status(job_id, printlog, should_print=False):
     temp = subprocess.getoutput('sacct -n -P -j {} --noconvert --format=State,Elapsed,MaxRSS,NCPUS'.format(job_id))
     if temp == '': return None # is empty if the job is too new
     status = temp.split('\n')[0].split('|')[0]
@@ -185,9 +185,9 @@ def get_job_status(job_id, should_print=False):
 def wait_for_job(job_id, printlog):
     printlog('Waiting for job {}'.format(job_id))
     while True:
-        status = get_job_status(job_id)
+        status = get_job_status(job_id, printlog)
         if status in ['COMPLETED', 'CANCELLED', 'TIMEOUT', 'FAILED', 'OUT_OF_MEMORY']:
-            status = get_job_status(job_id, should_print=True)
+            status = get_job_status(job_id, printlog, should_print=True)
             break
         else:
             time.sleep(5)
