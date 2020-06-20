@@ -151,11 +151,12 @@ def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
  
     sbatch_command = "sbatch -J {} -o {} -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, logfile, logfile, time, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
-    #logger(sbatch_response)
+    flow.Printlog(logfile=logfile).print_to_log(sbatch_response)
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
-def get_job_status(job_id, printlog, should_print=False):
+def get_job_status(job_id, logfile, should_print=False):
+    printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     temp = subprocess.getoutput('sacct -n -P -j {} --noconvert --format=State,Elapsed,MaxRSS,NCPUS'.format(job_id))
     if temp == '': return None # is empty if the job is too new
     status = temp.split('\n')[0].split('|')[0]
@@ -179,16 +180,16 @@ def get_job_status(job_id, printlog, should_print=False):
             percent_mem = memory_used/(core_memory*num_cores)
             printlog('Job {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.2f}%)'.format(job_id, status, duration, num_cores, memory_to_print, percent_mem))
         else:
-            print('Job {} Status: {}'.format(job_id, status))
+            printlog('Job {} Status: {}'.format(job_id, status))
 
     return status
 
-def wait_for_job(job_id, printlog):
-    printlog('Waiting for job {}'.format(job_id))
+def wait_for_job(job_id, logfile):
+    flow.Printlog(logfile=logfile).print_to_log('Waiting for job {}'.format(job_id))
     while True:
-        status = get_job_status(job_id, printlog)
+        status = get_job_status(job_id, logfile)
         if status in ['COMPLETED', 'CANCELLED', 'TIMEOUT', 'FAILED', 'OUT_OF_MEMORY']:
-            status = get_job_status(job_id, printlog, should_print=True)
+            status = get_job_status(job_id, logfile, should_print=True)
             break
         else:
             sleep(5)
