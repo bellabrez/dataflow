@@ -178,7 +178,8 @@ def get_job_status(job_id, logfile, should_print=False):
                 memory_to_print = str(memory_used) + 'B'
 
             percent_mem = memory_used/(core_memory*num_cores)
-            printlog('Job {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.2f}%)'.format(job_id, status, duration, num_cores, memory_to_print, percent_mem))
+            pretty = '*' * 40
+            printlog('\n{}Job {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.2f}%){}\n'.format(pretty, job_id, status, duration, num_cores, memory_to_print, percent_mem, pretty))
         else:
             printlog('Job {} Status: {}'.format(job_id, status))
 
