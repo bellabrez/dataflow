@@ -6,6 +6,8 @@ import dataflow as flow
 def main(args):
     #logfile = args[0]
     printlog = args[0]
+    printlog('print from minion')
+    print('normal minion print')
     #printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     for i in range(10):
