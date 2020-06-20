@@ -7,6 +7,7 @@ import math
 from email.mime.text import MIMEText
 from time import time
 from time import strftime
+from time import sleep
 from functools import wraps
 import numpy as np
 import nibabel as nib
@@ -190,4 +191,4 @@ def wait_for_job(job_id, printlog):
             status = get_job_status(job_id, printlog, should_print=True)
             break
         else:
-            time.sleep(5)
+            sleep(5)
