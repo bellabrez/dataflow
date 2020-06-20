@@ -151,7 +151,7 @@ def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
  
     sbatch_command = "sbatch -J {} -o {} -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, logfile, logfile, time, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
-    Printlog(logfile=logfile).print_to_log(sbatch_response)
+    Printlog(logfile=logfile).print_to_log('***{}***'.format(sbatch_response))
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
@@ -178,8 +178,8 @@ def get_job_status(job_id, logfile, should_print=False):
                 memory_to_print = str(memory_used) + 'B'
 
             percent_mem = memory_used/(core_memory*num_cores)
-            pretty = '*' * 40
-            printlog('\n{}Job {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.2f}%){}\n'.format(pretty, job_id, status, duration, num_cores, memory_to_print, percent_mem, pretty))
+            pretty = '*' * 20
+            printlog('\n{}\nJob {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.2f}%)\n{}\n'.format(pretty, job_id, status, duration, num_cores, memory_to_print, percent_mem, pretty))
         else:
             printlog('Job {} Status: {}'.format(job_id, status))
 
