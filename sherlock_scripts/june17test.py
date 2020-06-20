@@ -18,23 +18,27 @@ def get_job_status(job_id, should_print=False):
     if temp == '': return None # is empty if the job is too new
     printlog('tada: {}'.format(temp))
     status = temp.split('\n')[0].split('|')[0]
-    duration = temp.split('\n')[0].split('|')[1]
-    num_cores = temp.split('\n')[0].split('|')[3]
-    memory_used = temp.split('\n')[1].split('|')[2] # in bytes
-    core_memory = 7.77 * 1024 * 1024 * 1024 #GB to MB to KB to bytes
-    if should_print:
+    
+    if should_print: 
+        if status != 'PENDING':
+            duration = temp.split('\n')[0].split('|')[1]
+            num_cores = temp.split('\n')[0].split('|')[3]
+            memory_used = temp.split('\n')[1].split('|')[2] # in bytes
+            core_memory = 7.77 * 1024 * 1024 * 1024 #GB to MB to KB to bytes
 
-        if memory_used > 1024 ** 3:
-            memory_to_print = str(memory_used/1024 ** 3) + 'GB'
-        elif memory_used > 1024 ** 2:
-            memory_to_print = str(memory_used/1024 ** 2) + 'MB'
-        elif memory_used > 1024 ** 1:
-            memory_to_print = str(memory_used/1024 ** 1) + 'KB'
+            if memory_used > 1024 ** 3:
+                memory_to_print = str(memory_used/1024 ** 3) + 'GB'
+            elif memory_used > 1024 ** 2:
+                memory_to_print = str(memory_used/1024 ** 2) + 'MB'
+            elif memory_used > 1024 ** 1:
+                memory_to_print = str(memory_used/1024 ** 1) + 'KB'
+            else:
+                memory_to_print = str(memory_used) + 'B'
+
+            percent_mem = memory_used/(core_memory*num_cores)
+            printlog('Job {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.2f}%)'.format(job_id, status, duration, num_cores, memory_to_print, percent_mem))
         else:
-            memory_to_print = str(memory_used) + 'B'
-
-        percent_mem = memory_used/(core_memory*num_cores)
-        printlog('Job {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.2f}%)'.format(job_id, status, duration, num_cores, memory_to_print, percent_mem))
+            print('Job {} Status: {}'.format(job_id, status))
 
     return status
 
