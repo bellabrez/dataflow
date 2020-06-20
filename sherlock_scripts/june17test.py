@@ -15,6 +15,7 @@ def sbatch(job_name, command, logfile, time=1, mem=1, dep=''):
 
 def get_job_status(job_id, should_print=False):
     temp = subprocess.getoutput('sacct -n -P -j {} --noconvert --format=State,Elapsed,MaxRSS,NCPUS'.format(job_id))
+    printlog(temp)
     status = temp.split('\n')[0].split('|')[0]
     duration = temp.split('\n')[0].split('|')[1]
     num_cores = temp.split('\n')[0].split('|')[3]
