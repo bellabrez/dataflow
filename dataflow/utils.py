@@ -182,7 +182,7 @@ def get_job_status(job_id, should_print=False):
 
     return status
 
-def wait_for_job(job_id):
+def wait_for_job(job_id, printlog):
     printlog('Waiting for job {}'.format(job_id))
     while True:
         status = get_job_status(job_id)
