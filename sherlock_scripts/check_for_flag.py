@@ -16,7 +16,7 @@ def main(args):
 
     queued_folders = []
     for item in os.listdir(imports_path):
-        printlog('Found queued folder {}'.format(item))
+        printlog(f'Found queued folder {item}')
         queued_folders.append(item)
 
     if len(queued_folders) == 0:
@@ -32,4 +32,6 @@ def main(args):
 
 if __name__ == '__main__':
     #main(sys.argv[1:])
+    printlog(f'sys.argv: {sys.argv}')
+    printlog(f'sys.argv[1]: {sys.argv[1]}')
     main(json.loads(sys.argv[1]))
