@@ -12,7 +12,7 @@ def main(args):
     imports_path = args['imports_path']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
-    printlog('Checking build queue.')
+    printlog('\nChecking build queue.')
     printlog('Time: {}'.format(datetime.datetime.now()))
 
     queued_folders = []
