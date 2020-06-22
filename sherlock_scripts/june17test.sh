@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=main_launch
+#SBATCH --job-name=main
 #SBATCH --partition=trc
 #SBATCH --time=1:00:00
 #SBATCH --ntasks=1
