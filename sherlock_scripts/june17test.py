@@ -37,9 +37,10 @@ check for flag (in:None, out:PATH)
 How to return values? writing to a file is probably simply the best? (write to a file with it's own job ID!)
 
 '''
-args = json.dumps({'logfile': logfile, 'imports_path': imports_path})
+args = json.dumps(json.dumps({'logfile': logfile, 'imports_path': imports_path}))
 printlog(f'dumps: {args}')
-command = f'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py \"{args}\"'
+command = f'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py {args}'
+#command = f'ml python/3.6.1; python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/check_for_flag.py \"{args}\"'
 job_id = flow.sbatch('flagchk', command, logfile, time=1, mem=1, dep='')
 flow.wait_for_job(job_id, logfile)
 
