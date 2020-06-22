@@ -188,12 +188,18 @@ def get_job_status(job_id, logfile, should_print=False):
 
     return status
 
-def wait_for_job(job_id, logfile):
+def wait_for_job(job_id, logfile, com_path):
     Printlog(logfile=logfile).print_to_log('Waiting for job {}'.format(job_id))
     while True:
         status = get_job_status(job_id, logfile)
         if status in ['COMPLETED', 'CANCELLED', 'TIMEOUT', 'FAILED', 'OUT_OF_MEMORY']:
             status = get_job_status(job_id, logfile, should_print=True)
-            break
+            com_file = os.path.join(com_path, job_id + '.out')
+            try:
+                with open(com_file, r) as f:
+                    output = f.read()
+            except:
+                output = None
+            return output
         else:
             sleep(5)
