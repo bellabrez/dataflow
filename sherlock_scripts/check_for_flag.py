@@ -32,6 +32,6 @@ def main(args):
 
 if __name__ == '__main__':
     #main(sys.argv[1:])
-    printlog(f'sys.argv: {sys.argv}')
-    printlog(f'sys.argv[1]: {sys.argv[1]}')
+    print(f'sys.argv: {sys.argv}')
+    print(f'sys.argv[1]: {sys.argv[1]}')
     main(json.loads(sys.argv[1]))
