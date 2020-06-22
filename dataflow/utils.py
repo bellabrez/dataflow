@@ -4,6 +4,7 @@ import re
 import os
 import h5py
 import math
+import json
 from email.mime.text import MIMEText
 from time import time
 from time import strftime
@@ -151,7 +152,7 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep=''):
  
     command = f'ml {modules}; python3 {script} {json.dumps(json.dumps(args))}'
 
-    sbatch_command = "sbatch -J {} -o %j.out -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, logfile, time, mem, command, dep)
+    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(job_name, logfile, time, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
     Printlog(logfile=logfile).print_to_log('***{}***'.format(sbatch_response))
     job_id = sbatch_response.split(' ')[-1].strip()
