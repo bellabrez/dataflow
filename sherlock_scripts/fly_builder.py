@@ -36,7 +36,7 @@ def main(args):
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
-            printlog('This fly will be number: {}'.format(new_fly_number))
+            printlog(f'Building {likely_fly_folder} as fly number {new_fly_number}')
             printlog('Creating fly from directory: {}'.format(likely_fly_folder))
 
             # Define source fly directory
@@ -404,6 +404,7 @@ def create_imaging_json(xml_source_file, printlog):
             # I think this is the maximum power if set to vary by z depth - WRONG
             indices = statevalue.findall('IndexedValue')
             laser_power_overall = int(float(indices[0].get('value')))
+            source_data['laser_power'] = laser_power_overall
         if key == 'pmtGain':
             indices = statevalue.findall('IndexedValue')
             for index in indices:
@@ -421,23 +422,26 @@ def create_imaging_json(xml_source_file, printlog):
     source_data['z_dim'] = int(last_frame.get('index'))
 
     # Need this try block since sometimes first 1 or 2 frames don't have laser info...
-    try:
-        # Get laser power of first and last frames
-        last_frame = sequence.findall('Frame')[-1]
-        source_data['laser_power_max'] = int(last_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
-        first_frame = sequence.findall('Frame')[0]
-        source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
-    except:
-        try:
-            first_frame = sequence.findall('Frame')[2]
-            source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
-            printlog('Took min laser data from frame 3, not frame 1, due to bruker metadata error.')
-        # Apparently sometimes the metadata will only include the
-        # laser value at the very beginning
-        except:
-            source_data['laser_power_min'] = laser_power_overall
-            source_data['laser_power_max'] = laser_power_overall
-            printlog('Used overall laser power.')
+    # try:
+    #     # Get laser power of first and last frames
+    #     last_frame = sequence.findall('Frame')[-1]
+    #     source_data['laser_power'] = int(last_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+    #     #first_frame = sequence.findall('Frame')[0]
+    #     #source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+    # except:
+    #     source_data['laser_power_min'] = laser_power_overall
+    #     source_data['laser_power_max'] = laser_power_overall
+    #     #printlog('Used overall laser power.')
+    #     # try:
+    #     #     first_frame = sequence.findall('Frame')[2]
+    #     #     source_data['laser_power_min'] = int(first_frame.findall('PVStateShard')[0].findall('PVStateValue')[1].findall('IndexedValue')[0].get('value'))
+    #     #     printlog('Took min laser data from frame 3, not frame 1, due to bruker metadata error.')
+    #     # # Apparently sometimes the metadata will only include the
+    #     # # laser value at the very beginning
+    #     # except:
+    #     #     source_data['laser_power_min'] = laser_power_overall
+    #     #     source_data['laser_power_max'] = laser_power_overall
+    #     #     printlog('Used overall laser power.')
 
     # Save data
     with open(os.path.join(os.path.split(xml_source_file)[0], 'scan.json'), 'w') as f:
@@ -666,7 +670,7 @@ def add_fly_to_xlsx(fly_folder):
                    fly_data['gender'],
                    fly_data['age'],
                    fly_data['temp'],
-                   scan_data['laser_power_max'],
+                   scan_data['laser_power'],
                    scan_data['PMT_green'],
                    scan_data['PMT_red'],
                    scan_data['x_dim'],
