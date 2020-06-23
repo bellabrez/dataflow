@@ -55,7 +55,7 @@ def main(args):
             printlog('Created fly directory: {}'.format(destination_fly))
 
             # Copy fly data
-            copy_fly(source_fly, destination_fly)
+            copy_fly(source_fly, destination_fly, printlog)
 
             # Add date to fly.json file
             add_date_to_fly(destination_fly)
@@ -97,7 +97,7 @@ def add_date_to_fly(destination_fly):
         json.dump(metadata, f, indent=4)
         f.truncate()
 
-def copy_fly(source_fly, destination_fly):
+def copy_fly(source_fly, destination_fly, printlog):
 
     ''' There will be two types of folders in a fly folder.
     1) func_x folder
@@ -131,9 +131,9 @@ def copy_fly(source_fly, destination_fly):
                 os.mkdir(imaging_destination)
                 copy_bruker_data(source_expt_folder, imaging_destination, 'func')
                 # Copt fictrac data based on timestamps
-                copy_fictrac(expt_folder)
+                copy_fictrac(expt_folder, printlog)
                 # Copy visual data based on timestamps, and create visual.json
-                copy_visual(expt_folder)
+                copy_visual(expt_folder, printlog)
 
                 # REMOVED TRIGGERING
 
@@ -198,9 +198,9 @@ def copy_bruker_data(source, destination, folder_type):
             if '.xml' in item and folder_type == 'func' and 'Voltage' not in item:
                 item = 'functional.xml'
                 target_item = os.path.join(destination, item)
-                copy_file(source_item, target_item)
+                copy_file(source_item, target_item, printlog)
                 # Create json file
-                create_imaging_json(target_item)
+                create_imaging_json(target_item, printlog)
                 continue
             # Special copy for expt.json
             if 'expt.json' in item:
@@ -215,14 +215,14 @@ def copy_bruker_data(source, destination, folder_type):
 
             # Actually copy the file
             target_item = os.path.join(destination, item)
-            copy_file(source_item, target_item)
+            copy_file(source_item, target_item, printlog)
 
-def copy_file(source, target):
+def copy_file(source, target, printlog):
     printlog('Transfering file {}'.format(target))
     ##sys.stdout.flush()
     copyfile(source, target)
 
-def copy_visual(destination_region):
+def copy_visual(destination_region, printlog):
     printlog('Starting copy_visual')
     visual_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/visual'
     visual_destination = os.path.join(destination_region, 'visual')
@@ -289,7 +289,7 @@ def copy_visual(destination_region):
     with open(os.path.join(visual_destination, 'visual.json'), 'w') as f:
         json.dump(unique_stimuli, f, indent=4)
 
-def copy_fictrac(destination_region):
+def copy_fictrac(destination_region, printlog):
     fictrac_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/fictrac'
     fictrac_destination = os.path.join(destination_region, 'fictrac')
 
@@ -367,7 +367,7 @@ def copy_fictrac(destination_region):
     with open(os.path.join(fictrac_destination, 'fictrac.xml'), 'wb') as file:
         tree.write(file, pretty_print=True)
 
-def create_imaging_json(xml_source_file):
+def create_imaging_json(xml_source_file, printlog):
 
     # Make empty dict
     source_data = {}
