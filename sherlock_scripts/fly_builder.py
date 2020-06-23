@@ -124,12 +124,12 @@ def copy_fly(source_fly, destination_fly, printlog):
             # Is this folder an anatomy or functional folder?
             if 'anat' in item:
                 # If anatomy folder, just copy everything
-                copy_bruker_data(source_expt_folder, expt_folder, 'anat')
+                copy_bruker_data(source_expt_folder, expt_folder, 'anat', printlog)
             elif 'func' in item:
                 # Make imaging folder and copy 
                 imaging_destination = os.path.join(expt_folder, 'imaging')
                 os.mkdir(imaging_destination)
-                copy_bruker_data(source_expt_folder, imaging_destination, 'func')
+                copy_bruker_data(source_expt_folder, imaging_destination, 'func', printlog)
                 # Copt fictrac data based on timestamps
                 copy_fictrac(expt_folder, printlog)
                 # Copy visual data based on timestamps, and create visual.json
@@ -154,7 +154,7 @@ def copy_fly(source_fly, destination_fly, printlog):
                 printlog('Invalid file in fly folder (skipping): {}'.format(item))
                 ##sys.stdout.flush()
 
-def copy_bruker_data(source, destination, folder_type):
+def copy_bruker_data(source, destination, folder_type, printlog):
     # Do not update destination - download all files into that destination
     for item in os.listdir(source):
         # Create full path to item
@@ -165,7 +165,7 @@ def copy_bruker_data(source, destination, folder_type):
             # Do not update destination - download all files into that destination
             ##print('copy data is recursing.')
             ##sys.stdout.flush()
-            copy_bruker_data(source_item, destination, folder_type)
+            copy_bruker_data(source_item, destination, folder_type, printlog)
             
         # If the item is a file
         else:
