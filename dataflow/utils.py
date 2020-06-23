@@ -196,7 +196,6 @@ def wait_for_job(job_id, logfile, com_path):
         if status in ['COMPLETED', 'CANCELLED', 'TIMEOUT', 'FAILED', 'OUT_OF_MEMORY']:
             status = get_job_status(job_id, logfile, should_print=True)
             com_file = os.path.join(com_path, job_id + '.out')
-            printlog(f'comfile: {com_file}')
             try:
                 with open(com_file, 'r') as f:
                     output = f.read()
