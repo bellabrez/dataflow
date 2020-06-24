@@ -145,7 +145,7 @@ for funcanat in funcanats:
                          logfile=logfile, time=2, mem=6, nice=True)
     job_ids.append(job_id)
 
-for job_id in job_ids
+for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
 ############
