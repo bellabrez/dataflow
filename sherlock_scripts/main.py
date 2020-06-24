@@ -127,7 +127,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                          logfile=logfile, time=2, mem=6, dep=job_ids_colons, nice=True)
     stitcher_job_ids.append(job_id)
 
-for job_id in job_ids
+for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
 ###############
