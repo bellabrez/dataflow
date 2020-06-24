@@ -49,8 +49,8 @@ job_id = flow.sbatch(jobname='bldfly',
                      logfile=logfile, time=2, mem=1, dep='')
 func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
 func_and_anats = func_and_anats.split('\n')[:-1]
-funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in func_and_anats]
-anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in func_and_anats]
+funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x]
+anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
 printlog(f"func_and_anats: {func_and_anats}")
 printlog(f"funcs: {funcs}")
 printlog(f"anats: {anats}")
@@ -74,9 +74,24 @@ then it is trivial to loop over
 now, how to restructure the motcorr splitter/partial/stitcher?
 would like all calls to sbatch to come from this script - is that possible? I think so
 
-first, make a new script whos job is to simply make the meanbrains...
+#######
+--- 1) make a new script whos job is to simply make the meanbrains...
+for funcanat in funcanat:
+    (funcanat) -> makemeanbrain -> (shape) : [jobids]
+for jobid: wait_for_job
+now, all these jobs are done
+#######
+--- 2)
+for funcanat in funcanat:
+    for start/stop (calc via shape):
+        moco_partial
+    moco_stitcher with dependency on all moco_partials
+wait for moco_stitchers
 
-(funcs and anats) -> makemeanbrain -> (NA) # wait_for_job
+
+so, for funcanat in funcanat:
+    (funcanat) -> moco_splitter -> ([vol starts and ends])
+for jobid: wait_for_job
 
 
 path -> splitter
