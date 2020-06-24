@@ -119,7 +119,10 @@ def copy_fly(source_fly, destination_fly, printlog):
             # Is this folder an anatomy or functional folder?
             if 'anat' in item:
                 # If anatomy folder, just copy everything
-                copy_bruker_data(source_expt_folder, expt_folder, 'anat', printlog)
+                # Make imaging folder and copy 
+                imaging_destination = os.path.join(expt_folder, 'imaging')
+                os.mkdir(imaging_destination)
+                copy_bruker_data(source_expt_folder, imaging_destination, 'anat', printlog)
                 ######################################################################
                 print(f"anat:{expt_folder}") # IMPORTANT - FOR COMMUNICATING WITH MAIN
                 ######################################################################
