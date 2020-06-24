@@ -4,6 +4,8 @@ import bigbadbrain as bbb
 import subprocess
 import numpy as np
 import time
+import json
+import dataflow as flow
 
 def main(args):
     '''
@@ -11,6 +13,13 @@ def main(args):
     functional_channel_1.nii, serving as red master
     functional_channel_2.nii, serving as green slave
     '''
+
+    # logfile = args['logfile']
+    # flagged_dir = args['flagged_dir']
+    # target_path = args['dataset_path']
+    # printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
+    # printlog('\nBuilding fly from directory {}'.format(flagged_dir))
+    
     path = args[0]
 
     ### Create mean brain
@@ -76,5 +85,9 @@ def main(args):
     print('Colons: {}'.format(job_ids_colons))
     os.system('sbatch --dependency=afterany:{} motcorr_stitcher.sh {}'.format(job_ids_colons, motcorr_directory))
 
+
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main(json.loads(sys.argv[1]))
+
+# if __name__ == '__main__':
+#     main(sys.argv[1:])

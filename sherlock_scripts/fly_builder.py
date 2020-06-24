@@ -149,7 +149,7 @@ def copy_fly(source_fly, destination_fly, printlog):
                 target_path = os.path.join(destination_fly, item)
                 ##print('Will copy from {} to {}'.format(source_path, target_path))
                 ##sys.stdout.flush()
-                copyfile(source_path, target_path, printlog)
+                copyfile(source_path, target_path)
             else:
                 printlog('Invalid file in fly folder (skipping): {}'.format(item))
                 ##sys.stdout.flush()
@@ -187,7 +187,7 @@ def copy_bruker_data(source, destination, folder_type, printlog):
                 except:
                     pass
                 target_item = os.path.join(os.path.split(destination)[0], 'visual', item)
-                copyfile(source_item, target_item, printlog)
+                copyfile(source_item, target_item)
                 continue
             # Rename to anatomy.xml if appropriate
             if '.xml' in item and folder_type == 'anat' and 'Voltage' not in item:
@@ -205,7 +205,7 @@ def copy_bruker_data(source, destination, folder_type, printlog):
             # Special copy for expt.json
             if 'expt.json' in item:
                 target_item = os.path.join(os.path.split(destination)[0], item)
-                copyfile(source_item, target_item, printlog)
+                copyfile(source_item, target_item)
                 continue
 
             # Actually copy the file
@@ -215,7 +215,7 @@ def copy_bruker_data(source, destination, folder_type, printlog):
 def copy_file(source, target, printlog):
     printlog('Transfering file {}'.format(target))
     ##sys.stdout.flush()
-    copyfile(source, target, printlog)
+    copyfile(source, target)
 
 def copy_visual(destination_region, printlog):
     printlog('Starting copy_visual')
@@ -273,7 +273,7 @@ def copy_visual(destination_region, printlog):
         source_path = os.path.join(source_folder, file)
         ##print('Transfering from {} to {}'.format(source_path, target_path))
         ##sys.stdout.flush()
-        copyfile(source_path, target_path, printlog)
+        copyfile(source_path, target_path)
 
     # Create visual.json metadata
     # Try block to prevent quiting if visual stimuli timing is wonky (likely went too long)
@@ -349,7 +349,7 @@ def copy_fictrac(destination_region, printlog):
         source_path = os.path.join(fictrac_folder, file)
         printlog('Transfering {}'.format(target_path))
         ##sys.stdout.flush()
-        copyfile(source_path, target_path, printlog)
+        copyfile(source_path, target_path)
 
     ### Create empty xml file.
     # Update this later

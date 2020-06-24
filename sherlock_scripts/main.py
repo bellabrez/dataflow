@@ -47,12 +47,17 @@ job_id = flow.sbatch(jobname='bldfly',
                      modules=modules,
                      args=args,
                      logfile=logfile, time=2, mem=1, dep='')
-import_folder = flow.wait_for_job(job_id, logfile, com_path)
-
+flies = flow.wait_for_job(job_id, logfile, com_path)
+printlog(f'flies not split: {flies}')
+printlog(f'flies split: {flies.split('\n')}')
+# \n split?
 
 ###################################
 ### START MOTCORR ON FUNCTIONAL ###
 ###################################
+#2798265
+
+
 #os.system("sbatch motcorr_trigger.sh {}".format(expt_folder))
 
 ##################################
