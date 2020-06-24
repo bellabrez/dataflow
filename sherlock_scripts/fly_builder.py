@@ -19,9 +19,9 @@ def main(args):
     flagged_dir = args['flagged_dir']
     target_path = args['dataset_path']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
-    printlog('\nBuilding fly from directory {}'.format(flagged_dir))
+    printlog('\nBuilding flies from directory {}'.format(flagged_dir))
 
-    # Assume this folder contains fly_1 etc
+    # Assume this folder contains fly1 etc
     # This folder may (or may not) contain separate areas # False, now enforcing experiment subfolders
     # Each area will have a T and a Z
     # Avoid grabbing other weird xml files, reference folder etc.
@@ -29,15 +29,14 @@ def main(args):
 
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_dir)
-    printlog('Found fly folders: {}'.format(likely_fly_folders))
     bbb.sort_nicely(likely_fly_folders)
+    printlog('Found fly folders: {}'.format(likely_fly_folders))
 
     for likely_fly_folder in likely_fly_folders:
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
-            printlog(f'\nBuilding {likely_fly_folder} as fly number {new_fly_number}')
-            printlog('Creating fly from directory: {}'.format(likely_fly_folder))
+            printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)
@@ -45,10 +44,6 @@ def main(args):
             # Define destination fly directory
             #fly_time = get_fly_time(source_fly)
             new_fly_folder = 'fly_' + str(new_fly_number)
-
-            ###############################################################
-            print(new_fly_folder) # IMPORTANT - FOR COMMUNICATING WITH MAIN
-            ###############################################################
 
             destination_fly = os.path.join(target_path, new_fly_folder)
             os.mkdir(destination_fly)
@@ -125,6 +120,9 @@ def copy_fly(source_fly, destination_fly, printlog):
             if 'anat' in item:
                 # If anatomy folder, just copy everything
                 copy_bruker_data(source_expt_folder, expt_folder, 'anat', printlog)
+                ######################################################################
+                print(f"anat:{expt_folder}") # IMPORTANT - FOR COMMUNICATING WITH MAIN
+                ######################################################################
             elif 'func' in item:
                 # Make imaging folder and copy 
                 imaging_destination = os.path.join(expt_folder, 'imaging')
@@ -135,6 +133,9 @@ def copy_fly(source_fly, destination_fly, printlog):
                 # Copy visual data based on timestamps, and create visual.json
                 copy_visual(expt_folder, printlog)
 
+                ######################################################################
+                print(f"func:{expt_folder}") # IMPORTANT - FOR COMMUNICATING WITH MAIN
+                ######################################################################
                 # REMOVED TRIGGERING
 
             else:

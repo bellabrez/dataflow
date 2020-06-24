@@ -47,15 +47,45 @@ job_id = flow.sbatch(jobname='bldfly',
                      modules=modules,
                      args=args,
                      logfile=logfile, time=2, mem=1, dep='')
-flies = flow.wait_for_job(job_id, logfile, com_path)
-printlog(f"flies not split: {flies}")
-printlog("flies split: {}".format(flies.split('\n')))
-# \n split?
+func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
+func_and_anats = func_and_anats.split('\n')[:-1]
+funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in func_and_anats]
+anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in func_and_anats]
+printlog(f"func_and_anats: {func_and_anats}")
+printlog(f"funcs: {funcs}")
+printlog(f"anats: {anats}")
 
 ###################################
 ### START MOTCORR ON FUNCTIONAL ###
 ###################################
-#2798265
+'''
+option:
+I will now have a list of flies
+each fly could have multiple func...
+before, this was handled by each func folder triggering motcorr trigger,
+after flybuilder copied the func folder
+
+I think this main loop should expose each func folder, that way I can run
+any analysis on only a single func folder! - way more flexibility
+
+so actually I would like fly builder to return a list of fly/funcs, not just flies...
+then it is trivial to loop over
+
+now, how to restructure the motcorr splitter/partial/stitcher?
+would like all calls to sbatch to come from this script - is that possible? I think so
+
+first, make a new script whos job is to simply make the meanbrains...
+
+(funcs and anats) -> makemeanbrain -> (NA) # wait_for_job
+
+
+path -> splitter
+splitter will create the meanbrain
+
+only needs to
+
+'''
+
 
 
 #os.system("sbatch motcorr_trigger.sh {}".format(expt_folder))
