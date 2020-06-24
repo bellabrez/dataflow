@@ -48,8 +48,8 @@ job_id = flow.sbatch(jobname='bldfly',
                      args=args,
                      logfile=logfile, time=2, mem=1, dep='')
 flies = flow.wait_for_job(job_id, logfile, com_path)
-printlog(f'flies not split: {flies}')
-printlog(f'flies split: {flies.split('\n')}')
+printlog(f"flies not split: {flies}")
+printlog(f"flies split: {flies.split('\n')}")
 # \n split?
 
 ###################################
