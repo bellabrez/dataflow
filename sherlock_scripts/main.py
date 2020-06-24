@@ -4,6 +4,8 @@ import os
 import json
 import dataflow as flow
 
+modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
+
 #####################
 ### Setup logging ###
 #####################
@@ -13,7 +15,7 @@ printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 sys.stderr = flow.Logger_stderr_sherlock(logfile)
 
 ###################
-### Setup Paths ###
+### Setup paths ###
 ###################
 
 imports_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/build_queue"
@@ -27,12 +29,11 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
-modules = 'python/3.6.1'
 job_id = flow.sbatch(jobname='flagchk',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=1, mem=1, dep='')
+                     logfile=logfile, time=1, mem=1, nice=True)
 flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
 
 ###################
@@ -41,23 +42,118 @@ flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
 
 args = {'logfile': logfile, 'flagged_dir': flagged_dir.strip('\n'), 'dataset_path': dataset_path}
 script = 'fly_builder.py'
-modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
 job_id = flow.sbatch(jobname='bldfly',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=2, mem=1, dep='')
+                     logfile=logfile, time=1, mem=1, nice=True)
 func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
 func_and_anats = func_and_anats.split('\n')[:-1]
 funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x]
 anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
-printlog(f"func_and_anats: {func_and_anats}")
-printlog(f"funcs: {funcs}")
-printlog(f"anats: {anats}")
+funcanats = funcs + anats
+dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
+# printlog(f"func_and_anats: {func_and_anats}")
+# printlog(f"funcs: {funcs}")
+# printlog(f"anats: {anats}")
 
-###################################
-### START MOTCORR ON FUNCTIONAL ###
-###################################
+##########################
+### Create mean brains ###
+##########################
+
+job_ids = []
+for funcanat, dirtype in zip(funcanats, dirtypes):
+    directory = os.path.join(funcanat, 'imaging')
+    args = {'logfile': logfile, 'directory': directory, 'dirtype': dirtype}
+    script = 'make_mean_brain.py'
+    job_id = flow.sbatch(jobname='meanbrn',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=1, mem=6, nice=True)
+    job_ids.append(job_id)
+
+timepointss = []
+for job_id in job_ids
+    timepoints = flow.wait_for_job(job_id, logfile, com_path)
+    timepointss.append(int(timepoints.strip('\n')))
+
+##################
+### Start MOCO ###
+##################
+
+# This will immediately launch all partial mocos and their corresponding dependent moco stitchers
+stitcher_job_ids = []
+for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
+
+    moco_dir = os.path.join(funcanat, 'moco')
+    if not os.path.exists(moco_dir):
+        os.makedirs(moco_dir)
+
+    if dirtype == 'func':
+        step = 100
+    elif dirtype == 'anat':
+        step = 10
+
+    starts = list(range(0,timepoints,step))
+    stops = starts[1:] + [timepoints]
+
+    #######################
+    ### Launch partials ###
+    #######################
+
+    job_ids = []
+    for start, stop in zip (starts, stops):
+        args = {'logfile': logfile, 'directory': funcanat, 'dirtype': dirtype, 'start': start, 'stop': stop}
+        script = 'moco_partial.py'
+        job_id = flow.sbatch(jobname='moco',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=1, mem=4, nice=True)
+        job_ids.append(job_id)
+    job_ids_colons = ':'.join(job_ids)
+
+    #################################
+    ### Create dependent stitcher ###
+    #################################
+
+    args = {'logfile': logfile, 'directory': moco_dir}
+    script = 'moco_stitcher.py'
+    job_id = flow.sbatch(jobname='stitch',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=2, mem=6, dep=job_ids_colons, nice=True)
+    stitcher_job_ids.append(job_id)
+
+for job_id in job_ids
+    flow.wait_for_job(job_id, logfile, com_path)
+
+###############
+### Z-Score ###
+###############
+
+job_ids = []
+for funcanat in funcanats:
+    args = {'logfile': logfile, 'directory': funcanat}
+    script = 'zscore.py'
+    job_id = flow.sbatch(jobname='zscore',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=2, mem=6, nice=True)
+    job_ids.append(job_id)
+
+for job_id in job_ids
+    flow.wait_for_job(job_id, logfile, com_path)
+
+############
+### Done ###
+############
+
+
+
 '''
 option:
 I will now have a list of flies

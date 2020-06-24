@@ -146,27 +146,30 @@ class Printlog():
             f.write('\n')
             fcntl.flock(f, fcntl.LOCK_UN)
 
-def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep=''):
+def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=False):
     if dep != '':
         dep = '--dependency=afterok:{} --kill-on-invalid-dep=yes '.format(dep)
  
     command = f'ml {modules}; python3 {script} {json.dumps(json.dumps(args))}'
 
-    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, mem, command, dep)
+    if nice: # For lowering the priority of the job
+        nice = 1000000
+    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
-    Printlog(logfile=logfile).print_to_log('***{}***'.format(sbatch_response))
+    Printlog(logfile=logfile).print_to_log('*** {} ***'.format(sbatch_response))
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
 def get_job_status(job_id, logfile, should_print=False):
     printlog = getattr(Printlog(logfile=logfile), 'print_to_log')
-    temp = subprocess.getoutput('sacct -n -P -j {} --noconvert --format=State,Elapsed,MaxRSS,NCPUS'.format(job_id))
+    temp = subprocess.getoutput('sacct -n -P -j {} --noconvert --format=State,Elapsed,MaxRSS,NCPUS,JobName'.format(job_id))
     if temp == '': return None # is empty if the job is too new
     status = temp.split('\n')[0].split('|')[0]
     
     if should_print: 
         if status != 'PENDING':
             duration = temp.split('\n')[0].split('|')[1]
+            jobname = temp.split('\n')[0].split('|')[4]
             num_cores = int(temp.split('\n')[0].split('|')[3])
             memory_used = float(temp.split('\n')[1].split('|')[2]) # in bytes
             core_memory = 7.77 * 1024 * 1024 * 1024 #GB to MB to KB to bytes
@@ -182,7 +185,7 @@ def get_job_status(job_id, logfile, should_print=False):
 
             percent_mem = memory_used/(core_memory*num_cores)*100
             pretty = '*' * 20
-            printlog('\n{}\nJob {} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.1f}%)\n{}\n'.format(pretty, job_id, status, duration, num_cores, memory_to_print, percent_mem, pretty))
+            printlog('\n{}\n{}|{} Status: {}\nDuration: {}\nNum Cores: {}\nMemory Used: {} ({:0.1f}%)\n{}\n'.format(pretty, jobname, job_id, status, duration, num_cores, memory_to_print, percent_mem, pretty))
         else:
             printlog('Job {} Status: {}'.format(job_id, status))
 
