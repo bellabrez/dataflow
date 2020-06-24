@@ -6,6 +6,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --output=./logs/mainlog.out
 #SBATCH --open-mode=append
+#SBATCH --mail-type=ALL
 
 ml python/3.6.1
 date

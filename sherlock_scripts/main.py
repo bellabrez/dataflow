@@ -74,7 +74,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
     job_ids.append(job_id)
 
 timepointss = []
-for job_id in job_ids
+for job_id in job_ids:
     timepoints = flow.wait_for_job(job_id, logfile, com_path)
     timepointss.append(int(timepoints.strip('\n')))
 
