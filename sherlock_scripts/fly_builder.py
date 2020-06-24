@@ -36,7 +36,7 @@ def main(args):
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
-            printlog(f'Building {likely_fly_folder} as fly number {new_fly_number}')
+            printlog(f'\nBuilding {likely_fly_folder} as fly number {new_fly_number}')
             printlog('Creating fly from directory: {}'.format(likely_fly_folder))
 
             # Define source fly directory
@@ -149,7 +149,7 @@ def copy_fly(source_fly, destination_fly, printlog):
                 target_path = os.path.join(destination_fly, item)
                 ##print('Will copy from {} to {}'.format(source_path, target_path))
                 ##sys.stdout.flush()
-                copyfile(source_path, target_path)
+                copyfile(source_path, target_path, printlog)
             else:
                 printlog('Invalid file in fly folder (skipping): {}'.format(item))
                 ##sys.stdout.flush()
@@ -163,13 +163,14 @@ def copy_bruker_data(source, destination, folder_type, printlog):
         # Check if item is a directory
         if os.path.isdir(source_item):
             # Do not update destination - download all files into that destination
-            ##print('copy data is recursing.')
-            ##sys.stdout.flush()
             copy_bruker_data(source_item, destination, folder_type, printlog)
             
         # If the item is a file
         else:
             ### Change file names and filter various files
+            # Don't copy these files
+            if 'SingleImage' in item:
+                continue
             # Rename functional file to functional_channel_x.nii
             if '.nii' in item and folder_type == 'func':
                 # '_' is from channel numbers my tiff to nii adds
@@ -185,11 +186,8 @@ def copy_bruker_data(source, destination, folder_type, printlog):
                     os.mkdir(visual_folder)
                 except:
                     pass
-                    ##print('{} already exists'.format(visual_folder))
                 target_item = os.path.join(os.path.split(destination)[0], 'visual', item)
-                ##print('Transfering file {}'.format(target_item))
-                ##sys.stdout.flush()
-                copyfile(source_item, target_item)
+                copyfile(source_item, target_item, printlog)
                 continue
             # Rename to anatomy.xml if appropriate
             if '.xml' in item and folder_type == 'anat' and 'Voltage' not in item:
@@ -202,15 +200,12 @@ def copy_bruker_data(source, destination, folder_type, printlog):
                 # Create json file
                 create_imaging_json(target_item, printlog)
                 continue
+            if '.xml' in item and 'VoltageOutput' in item:
+                item = 'voltage_output.xml'
             # Special copy for expt.json
             if 'expt.json' in item:
                 target_item = os.path.join(os.path.split(destination)[0], item)
-                ##print('Transfering file {}'.format(target_item))
-                ##sys.stdout.flush()
-                copyfile(source_item, target_item)
-                continue
-            # Don't copy these files
-            if 'SingleImage' in item:
+                copyfile(source_item, target_item, printlog)
                 continue
 
             # Actually copy the file
@@ -220,7 +215,7 @@ def copy_bruker_data(source, destination, folder_type, printlog):
 def copy_file(source, target, printlog):
     printlog('Transfering file {}'.format(target))
     ##sys.stdout.flush()
-    copyfile(source, target)
+    copyfile(source, target, printlog)
 
 def copy_visual(destination_region, printlog):
     printlog('Starting copy_visual')
@@ -278,7 +273,7 @@ def copy_visual(destination_region, printlog):
         source_path = os.path.join(source_folder, file)
         ##print('Transfering from {} to {}'.format(source_path, target_path))
         ##sys.stdout.flush()
-        copyfile(source_path, target_path)
+        copyfile(source_path, target_path, printlog)
 
     # Create visual.json metadata
     # Try block to prevent quiting if visual stimuli timing is wonky (likely went too long)
@@ -354,7 +349,7 @@ def copy_fictrac(destination_region, printlog):
         source_path = os.path.join(fictrac_folder, file)
         printlog('Transfering {}'.format(target_path))
         ##sys.stdout.flush()
-        copyfile(source_path, target_path)
+        copyfile(source_path, target_path, printlog)
 
     ### Create empty xml file.
     # Update this later

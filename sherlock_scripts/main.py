@@ -46,7 +46,7 @@ job_id = flow.sbatch(jobname='bldfly',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=2, mem=4, dep='')
+                     logfile=logfile, time=2, mem=1, dep='')
 import_folder = flow.wait_for_job(job_id, logfile, com_path)
 
 
