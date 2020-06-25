@@ -17,7 +17,7 @@ def main(args):
 
     if dirtype == 'func':
         files = ['functional_channel_1', 'functional_channel_2']
-    else dirtype == 'anat':
+    elif dirtype == 'anat':
         files = ['anatomy_channel_1', 'anatomy_channel_2']
 
     for file in files:
