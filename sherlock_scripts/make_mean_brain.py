@@ -14,8 +14,6 @@ def main(args):
     dirtype = args['dirtype']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
-    printlog('\nMaking meanbrains from directory: {}'.format(directory))
-
     if dirtype == 'func':
         files = ['functional_channel_1', 'functional_channel_2']
     elif dirtype == 'anat':
@@ -26,8 +24,8 @@ def main(args):
             brain = bbb.load_numpy_brain(os.path.join(directory, file + '.nii'))
             meanbrain = np.mean(brain, axis=-1)
             save_file = os.path.join(directory, file + '_mean.nii')
-            fly_func_str = (' ').join(directory.split('/')[-3:-1])
-            printlog(f"{fly_func_str} {file} {brain.shape} --> {meanbrain.shape}")
+            fly_func_str = ('|').join(directory.split('/')[-3:-1])
+            printlog(f"{fly_func_str}|{file}|{brain.shape} --> {meanbrain.shape}")
             print(brain.shape[-1]) ### IMPORTANT: for communication to main
         except FileNotFoundError:
             printlog(f'{file} not found.')

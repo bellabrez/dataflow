@@ -25,7 +25,7 @@ def main(args):
         master_path = os.path.join(directory, 'imaging', 'functional_channel_1.nii')
         slave_path = os.path.join(directory, 'imaging', 'functional_channel_2.nii')
         master_path_mean = os.path.join(directory, 'imaging', 'functional_channel_1_mean.nii')
-    elif dirtype == 'anat'
+    elif dirtype == 'anat':
         master_path = os.path.join(directory, 'imaging', 'anatomy_channel_1.nii')
         slave_path = os.path.join(directory, 'imaging', 'anatomy_channel_2.nii')
         master_path_mean = os.path.join(directory, 'imaging', 'anatomy_channel_1_mean.nii')
