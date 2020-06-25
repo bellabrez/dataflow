@@ -26,10 +26,11 @@ def main(args):
             brain = bbb.load_numpy_brain(os.path.join(directory, file + '.nii'))
             meanbrain = np.mean(brain, axis=-1)
             save_file = os.path.join(directory, file + '_mean.nii')
-            printlog(f"{file} {brain.shape} --> {meanbrain.shape}")
+            fly_func_str = (' ').join(directory.split('/')[-3:-1])
+            printlog(f"{fly_func_str} {file} {brain.shape} --> {meanbrain.shape}")
             print(brain.shape[-1]) ### IMPORTANT: for communication to main
         except FileNotFoundError:
-            pringlog(f'{file} not found.')
+            printlog(f'{file} not found.')
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))

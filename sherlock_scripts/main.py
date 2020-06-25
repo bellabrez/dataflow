@@ -76,7 +76,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
 timepointss = []
 for job_id in job_ids:
     timepoints = flow.wait_for_job(job_id, logfile, com_path)
-    timepointss.append(int(timepoints.strip('\n')))
+    timepointss.append(int(timepoints.split('\n')[0]))
 
 ##################
 ### Start MOCO ###
