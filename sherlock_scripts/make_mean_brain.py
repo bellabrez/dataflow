@@ -5,7 +5,7 @@ from time import sleep
 import datetime
 import bigbadbrain as bbb
 import dataflow as flow
-import numpy as numpy
+import numpy as np
 
 def main(args):
 
