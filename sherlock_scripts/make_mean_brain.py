@@ -6,6 +6,7 @@ import datetime
 import bigbadbrain as bbb
 import dataflow as flow
 import numpy as np
+import nibabel as nib
 
 def main(args):
 
@@ -21,9 +22,16 @@ def main(args):
 
     for file in files:
         try:
-            brain = bbb.load_numpy_brain(os.path.join(directory, file + '.nii'))
+            ### make mean ###
+            brain = np.asarray(nib.load(os.path.join(directory, file + '.nii')).get_data(), dtype='uint16')
             meanbrain = np.mean(brain, axis=-1)
+
+            ### Save ###
             save_file = os.path.join(directory, file + '_mean.nii')
+            aff = np.eye(4)
+            img = nib.Nifti1Image(meanbrain, aff)
+            img.to_filename(save_file)
+
             fly_func_str = ('|').join(directory.split('/')[-3:-1])
             printlog(f"{fly_func_str}|{file}|{brain.shape} --> {meanbrain.shape}")
             print(brain.shape[-1]) ### IMPORTANT: for communication to main

@@ -33,7 +33,7 @@ def main(args):
     # For the sake of memory, load only the part of the brain we will need.
     master_brain = load_partial_brain(master_path,start,stop)
     slave_brain = load_partial_brain(slave_path,start,stop)
-    mean_brain = ants.from_numpy(bbb.load_numpy_brain(master_path_mean))
+    mean_brain = ants.from_numpy(np.asarray(nib.load(master_path_mean).get_data(), dtype='float32'))
 
     bbb.motion_correction(master_brain,
                           slave_brain,
@@ -44,8 +44,8 @@ def main(args):
 
 def load_partial_brain(file, start, stop):
     brain = nib.load(file).dataobj[:,:,:,start:stop]
-    #brain = ants.from_numpy(np.asarray(np.squeeze(brain), 'float64'))
-    brain = ants.from_numpy(np.asarray(np.squeeze(brain), dtype=np.uint16)) #updated dtype 20200624
+    # for ants, supported_ntypes = {'uint8', 'uint32', 'float32', 'float64'}
+    brain = ants.from_numpy(np.asarray(np.squeeze(brain), dtype='float32')) #updated dtype 20200626 from float64 to float32
     # always keep 4 axes:
     if len(np.shape(brain)) == 3:
       brain = brain[:,:,:,np.newaxis]

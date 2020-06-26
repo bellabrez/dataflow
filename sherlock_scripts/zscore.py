@@ -3,7 +3,6 @@ import sys
 import bigbadbrain as bbb
 import numpy as np
 import argparse
-import datadir_appender
 import subprocess
 
 def main(args):
