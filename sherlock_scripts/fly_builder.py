@@ -21,7 +21,7 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
     width = 120
-    printlog(F"{'#' * width}\n"
+    printlog(F"\n{'#' * width}\n"
              F"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':#^{width}}\n"
              F"{'#' * width}")
 
@@ -34,14 +34,14 @@ def main(args):
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_dir)
     bbb.sort_nicely(likely_fly_folders)
-    printlog(F"Found fly folders{str(likely_fly_folders):.>{width-17}}")
+    printlog(F"\nFound fly folders{str(likely_fly_folders):.>{width-17}}")
 
     for likely_fly_folder in likely_fly_folders:
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
             #printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
-            printlog(f"{'   Building '+likely_fly_folder+' as fly_'+ str(new_fly_number) + '   ':-^{width}}")
+            printlog(f"\n{'   Building '+likely_fly_folder+' as fly_'+ str(new_fly_number) + '   ':-^{width}}")
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)
@@ -231,7 +231,7 @@ def copy_file(source, target, printlog):
 
 def copy_visual(destination_region, printlog):
     width=120
-    printlog(F"Starting copy_visual{'':.^{width}}")
+    printlog(F"Copying visual stimulus data{'':.^{width-28}}")
     visual_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/visual'
     visual_destination = os.path.join(destination_region, 'visual')
 
@@ -340,7 +340,8 @@ def copy_fictrac(destination_region, printlog):
                         break
 
     if datetime_correct is None:
-        printlog('No correct fictrac data found.')
+        width = 120
+        printlog(F"{'No correct fictrac data found; continuing without fictrac data':*^{width}}")
         return
 
     # Now collect the 4 files with correct datetime

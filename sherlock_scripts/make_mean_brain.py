@@ -34,8 +34,8 @@ def main(args):
             img.to_filename(save_file)
 
             fly_func_str = ('|').join(directory.split('/')[-3:-1])
-            fly_print = directory.split('/')[-2]
-            func_print = directory.split('/')[-1]
+            fly_print = directory.split('/')[-3]
+            func_print = directory.split('/')[-2]
             #printlog(f"COMPLETE | {fly_func_str} | {file} | {brain.shape} --> {meanbrain.shape}")
             printlog(F"meanbrn | COMPLETED | {fly_print} | {func_print} | {file} | {brain.shape} ===> {meanbrain.shape}")
             print(brain.shape[-1]) ### IMPORTANT: for communication to main

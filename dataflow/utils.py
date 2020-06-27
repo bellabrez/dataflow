@@ -186,7 +186,7 @@ def get_job_status(job_id, logfile, should_print=False):
                 memory_to_print = f'{memory_used :0.2f}' + 'B'
 
             percent_mem = memory_used/(core_memory*num_cores)*100
-            percent_mem = f"{percent_mem:0.1}"
+            percent_mem = f"{percent_mem:0.1f}"
 
             width = 120
             pretty = '+' + '-' * (width-2) + '+'
