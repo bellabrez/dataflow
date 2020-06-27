@@ -21,8 +21,8 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
     width = 120
-    printlog(F"{'#' * width}"
-             F"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':#^{width}}"
+    printlog(F"{'#' * width}\n"
+             F"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':#^{width}}\n"
              F"{'#' * width}")
 
     # Assume this folder contains fly1 etc
@@ -34,14 +34,14 @@ def main(args):
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_dir)
     bbb.sort_nicely(likely_fly_folders)
-    printlog(f"{'Found fly folders: '+str(likely_fly_folders):^{width}}")
+    printlog(F"Found fly folders{str(likely_fly_folders):.>{width-17}}")
 
     for likely_fly_folder in likely_fly_folders:
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
             #printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
-            printlog(f"{'Building '+likely_fly_folder+' as fly_'+ str(new_fly_number):-^{width}}")
+            printlog(f"{'   Building '+likely_fly_folder+' as fly_'+ str(new_fly_number) + '   ':-^{width}}")
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)
@@ -52,7 +52,7 @@ def main(args):
 
             destination_fly = os.path.join(target_path, new_fly_folder)
             os.mkdir(destination_fly)
-            printlog(F'Created fly directory:{destination_fly::>{width}}')
+            printlog(F'Created fly directory:{destination_fly:.>{width-22}}')
 
             # Copy fly data
             copy_fly(source_fly, destination_fly, printlog)
@@ -230,7 +230,8 @@ def copy_file(source, target, printlog):
     copyfile(source, target)
 
 def copy_visual(destination_region, printlog):
-    printlog('Starting copy_visual')
+    width=120
+    printlog(F"Starting copy_visual{'':.^{width}}")
     visual_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/imports/visual'
     visual_destination = os.path.join(destination_region, 'visual')
 
@@ -261,7 +262,7 @@ def copy_visual(destination_region, printlog):
         correct_folder = folders[0]
     #if no matching folder, 
     elif len(folders) == 0:
-        printlog('No matching visual folders found - continuing without visual data.')
+        printlog(F"{'No matching visual folders found; continuing without visual data':.<{width}}")
         return
     else:
         printlog('Found more than 1 visual stimulus folder within 3min of expt. Picking oldest.')
