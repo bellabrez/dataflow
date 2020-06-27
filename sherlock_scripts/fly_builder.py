@@ -222,6 +222,7 @@ def copy_bruker_data(source, destination, folder_type, printlog):
 def copy_file(source, target, printlog):
     #printlog('Transfering file {}'.format(target))
     to_print = ('/').join(target.split('/')[-4:])
+    width = 120
     printlog(f'Transfering file{to_print:.>{width-16}}')
     ##sys.stdout.flush()
     copyfile(source, target)

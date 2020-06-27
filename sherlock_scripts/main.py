@@ -32,7 +32,7 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 printlog(f"{'--*-*- Dataflow -*-*--':^{width}}")
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
-printlog(F"{day_now+' | '+time_now:^77}")
+printlog(F"{day_now+' | '+time_now:^{width}}")
 printlog("="*width)
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
