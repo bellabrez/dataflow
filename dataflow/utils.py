@@ -157,7 +157,7 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=
     sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
     width = 120
-    Printlog(logfile=logfile).print_to_log(f"{sbatch_response}{jobname:.>{width}-27}")
+    Printlog(logfile=logfile).print_to_log(f"{sbatch_response}{jobname:.>{width-27}}")
     #Printlog(logfile=logfile).print_to_log('*** {} | {:10} ***'.format(sbatch_response, jobname))
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
