@@ -5,6 +5,7 @@ import json
 import dataflow as flow
 
 modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
+width = 77 # width of print log
 
 #####################
 ### Setup logging ###
@@ -27,6 +28,8 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ### Check for flag ###
 ######################
 
+printlog(f"{'--*-*- Dataflow -*-*--':^{width}}")
+printlog("="*width)
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
 job_id = flow.sbatch(jobname='flagchk',
@@ -53,9 +56,6 @@ funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x]
 anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
 funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
-# printlog(f"func_and_anats: {func_and_anats}")
-# printlog(f"funcs: {funcs}")
-# printlog(f"anats: {anats}")
 
 ##########################
 ### Create mean brains ###
@@ -110,7 +110,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=1, mem=4, nice=True)
+                             logfile=logfile, time=1, mem=1, nice=True)
         job_ids.append(job_id)
     job_ids_colons = ':'.join(job_ids)
 
@@ -124,10 +124,10 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=2, mem=6, dep=job_ids_colons, nice=True)
+                         logfile=logfile, time=2, mem=4, dep=job_ids_colons, nice=True)
     stitcher_job_ids.append(job_id)
 
-for job_id in job_ids:
+for job_id in stitcher_job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
 ###############

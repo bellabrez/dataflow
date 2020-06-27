@@ -156,7 +156,8 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=
         nice = 1000000
     sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
-    Printlog(logfile=logfile).print_to_log('*** {} | {:10} ***'.format(sbatch_response, jobname))
+    Printlog(logfile=logfile).print_to_log(f"{sbatch_response}{jobname:.>50}")
+    #Printlog(logfile=logfile).print_to_log('*** {} | {:10} ***'.format(sbatch_response, jobname))
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
@@ -184,14 +185,21 @@ def get_job_status(job_id, logfile, should_print=False):
                 memory_to_print = f'{memory_used :0.2f}' + 'B'
 
             percent_mem = memory_used/(core_memory*num_cores)*100
-            pretty = '=' * 41
+            percent_mem = f"{percent_mem:0.1}"
 
-            printlog(f"{pretty}\n"
-                     f"{jobname + ' | ' + job_id + ' | ' + status:40}-\n"
-                     f"{'Duration: ' + duration:40}-\n"
-                     f"{'Num Cores: ' + str(num_cores):40}-\n"
-                     f"{'Memory Used: ' + memory_to_print + ' (' + str(percent_mem) + '%)':40}-\n"
-                     f"{pretty}\n")
+            width = 77
+            pretty = '+' + '-' * (width-2) + '+'
+            printlog(F"{pretty}\n"
+                     F"{'| '+jobname+sep+job_id+sep+status+sep+duration+sep+num_cores+' cores'+sep+memory_to_print+' (' + percent_mem + '%)':{width-1}}|\n"
+                     F"{pretty}\n")
+
+            # pretty = '=' * 41
+            # printlog(f"{pretty}\n"
+            #          f"{jobname + ' | ' + job_id + ' | ' + status:40}-\n"
+            #          f"{'Duration: ' + duration:40}-\n"
+            #          f"{'Num Cores: ' + str(num_cores):40}-\n"
+            #          f"{'Memory Used: ' + memory_to_print + ' (' + percent_mem + '%)':40}-\n"
+            #          f"{pretty}\n")
         else:
             printlog('Job {} Status: {}'.format(job_id, status))
 

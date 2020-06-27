@@ -19,7 +19,9 @@ def main(args):
     flagged_dir = args['flagged_dir']
     target_path = args['dataset_path']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
-    printlog('\nBuilding flies from directory {}'.format(flagged_dir))
+    #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
+    width = 77
+    printlog(f"{'Building flies from directory ' + os.path.split(flagged_dir)[-1]:-^{width}}")
 
     # Assume this folder contains fly1 etc
     # This folder may (or may not) contain separate areas # False, now enforcing experiment subfolders
@@ -36,7 +38,8 @@ def main(args):
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
-            printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
+            #printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
+            printlog(f"{'--- Building '+likely_fly_folder+' as fly #'+ str(new_fly_number)+' ---':^77}")
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)
@@ -217,7 +220,9 @@ def copy_bruker_data(source, destination, folder_type, printlog):
             copy_file(source_item, target_item, printlog)
 
 def copy_file(source, target, printlog):
-    printlog('Transfering file {}'.format(target))
+    #printlog('Transfering file {}'.format(target))
+    to_print = ('/').join(target.split('/')[-4:])
+    printlog(f'Transfering file{to_print:.>61}')
     ##sys.stdout.flush()
     copyfile(source, target)
 
