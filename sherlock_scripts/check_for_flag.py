@@ -13,14 +13,13 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     width=120
-    printlog(F"Checking build queue{'':.^{width}}")
+    printlog(F"{'Checking build queue':.<{width}}")
     #printlog('Time: {}'.format(datetime.datetime.now()))
 
     queued_folders = []
     for item in os.listdir(imports_path):
         queued_folders.append(item)
-    printlog(F"Found queued folders{queued_folders:.^{width}}")
-    printlog(F"Checking build queue{'':.^{width}}")
+    printlog(F"Found queued folders{str(queued_folders):.>{width-20}}")
 
     if len(queued_folders) == 0:
         printlog('No queued folders found. Raising SystemExit.')
