@@ -13,6 +13,7 @@ def main(args):
     logfile = args['logfile']
     directory = args['directory'] # directory will be a full path to either an anat/imaging folder or a func/imaging folder
     dirtype = args['dirtype']
+    width = 120
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     if dirtype == 'func':
@@ -33,10 +34,11 @@ def main(args):
             img.to_filename(save_file)
 
             fly_func_str = ('|').join(directory.split('/')[-3:-1])
-            printlog(f"{fly_func_str}|{file}|{brain.shape} --> {meanbrain.shape}")
+            printlog(f"{fly_func_str} | {file} | {brain.shape} --> {meanbrain.shape}")
             print(brain.shape[-1]) ### IMPORTANT: for communication to main
         except FileNotFoundError:
-            printlog(f'{file} not found.')
+            printlog(F"Not found (skipping){file:.>{width-20}}")
+            #printlog(f'{file} not found.')
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))

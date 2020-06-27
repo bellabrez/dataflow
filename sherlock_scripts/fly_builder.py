@@ -20,7 +20,7 @@ def main(args):
     target_path = args['dataset_path']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
-    width = 77
+    width = 120
     printlog(f"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':$^{width}}")
 
     # Assume this folder contains fly1 etc
@@ -32,14 +32,14 @@ def main(args):
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_dir)
     bbb.sort_nicely(likely_fly_folders)
-    printlog(f"{'Found fly folders: '+str(likely_fly_folders):^77}")
+    printlog(f"{'Found fly folders: '+str(likely_fly_folders):^{width}}")
 
     for likely_fly_folder in likely_fly_folders:
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
             #printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
-            printlog(f"{'--- Building '+likely_fly_folder+' as fly #'+ str(new_fly_number)+' ---':^77}")
+            printlog(f"{'--- Building '+likely_fly_folder+' as fly #'+ str(new_fly_number)+' ---':^{width}}")
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)
@@ -222,7 +222,7 @@ def copy_bruker_data(source, destination, folder_type, printlog):
 def copy_file(source, target, printlog):
     #printlog('Transfering file {}'.format(target))
     to_print = ('/').join(target.split('/')[-4:])
-    printlog(f'Transfering file{to_print:.>61}')
+    printlog(f'Transfering file{to_print:.>{width-16}}')
     ##sys.stdout.flush()
     copyfile(source, target)
 
@@ -330,7 +330,7 @@ def copy_fictrac(destination_region, printlog):
                     fp = os.path.join(fictrac_folder, file)
                     file_size = os.path.getsize(fp)
                     if file_size > 30000000:
-                        printlog('Found correct .dat file: {}'.format(file))
+                        printlog(F"Found correct .dat file{file:.>{width-23}}")
                         datetime_correct = datetime
                         break
 
@@ -357,7 +357,7 @@ def copy_fictrac(destination_region, printlog):
         target_path = os.path.join(fictrac_destination, file)
         source_path = os.path.join(fictrac_folder, file)
         to_print = ('/').join(target_path.split('/')[-4:])
-        printlog(f'Transfering file{to_print:.>61}')
+        printlog(f'Transfering file{to_print:.>{width-16}}')
         #printlog('Transfering {}'.format(target_path))
         ##sys.stdout.flush()
         copyfile(source_path, target_path)
