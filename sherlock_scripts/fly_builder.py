@@ -21,7 +21,9 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
     width = 120
-    printlog(f"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':$^{width}}")
+    printlog(F"{'#' * width}"
+             F"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':#^{width}}"
+             F"{'#' * width}")
 
     # Assume this folder contains fly1 etc
     # This folder may (or may not) contain separate areas # False, now enforcing experiment subfolders
@@ -39,7 +41,7 @@ def main(args):
 
             new_fly_number = get_new_fly_number(target_path)
             #printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
-            printlog(f"{'--- Building '+likely_fly_folder+' as fly #'+ str(new_fly_number)+' ---':^{width}}")
+            printlog(f"{'Building '+likely_fly_folder+' as fly_'+ str(new_fly_number):-^{width}}")
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)
@@ -50,7 +52,7 @@ def main(args):
 
             destination_fly = os.path.join(target_path, new_fly_folder)
             os.mkdir(destination_fly)
-            printlog('Created fly directory: {}'.format(destination_fly))
+            printlog(F'Created fly directory:{destination_fly::>{width}}')
 
             # Copy fly data
             copy_fly(source_fly, destination_fly, printlog)
@@ -331,6 +333,7 @@ def copy_fictrac(destination_region, printlog):
                     fp = os.path.join(fictrac_folder, file)
                     file_size = os.path.getsize(fp)
                     if file_size > 30000000:
+                        width = 120
                         printlog(F"Found correct .dat file{file:.>{width-23}}")
                         datetime_correct = datetime
                         break
