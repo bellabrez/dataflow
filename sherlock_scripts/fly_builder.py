@@ -21,7 +21,7 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
     width = 77
-    printlog(f"{'Building flies from directory ' + os.path.split(flagged_dir)[-1]:-^{width}}")
+    printlog(f"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':$^{width}}")
 
     # Assume this folder contains fly1 etc
     # This folder may (or may not) contain separate areas # False, now enforcing experiment subfolders
@@ -32,7 +32,7 @@ def main(args):
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_dir)
     bbb.sort_nicely(likely_fly_folders)
-    printlog('Found fly folders: {}'.format(likely_fly_folders))
+    printlog(f"{'Found fly folders: '+str(likely_fly_folders):^77}")
 
     for likely_fly_folder in likely_fly_folders:
         if 'fly' in likely_fly_folder:
@@ -356,7 +356,9 @@ def copy_fictrac(destination_region, printlog):
     for file in correct_time_files:
         target_path = os.path.join(fictrac_destination, file)
         source_path = os.path.join(fictrac_folder, file)
-        printlog('Transfering {}'.format(target_path))
+        to_print = ('/').join(target_path.split('/')[-4:])
+        printlog(f'Transfering file{to_print:.>61}')
+        #printlog('Transfering {}'.format(target_path))
         ##sys.stdout.flush()
         copyfile(source_path, target_path)
 
