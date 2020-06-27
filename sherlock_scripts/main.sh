@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=main
+#SBATCH --job-name=dataflow
 #SBATCH --partition=trc
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=1
