@@ -74,7 +74,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=6, nice=True)
+                         logfile=logfile, time=1, mem=4, nice=False)
     job_ids.append(job_id)
 
 timepointss = []
