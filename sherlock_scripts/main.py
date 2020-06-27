@@ -3,6 +3,7 @@ import sys
 import os
 import json
 import dataflow as flow
+import datetime
 
 modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
 width = 77 # width of print log
@@ -29,6 +30,9 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ######################
 
 printlog(f"{'--*-*- Dataflow -*-*--':^{width}}")
+day_now = datetime.datetime.now().strftime("%B %d, %Y")
+time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
+printlog(F"{day_now+' | '+time_now:^77}")
 printlog("="*width)
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'

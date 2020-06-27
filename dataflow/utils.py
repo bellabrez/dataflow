@@ -189,6 +189,7 @@ def get_job_status(job_id, logfile, should_print=False):
 
             width = 77
             pretty = '+' + '-' * (width-2) + '+'
+            sep = ' | '
             printlog(F"{pretty}\n"
                      F"{'| '+jobname+sep+job_id+sep+status+sep+duration+sep+num_cores+' cores'+sep+memory_to_print+' (' + percent_mem + '%)':{width-1}}|\n"
                      F"{pretty}\n")
