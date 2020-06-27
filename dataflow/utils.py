@@ -170,10 +170,14 @@ def get_job_status(job_id, logfile, should_print=False):
     
     if should_print: 
         if status != 'PENDING':
-            duration = temp.split('\n')[0].split('|')[1]
-            jobname = temp.split('\n')[0].split('|')[4]
-            num_cores = int(temp.split('\n')[0].split('|')[3])
-            memory_used = float(temp.split('\n')[1].split('|')[2]) # in bytes
+            try:
+                duration = temp.split('\n')[0].split('|')[1]
+                jobname = temp.split('\n')[0].split('|')[4]
+                num_cores = int(temp.split('\n')[0].split('|')[3])
+                memory_used = float(temp.split('\n')[1].split('|')[2]) # in bytes
+            except IndexError:
+                printlog(F"Failed to parse sacct subprocess: {temp}")
+                return status
             core_memory = 7.77 * 1024 * 1024 * 1024 #GB to MB to KB to bytes
 
             if memory_used > 1024 ** 3:
@@ -194,14 +198,6 @@ def get_job_status(job_id, logfile, should_print=False):
             printlog(F"{pretty}\n"
                      F"{'| '+jobname+sep+job_id+sep+status+sep+duration+sep+str(num_cores)+' cores'+sep+memory_to_print+' (' + percent_mem + '%)':{width-1}}|\n"
                      F"{pretty}")
-
-            # pretty = '=' * 41
-            # printlog(f"{pretty}\n"
-            #          f"{jobname + ' | ' + job_id + ' | ' + status:40}-\n"
-            #          f"{'Duration: ' + duration:40}-\n"
-            #          f"{'Num Cores: ' + str(num_cores):40}-\n"
-            #          f"{'Memory Used: ' + memory_to_print + ' (' + percent_mem + '%)':40}-\n"
-            #          f"{pretty}\n")
         else:
             printlog('Job {} Status: {}'.format(job_id, status))
 

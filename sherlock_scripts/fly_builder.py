@@ -341,7 +341,7 @@ def copy_fictrac(destination_region, printlog):
 
     if datetime_correct is None:
         width = 120
-        printlog(F"{'No correct fictrac data found; continuing without fictrac data':*^{width}}")
+        printlog(F"{'   No fictrac data found --- continuing without fictrac data   ':*^{width}}")
         return
 
     # Now collect the 4 files with correct datetime

@@ -31,12 +31,13 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ######################
 
 title = pyfiglet.figlet_format("Dataflow", font="cyberlarge" )
-title_shifted = ('\n').join([' '*28+line for line in title.split('\n')])
+title_shifted = ('\n').join([' '*28+line for line in title.split('\n')][:-1])
 printlog(title_shifted)
 #printlog(f"{'--*-*- Dataflow -*-*--':^{width}}")
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
+printlog("\n")
 printlog("="*width)
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
@@ -64,6 +65,10 @@ funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x]
 anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
 funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
+
+### TEMP - REMOVE!!!!!!!!
+funcanats = funcs[0]
+dirtypes = ['func']
 
 ##########################
 ### Create mean brains ###
@@ -99,9 +104,9 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
         os.makedirs(moco_dir)
 
     if dirtype == 'func':
-        step = 100
-    elif dirtype == 'anat':
         step = 10
+    elif dirtype == 'anat':
+        step = 5
 
     starts = list(range(0,timepoints,step))
     stops = starts[1:] + [timepoints]
