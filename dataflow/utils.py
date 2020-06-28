@@ -231,7 +231,8 @@ def print_progress_table(progress, logfile, print_header):
         total_vol.append(progress[funcanat]['total_vol'])
     num_columns=len(fly_print)
     column_width = int((120-20)/num_columns)
-    column_width=9
+    if column_width < 9:
+        column_width = 9
 
     if print_header:
         printlog((' '*9) + '+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+')
