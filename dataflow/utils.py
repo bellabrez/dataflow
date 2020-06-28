@@ -223,8 +223,6 @@ def wait_for_job(job_id, logfile, com_path):
 
 def print_progress_table(progress, logfile, print_header):
     printlog = getattr(Printlog(logfile=logfile), 'print_to_log')
-    column_width=9
-    #progress[funcanat] = {'total_vol': total_vol, 'complete_vol': complete_vol}
 
     fly_print, expt_print, total_vol = [], [], []
     for funcanat in progress:
@@ -232,6 +230,8 @@ def print_progress_table(progress, logfile, print_header):
         expt_print.append(funcanat.split('/')[-1])
         total_vol.append(progress[funcanat]['total_vol'])
     num_columns=len(fly_print)
+    column_width = int((120-20)/num_columns)
+    column_width=9
 
     if print_header:
         printlog((' '*9) + '+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+')
@@ -274,7 +274,7 @@ def moco_progress(progress_tracker, logfile, com_path):
                 try:
                     with open(com_file, 'r') as f:
                         output = f.read()
-                        complete_vol_partial = max(re.findall(r'\d+', output))
+                        complete_vol_partial = int(max(re.findall(r'\d+', output)))
                 except:
                     complete_vol_partial = 0
                 complete_vol += complete_vol_partial
