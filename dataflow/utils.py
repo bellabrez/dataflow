@@ -274,7 +274,8 @@ def moco_progress(progress_tracker, logfile, com_path):
                 try:
                     with open(com_file, 'r') as f:
                         output = f.read()
-                        complete_vol_partial = int(max(re.findall(r'\d+', output)))
+                        #complete_vol_partial = int(max(re.findall(r'\d+', output)))
+                        complete_vol_partial = max([int(x) for x in re.findall(r'\d+', output)])
                 except:
                     complete_vol_partial = 0
                 complete_vol += complete_vol_partial
