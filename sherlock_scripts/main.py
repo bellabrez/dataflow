@@ -1,6 +1,7 @@
 import time
 import sys
 import os
+import re
 import json
 import datetime
 import pyfiglet
@@ -45,7 +46,7 @@ printlog(title_shifted)
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
-printlog("\n")
+printlog("")
 printlog("="*width)
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
@@ -149,10 +150,11 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                              logfile=logfile, time=1, mem=1, nice=True, silence_print=True)
         job_ids.append(job_id)
 
-    to_print = F"| mocos | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each: {job_ids}"
-    printlog(textwrap.TextWrapper(width=width).fill(text=to_print))
+    #to_print = F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |"
+    #printlog(textwrap.TextWrapper(width=width).fill(text=to_print))
+    printlog(F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |")
     job_ids_colons = ':'.join(job_ids)
-    progress_tracker[funcanat] = job_ids
+    progress_tracker[funcanat] = {'job_ids': job_ids, 'total_vol': timepoints}
 
     #################################
     ### Create dependent stitcher ###
@@ -167,95 +169,10 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                          logfile=logfile, time=2, mem=4, dep=job_ids_colons, nice=True)
     stitcher_job_ids.append(job_id)
 
-#flow.moco_progress(progress_tracker, logfile, com_path)
+flow.moco_progress(progress_tracker, logfile, com_path)
 
 for job_id in stitcher_job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
-
-# def moco_progress(progress_tracker, logfile, com_path):
-#     ##############################################################################
-#     ### Printing a progress bar every min until all moco_partial jobs complete ###
-#     ##############################################################################
-#     printlog = getattr(Printlog(logfile=logfile), 'print_to_log')
-#     print_header = True
-#     while True:
-#         progress = {}
-#         stati = []
-#         ###############################
-#         ### Get progress and status ###
-#         ###############################
-#         ### For each expt_dir, for each moco_partial job_id, get progress from slurm.out files, and status ###
-#         for funcanat in progress_tracker:
-#             complete_vol = 0
-#             for job_id in progress_tracker[funcanat]:
-#                 # Read com file
-#                 com_file = os.path.join(com_path, job_id + '.out')
-#                 try:
-#                     with open(com_file, 'r') as f:
-#                         output = f.read()
-#                         ### TODO parse output <================================================
-#                         total_vol = TODO
-#                         complete_vol_partial = TODO
-#                 except:
-#                     output = None
-
-#                 total_vol = total_vol # should always be the same anyway
-#                 complete_vol += complete_vol_partial
-#             progress[funcanat] = {'total_vol': total_vol, 'complete_vol': complete_vol} # Track progress
-#             stati.append(get_job_status(job_id, logfile)) # Track status
-
-#         ##########################
-#         ### Print progress bar ###
-#         ##########################
-
-#         # what would be a good thing to print within moco_partials?
-#         # print numbers with a separation, then parse
-#         # will have this: progress[funcanat].append({'job_id': output})
-#         # want a double bar for each funcanat showing job% and vol%.
-#         # could easily have 4 flies, or 8 funcanats (anat and func), or 16 bars (job% and vol%)
-#         # 120 char width
-
-#         print_progress_table(progress, logfile)
-#         print_header = False
-
-#         ###############################################
-#         ### Return if all jobs are done, else sleep ###
-#         ###############################################
-#         finished = ['COMPLETED', 'CANCELLED', 'TIMEOUT', 'FAILED', 'OUT_OF_MEMORY']
-#         if all([status in finished for status in stati]):
-#             return
-#         else:
-#             sleep(1)
-
-# def progress_bar(iteration, total, length, fill = '█'):
-#     filledLength = int(length * iteration // total)
-#     bar = fill * filledLength + '-' * (length - filledLength)
-#     fraction = F"{str(iteration):^4}" + '/' + F"{str(total):^4}"
-#     bar_string = f"{bar}"
-#     return bar_string
-
-# def print_progress_table(progress, logfile, print_header):
-#     printlog = getattr(Printlog(logfile=logfile), 'print_to_log')
-
-#     num_columns=8
-
-#     complete_vol = 3000
-#     total_vol = 3142
-#     column_width=9
-
-#     if print_header:
-#         printlog((' '*9) + '+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+')
-#         printlog((' '*9) + '|' + '|'.join([F"{'fly_124':^{column_width}}"]*num_columns) + '|')
-#         printlog((' '*9) + '|' + '|'.join([F"{'func_0':^{column_width}}"]*num_columns) + '|'
-#         printlog((' '*9) + '|' + '|'.join([F"{str(total_vol)+' vols':^{column_width}}"]*num_columns) + '|')
-#         printlog('|ELAPSED ' + '+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+' + 'REMAININ|')
-
-#     for complete_vol in range(0,total_vol,100):
-#         bar_string = progress_bar(complete_vol, total_vol, column_width)
-#         fly_line = '|' + '|'.join([F"{bar_string:^{column_width}}"]*num_columns) + '|'
-#         fly_line = '|00:00:00' + fly_line + '00:00:00|'
-#         printlog(fly_line)
-
 
 ###############
 ### Z-Score ###
