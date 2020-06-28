@@ -4,6 +4,7 @@ import bigbadbrain as bbb
 import numpy as np
 import argparse
 import subprocess
+import json
 
 def main(args):
 
