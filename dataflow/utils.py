@@ -228,9 +228,9 @@ def print_progress_table(progress, logfile, print_header):
 
     fly_print, expt_print, total_vol = [], [], []
     for funcanat in progress:
-        fly_print = funcanat.split('/')[-2]
-        expt_print = funcanat.split('/')[-1]
-        total_vol = progress[funcanat]['total_vol']
+        fly_print.append(funcanat.split('/')[-2])
+        expt_print.append(funcanat.split('/')[-1])
+        total_vol.append(progress[funcanat]['total_vol'])
     num_columns=len(fly_print)
 
     if print_header:
