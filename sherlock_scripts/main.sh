@@ -10,4 +10,4 @@
 
 ml python/3.6.1
 date
-python3 /home/users/brezovec/projects/dataflow/sherlock_scripts/main.py
+python3 -u /home/users/brezovec/projects/dataflow/sherlock_scripts/main.py
