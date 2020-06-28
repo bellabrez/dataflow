@@ -277,8 +277,6 @@ def moco_progress(progress_tracker, logfile, com_path):
                         complete_vol_partial = max(re.findall(r'\d+', output))
                 except:
                     complete_vol_partial = 0
-
-                total_vol = total_vol # should always be the same anyway
                 complete_vol += complete_vol_partial
             progress_tracker[funcanat]['complete_vol'] = complete_vol
             stati.append(get_job_status(job_id, logfile)) # Track status

@@ -129,16 +129,6 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
     #######################
     ### Launch partials ###
     #######################
-
-    '''
-    Com and print makes this super easy! 
-    Each moco_partial job is responsible for 10 vol
-    main knowns what fly and expt goes with each jobid
-    each funcanat wants to be checking the slurm-jobid files in com, where it will find an int of progress
-    psuedocode:
-    
-    '''
-
     job_ids = []
     for start, stop in zip (starts, stops):
         args = {'logfile': logfile, 'directory': funcanat, 'dirtype': dirtype, 'start': start, 'stop': stop}
