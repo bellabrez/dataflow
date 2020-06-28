@@ -292,7 +292,7 @@ def moco_progress(progress_tracker, logfile, com_path):
         # could easily have 4 flies, or 8 funcanats (anat and func), or 16 bars (job% and vol%)
         # 120 char width
 
-        print_progress_table(progress_tracker, logfile)
+        print_progress_table(progress_tracker, logfile, print_header)
         print_header = False
 
         ###############################################
