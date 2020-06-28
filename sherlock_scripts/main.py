@@ -77,9 +77,9 @@ bbb.sort_nicely(anats)
 funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 
-### TEMP - REMOVE!!!!!!!!
-#funcanats = funcs[0]
-#dirtypes = ['func']
+### TEMP - REMOVE!!!!!!!! <==============================================    REMOVE
+funcanats = funcs
+dirtypes = ['func']*len(funcs)
 
 ##########################
 ### Create mean brains ###
