@@ -45,7 +45,7 @@ printlog(title_shifted)
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
-#printlog("\n")
+printlog("\n")
 printlog("="*width)
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
@@ -69,8 +69,10 @@ job_id = flow.sbatch(jobname='bldfly',
                      logfile=logfile, time=1, mem=1, nice=True)
 func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
 func_and_anats = func_and_anats.split('\n')[:-1]
-funcs = bbb.sort_nicely([x.split(':')[1] for x in func_and_anats if 'func:' in x]) # will be full paths to fly/expt
-anats = bbb.sort_nicely([x.split(':')[1] for x in func_and_anats if 'anat:' in x])
+funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x] # will be full paths to fly/expt
+anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
+bbb.sort_nicely(funcs)
+bbb.sort_nicely(anats)
 funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 

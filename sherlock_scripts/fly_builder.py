@@ -46,7 +46,7 @@ def main(args):
 
             new_fly_number = get_new_fly_number(target_path)
             #printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
-            printlog(f"\n{'   Building '+likely_fly_folder+' as fly_'+ str(new_fly_number) + '   ':-^{width}}")
+            printlog(f"\n{'   Building '+likely_fly_folder+' as fly_'+ str(new_fly_number) + '   ':=^{width}}")
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)
