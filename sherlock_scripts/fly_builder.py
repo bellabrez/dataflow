@@ -18,6 +18,7 @@ def main(args):
     logfile = args['logfile']
     flagged_dir = args['flagged_dir']
     target_path = args['dataset_path']
+    fly_dirs = args['fly_dirs']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
     width = 120
@@ -35,6 +36,10 @@ def main(args):
     likely_fly_folders = os.listdir(flagged_dir)
     bbb.sort_nicely(likely_fly_folders)
     printlog(F"\nFound fly folders{str(likely_fly_folders):.>{width-17}}")
+
+    if fly_dirs is not None:
+        likely_fly_folders = fly_dirs
+        printlog(F"\nContinuing with only{str(likely_fly_folders):.>{width-20}}")
 
     for likely_fly_folder in likely_fly_folders:
         if 'fly' in likely_fly_folder:
