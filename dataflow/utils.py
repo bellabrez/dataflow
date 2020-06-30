@@ -256,7 +256,10 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
 
     elapsed = time()-start_time
     elapsed_hms = sec_to_hms(elapsed)
-    remaining = elapsed/fraction_complete - elapsed
+    try:
+        remaining = elapsed/fraction_complete - elapsed
+    except ZeroDivisionError:
+        remaining = 0
     remaining_hms = sec_to_hms(remaining)
 
     for funcanat in progress:
