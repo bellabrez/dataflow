@@ -17,7 +17,7 @@ def main(args):
 
     for color in ['red', 'green']:
         brain_file = os.path.join(moco_dir, 'stitched_brain_{}.nii'.format(color))
-        if path.exists(brain_file):
+        if os.path.exists(brain_file):
             printlog('Z-scoring: {}'.format(brain_file))
 
             brain = nib.load(file).get_data()

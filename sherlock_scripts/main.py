@@ -144,7 +144,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
     printlog(F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |")
     job_ids_colons = ':'.join(job_ids)
     progress_tracker[funcanat] = {'job_ids': job_ids, 'total_vol': timepoints}
-    printlog(textwrap.TextWrapper(width=120).fill(text=str(job_ids_colons)))
+    #printlog(textwrap.TextWrapper(width=120).fill(text=str(job_ids_colons)))
 
     #################################
     ### Create dependent stitcher ###

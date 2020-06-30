@@ -245,9 +245,6 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
         printlog((' '*9) + '|' + '|'.join([F"{str(vol)+' vols':^{column_width}}" for vol in total_vol]) + '|')
         printlog('|ELAPSED ' + '+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+' + 'REMAININ|')
 
-    if print_footer:
-        printlog('|--------+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+--------|')
-
     def sec_to_hms(t):
         secs=F"{np.floor(t%60):02.0f}"
         mins=F"{np.floor((t/60)%60):02.0f}"
@@ -267,6 +264,9 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
         fly_line = '|' + '|'.join([F"{bar_string:^{column_width}}"]*num_columns) + '|'
         fly_line = '|' + elapsed_hms + fly_line + remaining_hms + '|'
     printlog(fly_line)
+
+    if print_footer:
+        printlog('|--------+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+--------|')
 
 def progress_bar(iteration, total, length, fill = '█'):
     filledLength = int(length * iteration // total)
