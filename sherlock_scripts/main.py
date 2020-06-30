@@ -38,9 +38,8 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ######################
 ### Check for flag ###
 ######################
-
-title = pyfiglet.figlet_format("Dataflow", font="shimrod" ) #28
-title_shifted = ('\n').join([' '*40+line for line in title.split('\n')][:-2])
+title = pyfiglet.figlet_format("Dataflow", font="cyberlarge" ) #28 #shimrod
+title_shifted = ('\n').join([' '*28+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
 #printlog(f"{'--*-*- Dataflow -*-*--':^{width}}")
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
@@ -145,6 +144,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
     printlog(F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |")
     job_ids_colons = ':'.join(job_ids)
     progress_tracker[funcanat] = {'job_ids': job_ids, 'total_vol': timepoints}
+    printlog(textwrap.TextWrapper(width=120).fill(text=str(job_ids_colons)))
 
     #################################
     ### Create dependent stitcher ###
