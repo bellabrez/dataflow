@@ -39,8 +39,8 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ### Check for flag ###
 ######################
 
-title = pyfiglet.figlet_format("Dataflow", font="cyberlarge" )
-title_shifted = ('\n').join([' '*28+line for line in title.split('\n')][:-2])
+title = pyfiglet.figlet_format("Dataflow", font="shimrod" ) #28
+title_shifted = ('\n').join([' '*40+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
 #printlog(f"{'--*-*- Dataflow -*-*--':^{width}}")
 day_now = datetime.datetime.now().strftime("%B %d, %Y")

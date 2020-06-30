@@ -159,7 +159,6 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=
     width = 120
     if not silence_print:
         Printlog(logfile=logfile).print_to_log(f"{sbatch_response}{jobname:.>{width-27}}")
-    #Printlog(logfile=logfile).print_to_log('*** {} | {:10} ***'.format(sbatch_response, jobname))
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
@@ -221,14 +220,19 @@ def wait_for_job(job_id, logfile, com_path):
         else:
             sleep(5)
 
-def print_progress_table(progress, logfile, print_header):
+def print_progress_table(progress, logfile, start_time, print_header=False, print_footer=False):
     printlog = getattr(Printlog(logfile=logfile), 'print_to_log')
 
-    fly_print, expt_print, total_vol = [], [], []
+    fly_print, expt_print, total_vol, complete_vol = [], [], [], []
     for funcanat in progress:
         fly_print.append(funcanat.split('/')[-2])
         expt_print.append(funcanat.split('/')[-1])
         total_vol.append(progress[funcanat]['total_vol'])
+        complete_vol.append(progress[funcanat]['complete_vol'])
+
+    total_vol_sum = np.sum(int(x) for x in total_vol)
+    complete_vol_sum = np.sum(int(x) for x in complete_vol)
+    fraction_complete = complete_vol_sum/total_vol_sum
     num_columns=len(fly_print)
     column_width = int((120-20)/num_columns)
     if column_width < 9:
@@ -241,10 +245,24 @@ def print_progress_table(progress, logfile, print_header):
         printlog((' '*9) + '|' + '|'.join([F"{str(vol)+' vols':^{column_width}}" for vol in total_vol]) + '|')
         printlog('|ELAPSED ' + '+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+' + 'REMAININ|')
 
+    if print_footer:
+        printlog('|--------+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+--------|')
+
+    def sec_to_hms(t):
+        secs=F"{np.floor(t%60):02.0f}"
+        mins=F"{np.floor((t/60)%60):02.0f}"
+        hrs=F"{np.floor((t/3600)%60):02.0f}"
+        return ':'.join([hrs, mins, secs])
+
+    elapsed = time()-t0
+    elapsed_hms = sec_to_hms(elapsed)
+    remaining = elapsed/fraction_complete - elapsed
+    remaining_hms = sec_to_hms(remaining)
+
     for funcanat in progress:
         bar_string = progress_bar(progress[funcanat]['complete_vol'], progress[funcanat]['total_vol'], column_width)
         fly_line = '|' + '|'.join([F"{bar_string:^{column_width}}"]*num_columns) + '|'
-        fly_line = '|00:00:00' + fly_line + '00:00:00|'
+        fly_line = '|' + elapsed_hms + fly_line + remaining_hms + '|'
     printlog(fly_line)
 
 def progress_bar(iteration, total, length, fill = '█'):
@@ -260,6 +278,7 @@ def moco_progress(progress_tracker, logfile, com_path):
     ##############################################################################
     printlog = getattr(Printlog(logfile=logfile), 'print_to_log')
     print_header = True
+    start_time = time()
     while True:
 
         stati = []
@@ -283,18 +302,10 @@ def moco_progress(progress_tracker, logfile, com_path):
             progress_tracker[funcanat]['complete_vol'] = complete_vol
             stati.append(get_job_status(job_id, logfile)) # Track status
 
-        ##########################
-        ### Print progress bar ###
-        ##########################
-
-        # what would be a good thing to print within moco_partials?
-        # print numbers with a separation, then parse
-        # will have this: progress[funcanat].append({'job_id': output})
-        # want a double bar for each funcanat showing job% and vol%.
-        # could easily have 4 flies, or 8 funcanats (anat and func), or 16 bars (job% and vol%)
-        # 120 char width
-
-        print_progress_table(progress_tracker, logfile, print_header)
+        ############################
+        ### Print progress table ###
+        ############################
+        print_progress_table(progress_tracker, logfile, start_time, print_header)
         print_header = False
 
         ###############################################
@@ -302,6 +313,8 @@ def moco_progress(progress_tracker, logfile, com_path):
         ###############################################
         finished = ['COMPLETED', 'CANCELLED', 'TIMEOUT', 'FAILED', 'OUT_OF_MEMORY']
         if all([status in finished for status in stati]):
+            print_progress_table(progress_tracker, logfile, start_time)
+            print_progress_table(progress_tracker, logfile, start_time, print_footer=True) # print final 100% complete line
             return
         else:
-            sleep(1)
+            sleep(60)
