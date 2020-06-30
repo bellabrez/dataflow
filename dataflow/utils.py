@@ -254,7 +254,7 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
         hrs=F"{np.floor((t/3600)%60):02.0f}"
         return ':'.join([hrs, mins, secs])
 
-    elapsed = time()-t0
+    elapsed = time()-start_time
     elapsed_hms = sec_to_hms(elapsed)
     remaining = elapsed/fraction_complete - elapsed
     remaining_hms = sec_to_hms(remaining)
