@@ -80,6 +80,24 @@ dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 funcanats = funcs
 dirtypes = ['func']*len(funcs)
 
+####################
+### Bleaching QC ###
+####################
+
+job_ids = []
+for funcanat, dirtype in zip(funcanats, dirtypes):
+    directory = os.path.join(funcanat, 'imaging')
+    args = {'logfile': logfile, 'directory': directory, 'dirtype': dirtype}
+    script = 'bleaching_qc.py'
+    job_id = flow.sbatch(jobname='bleachqc',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=1, mem=1, nice=False)
+    job_ids.append(job_id)
+for job_id in job_ids:
+    timepoints = flow.wait_for_job(job_id, logfile, com_path)
+
 ##########################
 ### Create mean brains ###
 ##########################
@@ -136,7 +154,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=1, mem=1, nice=True, silence_print=True)
+                             logfile=logfile, time=1, mem=2, nice=True, silence_print=True)
         job_ids.append(job_id)
 
     #to_print = F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |"
@@ -186,64 +204,10 @@ for job_id in job_ids:
 ### Done ###
 ############
 
-
-
-'''
-option:
-I will now have a list of flies
-each fly could have multiple func...
-before, this was handled by each func folder triggering motcorr trigger,
-after flybuilder copied the func folder
-
-I think this main loop should expose each func folder, that way I can run
-any analysis on only a single func folder! - way more flexibility
-
-so actually I would like fly builder to return a list of fly/funcs, not just flies...
-then it is trivial to loop over
-
-now, how to restructure the motcorr splitter/partial/stitcher?
-would like all calls to sbatch to come from this script - is that possible? I think so
-
-#######
---- 1) make a new script whos job is to simply make the meanbrains...
-for funcanat in funcanat:
-    (funcanat) -> makemeanbrain -> (shape) : [jobids]
-for jobid: wait_for_job
-now, all these jobs are done
-#######
---- 2)
-for funcanat in funcanat:
-    for start/stop (calc via shape):
-        moco_partial
-    moco_stitcher with dependency on all moco_partials
-wait for moco_stitchers
-
-
-so, for funcanat in funcanat:
-    (funcanat) -> moco_splitter -> ([vol starts and ends])
-for jobid: wait_for_job
-
-
-path -> splitter
-splitter will create the meanbrain
-
-only needs to
-
-'''
-
-
-
-#os.system("sbatch motcorr_trigger.sh {}".format(expt_folder))
-
-##################################
-### PRODUCE FICTRAC QC FIGURES ###
-##################################
-#os.system("sbatch fictrac_qc.sh {}".format(expt_folder))
-
-
-############
-### etc. ###
-############
+day_now = datetime.datetime.now().strftime("%B %d, %Y")
+time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
+printlog("="*width)
+printlog(F"{day_now+' | '+time_now:^{width}}")
 
 '''
 - check for flag

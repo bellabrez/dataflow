@@ -4,6 +4,7 @@ import numpy as np
 import argparse
 import subprocess
 import json
+import nibabel as nib
 import bigbadbrain as bbb
 import dataflow as flow
 
