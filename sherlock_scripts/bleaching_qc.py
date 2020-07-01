@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from skimage.filters import threshold_triangle
 import psutil
 import dataflow as flow
+import nibabel as nib
 
 def main(args):
 
