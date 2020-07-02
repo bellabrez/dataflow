@@ -4,6 +4,7 @@ import numpy as np
 import argparse
 import subprocess
 import json
+from scipy.ndimage import gaussian_filter1d
 import nibabel as nib
 import bigbadbrain as bbb
 import dataflow as flow
@@ -22,7 +23,7 @@ def main(args):
             printlog('Z-scoring: {}'.format(brain_file))
 
             brain = np.asarray(nib.load(brain_file).get_data(), dtype='float32')
-            smoothed = scipy.ndimage.gaussian_filter1d(brain,sigma=200,axis=-1,truncate=1)
+            smoothed = gaussian_filter1d(brain,sigma=200,axis=-1,truncate=1)
             brain = brain - smoothed
 
             # Z-score brain
