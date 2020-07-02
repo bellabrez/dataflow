@@ -212,7 +212,7 @@ for funcanat in funcanats:
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=2, mem=10, nice=True)
+                         logfile=logfile, time=2, mem=14, nice=True)
     job_ids.append(job_id)
 
 for job_id in job_ids:
