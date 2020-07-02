@@ -79,6 +79,25 @@ dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 funcanats = funcs
 dirtypes = ['func']*len(funcs)
 
+##################
+### Fictrac QC ###
+##################
+
+job_ids = []
+for func in funcs:
+    directory = os.path.join(func, 'fictrac')
+    if os.path.exists(directory):
+        args = {'logfile': logfile, 'directory': directory}
+        script = 'fictrac_qc.py'
+        job_id = flow.sbatch(jobname='fictracqc',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=1, mem=1, nice=False)
+        job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
+
 ####################
 ### Bleaching QC ###
 ####################
@@ -95,7 +114,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
                          logfile=logfile, time=1, mem=1, nice=False)
     job_ids.append(job_id)
 for job_id in job_ids:
-    timepoints = flow.wait_for_job(job_id, logfile, com_path)
+    flow.wait_for_job(job_id, logfile, com_path)
 
 ##########################
 ### Create mean brains ###

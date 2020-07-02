@@ -54,14 +54,15 @@ def main(args):
     loss_string = ''
     for file in data_mean:
         loss_string = loss_string + file + ' lost' + F'{int(signal_loss[file])}' +'%\n'
-    plt.text(0.5,0.9,
-             loss_string,
-             horizontalalignment='center',
-             verticalalignment='center',
-             transform=plt.gca().transAxes)
+    plt.title(loss_string, ha='center', va='bottom')
+    # plt.text(0.5,0.9,
+    #          loss_string,
+    #          horizontalalignment='center',
+    #          verticalalignment='center',
+    #          transform=plt.gca().transAxes)
 
     save_file = os.path.join(directory, 'bleaching.png')
-    plt.savefig(save_file,dpi=100,bbox_inches='tight')
+    plt.savefig(save_file,dpi=300,bbox_inches='tight')
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))
