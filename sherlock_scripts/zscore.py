@@ -12,17 +12,15 @@ import dataflow as flow
 def main(args):
 
     logfile = args['logfile']
-    directory = args['directory']
+    directory = args['directory'] # full fly func path
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
-    moco_dir = os.path.join(directory, 'moco')
-
     for color in ['red', 'green']:
-        brain_file = os.path.join(moco_dir, 'stitched_brain_{}.nii'.format(color))
+        brain_file = os.path.join(directory, 'moco', 'stitched_brain_{}.nii'.format(color))
         if os.path.exists(brain_file):
             printlog('Z-scoring: {}'.format(brain_file))
 
-            brain = np.asarray(nib.load(brain_file).get_data(), dtype='float32')
+            brain = np.asarray(nib.load(brain_file).get_data(), dtype='uint16')
             smoothed = gaussian_filter1d(brain,sigma=200,axis=-1,truncate=1)
             brain = brain - smoothed
 
@@ -33,7 +31,7 @@ def main(args):
 
             # Save brain
             zbrain_file = os.path.join(directory, 'brain_zscored_{}.nii'.format(color))
-            #bbb.save_brain(zbrain_file, brain)
+            printlog('Saving {}'.format(zbrain_file))
             aff = np.eye(4)
             img = nib.Nifti1Image(brain, aff)
             img.to_filename(zbrain_file)

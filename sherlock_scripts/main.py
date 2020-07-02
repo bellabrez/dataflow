@@ -76,8 +76,8 @@ funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 
 ### TEMP - REMOVE!!!!!!!! <==============================================    REMOVE
-funcanats = funcs
-dirtypes = ['func']*len(funcs)
+#funcanats = funcs
+#dirtypes = ['func']*len(funcs)
 
 ##################
 ### Fictrac QC ###

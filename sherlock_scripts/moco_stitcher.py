@@ -34,7 +34,8 @@ def main(args):
         if len(files[color]) > 0:
             brains = []
             for brain_file in files[color]:
-                brain = bbb.load_numpy_brain(brain_file)
+                brain = np.asarray(nib.load(file).get_data(), dtype=np.uint16)
+                #brain = bbb.load_numpy_brain(brain_file)
 
                 # Handle edgecase of single volume brain
                 if len(np.shape(brain)) == 3:
@@ -45,8 +46,12 @@ def main(args):
             #print('brains len: {}'.format(len(brains)))
             stitched_brain = np.concatenate(brains, axis=-1)
             printlog('Stitched brain shape: {}'.format(np.shape(stitched_brain)))
+            #bbb.save_brain(save_file, stitched_brain)
+
             save_file = os.path.join(directory, 'stitched_brain_{}.nii'.format(color))
-            bbb.save_brain(save_file, stitched_brain)
+            aff = np.eye(4)
+            img = nib.Nifti1Image(stitched_brain, aff)
+            img.to_filename(save_file)
             stitched_brain = None
 
             # delete partial brains
