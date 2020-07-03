@@ -5,6 +5,7 @@ import dataflow as flow
 import numpy as np
 import re
 import json
+import nibabel as nib
 
 def main(args):
 

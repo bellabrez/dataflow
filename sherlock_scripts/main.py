@@ -78,6 +78,8 @@ dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 ### TEMP - REMOVE!!!!!!!! <==============================================    REMOVE
 #funcanats = funcs
 #dirtypes = ['func']*len(funcs)
+funcanats = anats
+dirtypes = ['anat']*len(anats)
 
 ##################
 ### Fictrac QC ###
@@ -155,8 +157,10 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
 
     if dirtype == 'func':
         step = 10
+        mem=2
     elif dirtype == 'anat':
         step = 5
+        mem=4
 
     starts = list(range(0,timepoints,step))
     stops = starts[1:] + [timepoints]
@@ -172,7 +176,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=1, mem=2, nice=True, silence_print=True)
+                             logfile=logfile, time=1, mem=mem, nice=True, silence_print=True)
         job_ids.append(job_id)
 
     #to_print = F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |"
