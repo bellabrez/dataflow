@@ -259,14 +259,19 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
         remaining = 0
     remaining_hms = sec_to_hms(remaining)
 
+    single_bars = []
     for funcanat in progress:
         bar_string = progress_bar(progress[funcanat]['complete_vol'], progress[funcanat]['total_vol'], column_width)
-        fly_line = '|' + '|'.join([F"{bar_string:^{column_width}}"]*num_columns) + '|'
-        fly_line = '|' + elapsed_hms + fly_line + remaining_hms + '|'
+        single_bars.append(bar_string)
+    fly_line = '|' + '|'.join(single_bars) + '|'
+    #fly_line = '|' + '|'.join([F"{bar_string:^{column_width}}"]*num_columns) + '|'
+    fly_line = '|' + elapsed_hms + fly_line + remaining_hms + '|'
     printlog(fly_line)
 
     if print_footer:
         printlog('|--------+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+--------|')
+        for funcanat in progress:
+            printlog("{} {} {}".format(funcanat, progress[funcanat]['complete_vol'], progress[funcanat]['total_vol']))
 
 def progress_bar(iteration, total, length, fill = '█'):
     filledLength = int(length * iteration // total)
