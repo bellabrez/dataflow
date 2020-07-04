@@ -16,7 +16,7 @@ modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz
 #########################
 
 width = 120 # width of print log
-fly_dirs = ['fly1'] # set to None, or a list of fly dirs in the import dir
+fly_dirs = ['fly1', 'fly2'] # set to None, or a list of fly dirs in the import dir
 
 #####################
 ### Setup logging ###
@@ -76,10 +76,11 @@ funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 
 ### TEMP - REMOVE!!!!!!!! <==============================================    REMOVE
-#funcanats = funcs
-#dirtypes = ['func']*len(funcs)
-funcanats = anats
-dirtypes = ['anat']*len(anats)
+funcanats = funcs
+dirtypes = ['func']*len(funcs)
+
+# funcanats = anats
+# dirtypes = ['anat']*len(anats)
 
 ##################
 ### Fictrac QC ###
