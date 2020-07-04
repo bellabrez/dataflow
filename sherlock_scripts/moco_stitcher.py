@@ -35,7 +35,7 @@ def main(args):
         if len(files[color]) > 0:
             brains = []
             for brain_file in files[color]:
-                brain = np.asarray(nib.load(file).get_data(), dtype=np.uint16)
+                brain = np.asarray(nib.load(brain_file).get_data(), dtype=np.uint16)
                 #brain = bbb.load_numpy_brain(brain_file)
 
                 # Handle edgecase of single volume brain
