@@ -19,7 +19,7 @@ def main(args):
         brain_file = os.path.join(directory, 'moco', 'stitched_brain_{}.nii'.format(color))
         if os.path.exists(brain_file):
             to_print = '/'.join(brain_file.split('/')[-5:])
-            printlog(f'Z-scoring{to_print:.>{width-9}}')
+            printlog(f'Z-scoring{to_print:.>{120-9}}')
 
             brain = np.asarray(nib.load(brain_file).get_data(), dtype='uint16')
             smoothed = gaussian_filter1d(brain,sigma=200,axis=-1,truncate=1)
