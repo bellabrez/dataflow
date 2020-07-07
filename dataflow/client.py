@@ -11,7 +11,9 @@ host = "10.30.115.186"
 # the port, let's use 5001
 port = 5001
 # the name of file we want to send, make sure it exists
-filename = "data.csv"
+#filename = "data.csv"
+filename = "G:/ftp_imports/20200613/fly1/func_0/SingleImage-06132020-1058-001/SingleImage-06132020-1058-001_Cycle00001_Ch1_000001.ome.tif"
+
 # get the file size
 filesize = os.path.getsize(filename)
 
