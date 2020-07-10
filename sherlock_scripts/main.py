@@ -154,8 +154,8 @@ stitcher_job_ids = []
 progress_tracker = {}
 
 timepointss = [100]
-funcanat = os.path.join(dataset_path, 'fly_170', 'anat_0')
-dirtype = 'anat'
+funcanats = [os.path.join(dataset_path, 'fly_170', 'anat_0')]
+dirtype = ['anat']
 
 for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
 
