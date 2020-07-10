@@ -35,9 +35,6 @@ scripts_path = "/home/users/brezovec/projects/dataflow/sherlock_scripts"
 com_path = "/home/users/brezovec/projects/dataflow/sherlock_scripts/com"
 dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
 
-######################
-### Check for flag ###
-######################
 title = pyfiglet.figlet_format("Dataflow", font="cyberlarge" ) #28 #shimrod
 title_shifted = ('\n').join([' '*28+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
@@ -46,6 +43,10 @@ time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
 printlog("")
 printlog("="*width)
+
+######################
+### Check for flag ###
+######################
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
 job_id = flow.sbatch(jobname='flagchk',

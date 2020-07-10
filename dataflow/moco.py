@@ -34,9 +34,10 @@ def motion_correction(brain_master,
     motCorr_brain_slave = []
     durations = []
     transform_matrix = []
+    printlog('in moco.py')
 
     for i in range(np.shape(brain_master)[-1]):
-        printlog('Aligning brain volume {} of {}.'.format(i, end_volume))
+        printlog('Aligning brain volume {}'.format(i))
         t0 = time()
         
         #First, align given master volume to master meanbrain
