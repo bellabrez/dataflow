@@ -39,11 +39,11 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ### Start MOCO ###
 ##################
 step = 1
-mem = 4
+mem = 12 # was 4 <============================== fix
 time_moco = 3
 progress_tracker = {}
 job_ids = []
-start = 10
+start = 10 
 stop = 11
 timepoints=int(stop-start)
 funcanat = os.path.join(dataset_path, 'fly_170', 'anat_0')

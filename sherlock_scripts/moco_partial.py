@@ -35,12 +35,12 @@ def main(args):
     slave_brain = load_partial_brain(slave_path,start,stop)
     mean_brain = ants.from_numpy(np.asarray(nib.load(master_path_mean).get_data(), dtype='float32'))
 
-    bbb.motion_correction(master_brain,
-                          slave_brain,
-                          moco_dir,
-                          printlog,
-                          meanbrain=mean_brain,
-                          suffix='_'+str(start))
+    flow.motion_correction(master_brain,
+                           slave_brain,
+                           moco_dir,
+                           printlog,
+                           mean_brain,
+                           suffix='_'+str(start))
 
 def load_partial_brain(file, start, stop):
     brain = nib.load(file).dataobj[:,:,:,start:stop]
