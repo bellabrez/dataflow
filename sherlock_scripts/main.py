@@ -168,6 +168,8 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
     starts = list(range(0,timepoints,step))
     stops = starts[1:] + [timepoints]
 
+    if 
+
     #######################
     ### Launch partials ###
     #######################
