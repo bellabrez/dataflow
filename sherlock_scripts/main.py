@@ -155,7 +155,7 @@ progress_tracker = {}
 
 timepointss = [100]
 funcanats = [os.path.join(dataset_path, 'fly_170', 'anat_0')]
-dirtype = ['anat']
+dirtypes = ['anat']
 
 for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
 
