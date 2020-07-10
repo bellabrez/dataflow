@@ -58,6 +58,7 @@ def motion_correction(brain_master,
                 transform_matrix.append(temp.parameters)
 
         print(F"[{i+1}]") #IMPORTANT FOR COMMUNICATION WITH DATAFLOW MAIN
+        sys.stdout.flush()
 
     # Save motcorr brains
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)

@@ -48,7 +48,7 @@ printlog("="*width)
 ### Start MOCO ###
 ##################
 step = 1
-mem = 12 # was 4 <============================== fix
+mem = 6 # was 4 <============================== fix
 time_moco = 3
 progress_tracker = {}
 job_ids = []
