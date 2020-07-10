@@ -233,7 +233,7 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
 
     total_vol_sum = np.sum([int(x) for x in total_vol])
     complete_vol_sum = np.sum([int(x) for x in complete_vol])
-    printlog("{}, {}".format(total_vol_sum, complete_vol_sum))
+    #printlog("{}, {}".format(total_vol_sum, complete_vol_sum))
     fraction_complete = complete_vol_sum/total_vol_sum
     num_columns = len(fly_print)
     column_width = int((120-20)/num_columns)

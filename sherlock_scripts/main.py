@@ -158,18 +158,16 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
         os.makedirs(moco_dir)
 
     if dirtype == 'func':
-        step = 10
+        step = 10 ### <================ compare speed with different step/mem combos
         mem = 2
         time_moco = 1
     elif dirtype == 'anat':
-        step = 5
-        mem = 4
-        time_moco = 3
+        step = 15
+        mem = 6
+        time_moco = 6
 
     starts = list(range(0,timepoints,step))
     stops = starts[1:] + [timepoints]
-
-    if 
 
     #######################
     ### Launch partials ###
