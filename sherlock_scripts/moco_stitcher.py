@@ -11,6 +11,7 @@ def main(args):
 
     logfile = args['logfile']
     directory = args['directory'] # moco full path
+    dirtype = args['dirtype']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     printlog('\nStitcher started for {}'.format(directory))
 
@@ -82,9 +83,29 @@ def main(args):
         #print('directory: {}'.format(directory))
         #print('xml_dir: {}'.format(xml_dir))
         #sys.stdout.flush()
-        bbb.save_motion_figure(stitched_params, xml_dir, directory)
+        save_motion_figure(stitched_params, xml_dir, directory, dirtype)
     else:
         printlog('Empty motcorr params - skipping saving moco figure.')
+
+def save_motion_figure(transform_matrix, directory, motcorr_directory, dirtype):
+    # Get voxel resolution for figure
+    if dirtype == 'func':
+        file = os.path.join(directory, 'functional.xml')
+    elif dirtype == 'anat':
+        file = os.path.join(directory, 'anatomy.xml')
+    x_res, y_res, z_res = get_resolution(file)
+
+    # Save figure of motion over time
+    save_file = os.path.join(motcorr_directory, 'motion_correction.png')
+    plt.figure(figsize=(10,10))
+    plt.plot(transform_matrix[:,9]*x_res, label = 'y') # note, resolutions are switched since axes are switched
+    plt.plot(transform_matrix[:,10]*y_res, label = 'x')
+    plt.plot(transform_matrix[:,11]*z_res, label = 'z')
+    plt.ylabel('Motion Correction, um')
+    plt.xlabel('Time')
+    plt.title(directory)
+    plt.legend()
+    plt.savefig(save_file, bbox_inches='tight', dpi=300)
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))

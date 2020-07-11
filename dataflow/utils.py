@@ -272,8 +272,8 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
 
     if print_footer:
         printlog('|--------+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+--------|')
-        for funcanat in progress:
-            printlog("{} {} {}".format(funcanat, progress[funcanat]['complete_vol'], progress[funcanat]['total_vol']))
+        #for funcanat in progress:
+        #    printlog("{} {} {}".format(funcanat, progress[funcanat]['complete_vol'], progress[funcanat]['total_vol']))
 
 def progress_bar(iteration, total, length, fill = '█'):
     filledLength = int(length * iteration // total)

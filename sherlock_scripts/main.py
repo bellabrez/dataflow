@@ -48,115 +48,113 @@ printlog(F"{day_now+' | '+time_now:^{width}}")
 printlog("")
 printlog("="*width)
 
-# ######################
-# ### Check for flag ###
-# ######################
-# args = {'logfile': logfile, 'imports_path': imports_path}
-# script = 'check_for_flag.py'
-# job_id = flow.sbatch(jobname='flagchk',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=1, mem=1, nice=True)
-# flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
+######################
+### Check for flag ###
+######################
+args = {'logfile': logfile, 'imports_path': imports_path}
+script = 'check_for_flag.py'
+job_id = flow.sbatch(jobname='flagchk',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=1, mem=1, nice=True)
+flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
 
-# ###################
-# ### Build flies ###
-# ###################
+###################
+### Build flies ###
+###################
 
-# args = {'logfile': logfile, 'flagged_dir': flagged_dir.strip('\n'), 'dataset_path': dataset_path, 'fly_dirs': fly_dirs}
-# script = 'fly_builder.py'
-# job_id = flow.sbatch(jobname='bldfly',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=1, mem=1, nice=True)
-# func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
-# func_and_anats = func_and_anats.split('\n')[:-1]
-# funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x] # will be full paths to fly/expt
-# anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
-# bbb.sort_nicely(funcs)
-# bbb.sort_nicely(anats)
-# funcanats = funcs + anats
-# dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
+args = {'logfile': logfile, 'flagged_dir': flagged_dir.strip('\n'), 'dataset_path': dataset_path, 'fly_dirs': fly_dirs}
+script = 'fly_builder.py'
+job_id = flow.sbatch(jobname='bldfly',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=1, mem=1, nice=True)
+func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
+func_and_anats = func_and_anats.split('\n')[:-1]
+funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x] # will be full paths to fly/expt
+anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
+bbb.sort_nicely(funcs)
+bbb.sort_nicely(anats)
+funcanats = funcs + anats
+dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 
-# ### TEMP - REMOVE!!!!!!!! <==============================================    REMOVE
-# #funcanats = funcs
-# #dirtypes = ['func']*len(funcs)
+### TEMP - REMOVE!!!!!!!! <==============================================    REMOVE
+#funcanats = funcs
+#dirtypes = ['func']*len(funcs)
 
-# funcanats = anats
-# dirtypes = ['anat']*len(anats)
+funcanats = anats
+dirtypes = ['anat']*len(anats)
 
-# ##################
-# ### Fictrac QC ###
-# ##################
+##################
+### Fictrac QC ###
+##################
 
-# job_ids = []
-# for func in funcs:
-#     directory = os.path.join(func, 'fictrac')
-#     if os.path.exists(directory):
-#         args = {'logfile': logfile, 'directory': directory}
-#         script = 'fictrac_qc.py'
-#         job_id = flow.sbatch(jobname='fictracqc',
-#                              script=os.path.join(scripts_path, script),
-#                              modules=modules,
-#                              args=args,
-#                              logfile=logfile, time=1, mem=1, nice=False)
-#         job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+job_ids = []
+for func in funcs:
+    directory = os.path.join(func, 'fictrac')
+    if os.path.exists(directory):
+        args = {'logfile': logfile, 'directory': directory}
+        script = 'fictrac_qc.py'
+        job_id = flow.sbatch(jobname='fictracqc',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=1, mem=1, nice=False)
+        job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
-# ####################
-# ### Bleaching QC ###
-# ####################
+####################
+### Bleaching QC ###
+####################
 
-# job_ids = []
-# for funcanat, dirtype in zip(funcanats, dirtypes):
-#     directory = os.path.join(funcanat, 'imaging')
-#     args = {'logfile': logfile, 'directory': directory, 'dirtype': dirtype}
-#     script = 'bleaching_qc.py'
-#     job_id = flow.sbatch(jobname='bleachqc',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=1, mem=1, nice=False)
-#     job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+job_ids = []
+for funcanat, dirtype in zip(funcanats, dirtypes):
+    directory = os.path.join(funcanat, 'imaging')
+    args = {'logfile': logfile, 'directory': directory, 'dirtype': dirtype}
+    script = 'bleaching_qc.py'
+    job_id = flow.sbatch(jobname='bleachqc',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=1, mem=1, nice=False)
+    job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
-# ##########################
-# ### Create mean brains ###
-# ##########################
+##########################
+### Create mean brains ###
+##########################
 
-# job_ids = []
-# for funcanat, dirtype in zip(funcanats, dirtypes):
-#     directory = os.path.join(funcanat, 'imaging')
-#     args = {'logfile': logfile, 'directory': directory, 'dirtype': dirtype}
-#     script = 'make_mean_brain.py'
-#     job_id = flow.sbatch(jobname='meanbrn',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=1, mem=1, nice=False)
-#     job_ids.append(job_id)
+job_ids = []
+for funcanat, dirtype in zip(funcanats, dirtypes):
+    directory = os.path.join(funcanat, 'imaging')
+    args = {'logfile': logfile, 'directory': directory, 'dirtype': dirtype}
+    script = 'make_mean_brain.py'
+    job_id = flow.sbatch(jobname='meanbrn',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=1, mem=1, nice=False)
+    job_ids.append(job_id)
 
-# timepointss = []
-# for job_id in job_ids:
-#     timepoints = flow.wait_for_job(job_id, logfile, com_path)
-#     timepointss.append(int(timepoints.split('\n')[0]))
+timepointss = []
+for job_id in job_ids:
+    timepoints = flow.wait_for_job(job_id, logfile, com_path)
+    timepointss.append(int(timepoints.split('\n')[0]))
 
 ##################
 ### Start MOCO ###
 ##################
+# timepointss = [100]
+# funcanats = [os.path.join(dataset_path, 'fly_170', 'anat_0')]
+# dirtypes = ['anat']
 
 # This will immediately launch all partial mocos and their corresponding dependent moco stitchers
 stitcher_job_ids = []
 progress_tracker = {}
-
-timepointss = [100]
-funcanats = [os.path.join(dataset_path, 'fly_170', 'anat_0')]
-dirtypes = ['anat']
-
 for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
 
     fly_print = funcanat.split('/')[-2]
@@ -203,7 +201,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
     ### Create dependent stitcher ###
     #################################
 
-    args = {'logfile': logfile, 'directory': moco_dir}
+    args = {'logfile': logfile, 'directory': moco_dir, 'dirtype': dirtype}
     script = 'moco_stitcher.py'
     job_id = flow.sbatch(jobname='stitch',
                          script=os.path.join(scripts_path, script),
