@@ -229,7 +229,7 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
         expt_print.append(funcanat.split('/')[-1])
         total_vol.append(progress[funcanat]['total_vol'])
         complete_vol.append(progress[funcanat]['complete_vol'])
-        printlog("{}, {}".format(progress[funcanat]['total_vol'], progress[funcanat]['complete_vol']))
+        #printlog("{}, {}".format(progress[funcanat]['total_vol'], progress[funcanat]['complete_vol']))
 
     total_vol_sum = np.sum([int(x) for x in total_vol])
     complete_vol_sum = np.sum([int(x) for x in complete_vol])

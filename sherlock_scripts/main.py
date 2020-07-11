@@ -171,8 +171,8 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
         mem = 2
         time_moco = 1
     elif dirtype == 'anat':
-        step = 15
-        mem = 6
+        step = 10
+        mem = 7
         time_moco = 6
 
     starts = list(range(0,timepoints,step))
