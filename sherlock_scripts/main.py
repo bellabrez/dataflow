@@ -7,7 +7,6 @@ import datetime
 import pyfiglet
 import textwrap
 import dataflow as flow
-import bigbadbrain as bbb
 
 modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
 
@@ -75,8 +74,8 @@ func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
 func_and_anats = func_and_anats.split('\n')[:-1]
 funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x] # will be full paths to fly/expt
 anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
-bbb.sort_nicely(funcs)
-bbb.sort_nicely(anats)
+flow.sort_nicely(funcs)
+flow.sort_nicely(anats)
 funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 
@@ -227,7 +226,7 @@ for funcanat in funcanats:
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=2, mem=14, nice=True)
+                         logfile=logfile, time=4, mem=14, nice=True)
     job_ids.append(job_id)
 
 for job_id in job_ids:

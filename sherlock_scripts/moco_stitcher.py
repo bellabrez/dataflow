@@ -1,6 +1,5 @@
 import os
 import sys
-import bigbadbrain as bbb
 import dataflow as flow
 import numpy as np
 import re
@@ -26,7 +25,7 @@ def main(args):
         for file in os.listdir(directory):
             if '.nii' in file and color in file:
                 files[color].append(os.path.join(directory, file))
-        bbb.sort_nicely(files[color])
+        flow.sort_nicely(files[color])
 
     #####################
     ### Stitch brains ###
@@ -37,7 +36,6 @@ def main(args):
             brains = []
             for brain_file in files[color]:
                 brain = np.asarray(nib.load(brain_file).get_data(), dtype=np.uint16)
-                #brain = bbb.load_numpy_brain(brain_file)
 
                 # Handle edgecase of single volume brain
                 if len(np.shape(brain)) == 3:
@@ -48,7 +46,6 @@ def main(args):
             #print('brains len: {}'.format(len(brains)))
             stitched_brain = np.concatenate(brains, axis=-1)
             printlog('Stitched brain shape: {}'.format(np.shape(stitched_brain)))
-            #bbb.save_brain(save_file, stitched_brain)
 
             save_file = os.path.join(directory, 'stitched_brain_{}.nii'.format(color))
             aff = np.eye(4)
@@ -68,7 +65,7 @@ def main(args):
         if '.npy' in item:
             file = os.path.join(directory, item)
             motcorr_param_files.append(file)
-    bbb.sort_nicely(motcorr_param_files)
+    flow.sort_nicely(motcorr_param_files)
     
     motcorr_params = []
     for file in motcorr_param_files:
@@ -80,9 +77,6 @@ def main(args):
         np.save(save_file, stitched_params)
         [os.remove(file) for file in motcorr_param_files]
         xml_dir = os.path.join(os.path.split(directory)[0], 'imaging')
-        #print('directory: {}'.format(directory))
-        #print('xml_dir: {}'.format(xml_dir))
-        #sys.stdout.flush()
         save_motion_figure(stitched_params, xml_dir, directory, dirtype)
     else:
         printlog('Empty motcorr params - skipping saving moco figure.')
@@ -93,7 +87,7 @@ def save_motion_figure(transform_matrix, directory, motcorr_directory, dirtype):
         file = os.path.join(directory, 'functional.xml')
     elif dirtype == 'anat':
         file = os.path.join(directory, 'anatomy.xml')
-    x_res, y_res, z_res = get_resolution(file)
+    x_res, y_res, z_res = flow.get_resolution(file)
 
     # Save figure of motion over time
     save_file = os.path.join(motcorr_directory, 'motion_correction.png')

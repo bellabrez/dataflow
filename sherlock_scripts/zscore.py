@@ -18,7 +18,7 @@ def main(args):
     for color in ['red', 'green']:
         brain_file = os.path.join(directory, 'moco', 'stitched_brain_{}.nii'.format(color))
         if os.path.exists(brain_file):
-            to_print = '/'.join(brain_file.split('/')[-5:])
+            to_print = '/'.join(brain_file.split('/')[-4:])
             printlog(f'Z-scoring{to_print:.>{120-9}}')
 
             brain = np.asarray(nib.load(brain_file).get_data(), dtype='uint16')

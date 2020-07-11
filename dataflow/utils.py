@@ -328,3 +328,54 @@ def moco_progress(progress_tracker, logfile, com_path):
             return
         else:
             sleep(60)
+
+def tryint(s):
+    try:
+        return int(s)
+    except:
+        return s
+
+def alphanum_key(s):
+    return [tryint(c) for c in re.split('([0-9]+)', s)]
+
+def sort_nicely(x):
+    x.sort(key=alphanum_key)
+
+def get_resolution(xml_file):
+    """ Gets the x,y,z resolution of a Bruker recording.
+
+    Units of microns.
+
+    Parameters
+    ----------
+    xml_file: string to full path of Bruker xml file.
+
+    Returns
+    -------
+    x: float of x resolution
+    y: float of y resolution
+    z: float of z resolution """
+
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    statevalues = root.findall('PVStateShard')[0].findall('PVStateValue')
+    for statevalue in statevalues:
+        key = statevalue.get('key')
+        if key == 'micronsPerPixel':
+            indices = statevalue.findall('IndexedValue')
+            for index in indices:
+                axis = index.get('index')
+                if axis == 'XAxis':
+                    x = float(index.get('value'))
+                elif axis == 'YAxis':
+                    y = float(index.get('value'))
+                elif axis == 'ZAxis':
+                    z = float(index.get('value'))
+                else:
+                    print('Error')
+    return x, y, z
+
+
+
+
+
