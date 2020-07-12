@@ -5,6 +5,8 @@ import numpy as np
 import re
 import json
 import nibabel as nib
+from time import time
+import matplotlib.pyplot as plt
 
 def main(args):
 

@@ -175,8 +175,9 @@ def get_job_status(job_id, logfile, should_print=False):
                 jobname = temp.split('\n')[0].split('|')[4]
                 num_cores = int(temp.split('\n')[0].split('|')[3])
                 memory_used = float(temp.split('\n')[1].split('|')[2]) # in bytes
-            except IndexError:
+            except (IndexError, ValueError) as e:
                 printlog(F"Failed to parse sacct subprocess: {temp}")
+                printlog(e)
                 return status
             core_memory = 7.77 * 1024 * 1024 * 1024 #GB to MB to KB to bytes
 
