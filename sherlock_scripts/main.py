@@ -15,7 +15,8 @@ modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz
 #########################
 
 width = 120 # width of print log
-fly_dirs = ['fly1'] # set to None, or a list of fly dirs in the import dir
+#fly_dirs = ['fly1'] # set to None, or a list of fly dirs in the import dir
+fly_dirs = None
 
 #####################
 ### Setup logging ###
@@ -209,7 +210,8 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                          logfile=logfile, time=2, mem=12, dep=job_ids_colons, nice=True)
     stitcher_job_ids.append(job_id)
 
-flow.moco_progress(progress_tracker, logfile, com_path)
+if bool(progress_tracker): #if not empty
+    flow.moco_progress(progress_tracker, logfile, com_path)
 
 for job_id in stitcher_job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
