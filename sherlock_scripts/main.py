@@ -218,18 +218,16 @@ for job_id in stitcher_job_ids:
 ### Z-Score ###
 ###############
 
-# only z score func <============================
 job_ids = []
-for funcanat, dirtype in zip(funcanats, dirtypes):
-    if dirtype == 'func':
-        args = {'logfile': logfile, 'directory': funcanat}
-        script = 'zscore.py'
-        job_id = flow.sbatch(jobname='zscore',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=4, mem=14, nice=True)
-        job_ids.append(job_id)
+for func in funcs:
+    args = {'logfile': logfile, 'directory': func}
+    script = 'zscore.py'
+    job_id = flow.sbatch(jobname='zscore',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=8, mem=14, nice=True)
+    job_ids.append(job_id)
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
