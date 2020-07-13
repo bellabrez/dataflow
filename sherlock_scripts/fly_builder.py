@@ -85,7 +85,7 @@ def add_date_to_fly(destination_fly):
         bbb.sort_nicely(anat_folders)
         anat_folder = anat_folders[0]
         # Get full xml file path
-        xml_file = os.path.join(anat_folder, 'anatomy.xml')
+        xml_file = os.path.join(anat_folder, 'imaging', 'anatomy.xml')
     # Extract datetime
     datetime_str,_,_ = get_datetime_from_xml(xml_file)
     # Get just date
