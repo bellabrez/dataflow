@@ -51,10 +51,13 @@ def motion_correction(brain_master,
         motCorr_brain_slave.append(ants.apply_transforms(meanbrain,ants.from_numpy(brain_slave[:,:,:,i]),transformlist).numpy())
         
         #Lets immediately grab the transform file because otherwise I think it is auto deleted due to "tmp" status...?
+        #Indeed I think CentOS possibly perges /tmp pretty frequently
         for x in transformlist:
             if '.mat' in x:
                 temp = ants.read_transform(x)
                 transform_matrix.append(temp.parameters)
+            os.remove(x)
+            printlog("Deleted: {}".format(x))
 
         print(F"[{i+1}]") #IMPORTANT FOR COMMUNICATION WITH DATAFLOW MAIN
         sys.stdout.flush()
