@@ -228,7 +228,7 @@ for func in funcs:
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=8, mem=14, nice=True)
+                         logfile=logfile, time=8, mem=18, nice=True)
     job_ids.append(job_id)
 
 for job_id in job_ids:
