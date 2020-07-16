@@ -187,7 +187,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=time_moco, mem=mem, nice=True, silence_print=True)
+                             logfile=logfile, time=time_moco, mem=mem, nice=True, silence_print=False) #<============= return to true
         job_ids.append(job_id)
 
     #to_print = F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |"
