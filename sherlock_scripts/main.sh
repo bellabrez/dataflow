@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=dataflow
 #SBATCH --partition=trc
-#SBATCH --time=20:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=./logs/mainlog.out
