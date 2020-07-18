@@ -328,7 +328,7 @@ def moco_progress(progress_tracker, logfile, com_path):
             print_progress_table(progress_tracker, logfile, start_time, print_footer=True) # print final 100% complete line
             return
         else:
-            sleep(60)
+            sleep(int(60*5))
 
 def tryint(s):
     try:

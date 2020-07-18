@@ -57,6 +57,7 @@ def motion_correction(brain_master,
                 temp = ants.read_transform(x)
                 transform_matrix.append(temp.parameters)
             os.remove(x)
+            printlog('Deleted: {}'.format(x))
 
         print(F"[{i+1}]") #IMPORTANT FOR COMMUNICATION WITH DATAFLOW MAIN
         sys.stdout.flush()
