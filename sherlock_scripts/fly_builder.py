@@ -22,9 +22,9 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
     #printlog('\nBuilding flies from directory {}'.format(flagged_dir))
     width = 120
-    printlog(F"\n{'#' * width}\n"
-             F"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':#^{width}}\n"
-             F"{'#' * width}")
+    #printlog(F"\n{'#' * width}\n"
+    #         F"{'   Building flies from directory ' + os.path.split(flagged_dir)[-1] + '   ':#^{width}}\n"
+    #         F"{'#' * width}")
 
     # Assume this folder contains fly1 etc
     # This folder may (or may not) contain separate areas # False, now enforcing experiment subfolders
@@ -35,18 +35,18 @@ def main(args):
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_dir)
     bbb.sort_nicely(likely_fly_folders)
-    printlog(F"\nFound fly folders{str(likely_fly_folders):.>{width-17}}")
+    printlog(F"Found fly folders{str(likely_fly_folders):.>{width-17}}")
 
     if fly_dirs is not None:
         likely_fly_folders = fly_dirs
-        printlog(F"\nContinuing with only{str(likely_fly_folders):.>{width-20}}")
+        printlog(F"Continuing with only{str(likely_fly_folders):.>{width-20}}")
 
     for likely_fly_folder in likely_fly_folders:
         if 'fly' in likely_fly_folder:
 
             new_fly_number = get_new_fly_number(target_path)
             #printlog(f'\n*Building {likely_fly_folder} as fly number {new_fly_number}*')
-            printlog(f"\n{'   Building '+likely_fly_folder+' as fly_'+ str(new_fly_number) + '   ':=^{width}}")
+            printlog(f"\n{'   Building '+likely_fly_folder+' as fly_'+ str(new_fly_number) + '   ':-^{width}}")
 
             # Define source fly directory
             source_fly = os.path.join(flagged_dir, likely_fly_folder)

@@ -46,11 +46,13 @@ day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
 printlog("")
-printlog("="*width)
+#printlog("="*width)
 
 ######################
 ### Check for flag ###
 ######################
+
+printlog(f"\n{'   Check-For-Flag   ':=^{width}}")
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
 job_id = flow.sbatch(jobname='flagchk',
@@ -64,6 +66,7 @@ flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
 ### Build flies ###
 ###################
 
+printlog(f"\n{'   Build Flies   ':=^{width}}")
 args = {'logfile': logfile, 'flagged_dir': flagged_dir.strip('\n'), 'dataset_path': dataset_path, 'fly_dirs': fly_dirs}
 script = 'fly_builder.py'
 job_id = flow.sbatch(jobname='bldfly',
@@ -243,6 +246,7 @@ for job_id in job_ids:
 ### Done ###
 ############
 
+time.sleep(60) # to allow any final printing
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog("="*width)

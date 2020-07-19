@@ -62,7 +62,7 @@ def motion_correction(brain_master,
 
         # Delete invtransforms for /tmp directory size issue. note that .mat are shared, so only need to delete .nii.gz
         transformlist = motCorr_vol['invtransforms']
-        printlog('inv_files: {}'.format(transformlist))
+        #printlog('inv_files: {}'.format(transformlist))
         for x in transformlist:
             if '.mat' not in x:
                 os.remove(x)
