@@ -224,6 +224,7 @@ for job_id in stitcher_job_ids:
 ### Z-Score ###
 ###############
 
+printlog(f"\n{'   Z-Score   ':=^{width}}")
 job_ids = []
 for func in funcs:
     args = {'logfile': logfile, 'directory': func}
