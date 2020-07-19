@@ -52,13 +52,13 @@ def motion_correction(brain_master,
         
         #Lets immediately grab the transform file because otherwise I think it is auto deleted due to "tmp" status...?
         #Indeed I think CentOS possibly perges /tmp pretty frequently
-        printlog('fwd_files: {}'.format(transformlist))
+        #printlog('fwd_files: {}'.format(transformlist))
         for x in transformlist:
             if '.mat' in x:
                 temp = ants.read_transform(x)
                 transform_matrix.append(temp.parameters)
             os.remove(x)
-            printlog('Deleted fwd: {}'.format(x))
+            #printlog('Deleted fwd: {}'.format(x))
 
         # Delete invtransforms for /tmp directory size issue. note that .mat are shared, so only need to delete .nii.gz
         transformlist = motCorr_vol['invtransforms']
@@ -66,7 +66,7 @@ def motion_correction(brain_master,
         for x in transformlist:
             if '.mat' not in x:
                 os.remove(x)
-                printlog('Deleted inv: {}'.format(x))
+                #printlog('Deleted inv: {}'.format(x))
 
         print(F"[{i+1}]") #IMPORTANT FOR COMMUNICATION WITH DATAFLOW MAIN
         sys.stdout.flush()

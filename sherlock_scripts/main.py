@@ -91,6 +91,7 @@ dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 ### Fictrac QC ###
 ##################
 
+printlog(f"\n{'   Fictrac QC   ':=^{width}}")
 job_ids = []
 for func in funcs:
     directory = os.path.join(func, 'fictrac')
@@ -110,6 +111,7 @@ for job_id in job_ids:
 ### Bleaching QC ###
 ####################
 
+printlog(f"\n{'   Bleaching QC   ':=^{width}}")
 job_ids = []
 for funcanat, dirtype in zip(funcanats, dirtypes):
     directory = os.path.join(funcanat, 'imaging')
@@ -128,6 +130,7 @@ for job_id in job_ids:
 ### Create mean brains ###
 ##########################
 
+printlog(f"\n{'   Mean-Brains   ':=^{width}}")
 job_ids = []
 for funcanat, dirtype in zip(funcanats, dirtypes):
     directory = os.path.join(funcanat, 'imaging')
@@ -152,6 +155,7 @@ for job_id in job_ids:
 # funcanats = [os.path.join(dataset_path, 'fly_170', 'anat_0')]
 # dirtypes = ['anat']
 
+printlog(f"\n{'   Motion Correction   ':=^{width}}")
 # This will immediately launch all partial mocos and their corresponding dependent moco stitchers
 stitcher_job_ids = []
 progress_tracker = {}
