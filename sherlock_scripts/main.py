@@ -52,7 +52,7 @@ printlog("")
 ### Check for flag ###
 ######################
 
-printlog(f"\n{'   Check-For-Flag   ':=^{width}}")
+printlog(f"\n{'   CHECK FOR FLAG   ':=^{width}}")
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
 job_id = flow.sbatch(jobname='flagchk',
@@ -66,7 +66,7 @@ flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
 ### Build flies ###
 ###################
 
-printlog(f"\n{'   Build Flies   ':=^{width}}")
+printlog(f"\n{'   BUILD FLIES   ':=^{width}}")
 args = {'logfile': logfile, 'flagged_dir': flagged_dir.strip('\n'), 'dataset_path': dataset_path, 'fly_dirs': fly_dirs}
 script = 'fly_builder.py'
 job_id = flow.sbatch(jobname='bldfly',
@@ -94,7 +94,7 @@ dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 ### Fictrac QC ###
 ##################
 
-printlog(f"\n{'   Fictrac QC   ':=^{width}}")
+printlog(f"\n{'   FICTRAC QC   ':=^{width}}")
 job_ids = []
 for func in funcs:
     directory = os.path.join(func, 'fictrac')
@@ -114,7 +114,7 @@ for job_id in job_ids:
 ### Bleaching QC ###
 ####################
 
-printlog(f"\n{'   Bleaching QC   ':=^{width}}")
+printlog(f"\n{'   BLEACHING QC   ':=^{width}}")
 job_ids = []
 for funcanat, dirtype in zip(funcanats, dirtypes):
     directory = os.path.join(funcanat, 'imaging')
@@ -133,7 +133,7 @@ for job_id in job_ids:
 ### Create mean brains ###
 ##########################
 
-printlog(f"\n{'   Mean-Brains   ':=^{width}}")
+printlog(f"\n{'   MEAN BRAINS   ':=^{width}}")
 job_ids = []
 for funcanat, dirtype in zip(funcanats, dirtypes):
     directory = os.path.join(funcanat, 'imaging')
@@ -158,7 +158,7 @@ for job_id in job_ids:
 # funcanats = [os.path.join(dataset_path, 'fly_170', 'anat_0')]
 # dirtypes = ['anat']
 
-printlog(f"\n{'   Motion Correction   ':=^{width}}")
+printlog(f"\n{'   MOTION CORRECTION   ':=^{width}}")
 # This will immediately launch all partial mocos and their corresponding dependent moco stitchers
 stitcher_job_ids = []
 progress_tracker = {}
@@ -227,7 +227,7 @@ for job_id in stitcher_job_ids:
 ### Z-Score ###
 ###############
 
-printlog(f"\n{'   Z-Score   ':=^{width}}")
+printlog(f"\n{'   Z-SCORE   ':=^{width}}")
 job_ids = []
 for func in funcs:
     args = {'logfile': logfile, 'directory': func}

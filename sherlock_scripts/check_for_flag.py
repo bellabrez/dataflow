@@ -29,7 +29,7 @@ def main(args):
         folder_to_build = os.path.join(os.path.split(imports_path)[0], queued_folders[0])
         print(folder_to_build)
         printlog(F"Commencing processing of{folder_to_build:.>{width-24}}")
-        printlog(f"\n{'>   '+str(queued_folders[0])+'<   ':-^{width}}")
+        printlog(f"\n{'>   '+str(queued_folders[0])+'   <':-^{width}}")
 
         #os.system('sbatch build_fly.sh {}'.format(folder_to_build))
         #os.remove(os.path.join(imports_path, queued_folders[0]))
