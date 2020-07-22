@@ -31,8 +31,15 @@ def main(args):
         master_path_mean = os.path.join(directory, 'imaging', 'anatomy_channel_1_mean.nii')
 
     # For the sake of memory, load only the part of the brain we will need.
+    # Load master (required)
     master_brain = load_partial_brain(master_path,start,stop)
-    slave_brain = load_partial_brain(slave_path,start,stop)
+    # Load slave (optional)
+    if os.path.exists(slave_path):
+        slave_brain = load_partial_brain(slave_path,start,stop)
+    else:
+        slave_brain = None
+        printlog('Slave brain not found, continuing without: {}'.format(slave_path))
+    # Load mean (required)
     mean_brain = ants.from_numpy(np.asarray(nib.load(master_path_mean).get_data(), dtype='float32'))
 
     flow.motion_correction(master_brain,

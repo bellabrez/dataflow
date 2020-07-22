@@ -45,10 +45,11 @@ def motion_correction(brain_master,
             motCorr_vol = ants.registration(meanbrain, ants.from_numpy(brain_master[:,:,:,i]), type_of_transform='SyN')
 
         motCorr_brain_master.append(motCorr_vol['warpedmovout'].numpy())
-        
-        #Then, use warp parameters on slave volume
         transformlist = motCorr_vol['fwdtransforms']
-        motCorr_brain_slave.append(ants.apply_transforms(meanbrain,ants.from_numpy(brain_slave[:,:,:,i]),transformlist).numpy())
+
+        #Use warp parameters on slave volume if provided
+        if brain_slave:
+            motCorr_brain_slave.append(ants.apply_transforms(meanbrain,ants.from_numpy(brain_slave[:,:,:,i]),transformlist).numpy())
         
         #Lets immediately grab the transform file because otherwise I think it is auto deleted due to "tmp" status...?
         #Indeed I think CentOS possibly perges /tmp pretty frequently
@@ -73,7 +74,8 @@ def motion_correction(brain_master,
 
     # Save motcorr brains
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
-    save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green'+suffix)
+    if brain_slave:
+        save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green'+suffix)
 
     # Save transforms
     transform_matrix = np.array(transform_matrix)
