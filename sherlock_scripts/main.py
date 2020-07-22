@@ -17,6 +17,8 @@ modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz
 width = 120 # width of print log
 #fly_dirs = ['fly1'] # set to None, or a list of fly dirs in the import dir
 fly_dirs = None
+nodes = 1 # 1 or 2
+nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 #####################
 ### Setup logging ###
@@ -59,7 +61,7 @@ job_id = flow.sbatch(jobname='flagchk',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=1, mem=1, nice=True)
+                     logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
 flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
 
 ###################
@@ -73,7 +75,7 @@ job_id = flow.sbatch(jobname='bldfly',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=1, mem=1, nice=True)
+                     logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
 func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
 func_and_anats = func_and_anats.split('\n')[:-1]
 funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x] # will be full paths to fly/expt
@@ -105,7 +107,7 @@ for func in funcs:
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=1, mem=1, nice=False)
+                             logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
         job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
@@ -124,7 +126,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=1, nice=False)
+                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
     job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
@@ -143,7 +145,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=1, nice=False)
+                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
     job_ids.append(job_id)
 
 timepointss = []
@@ -194,7 +196,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=time_moco, mem=mem, nice=True, silence_print=True)
+                             logfile=logfile, time=time_moco, mem=mem, nice=nice, silence_print=True, nodes=nodes)
         job_ids.append(job_id)
 
     #to_print = F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |"
@@ -214,7 +216,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=2, mem=12, dep=job_ids_colons, nice=True)
+                         logfile=logfile, time=2, mem=12, dep=job_ids_colons, nice=nice, nodes=nodes)
     stitcher_job_ids.append(job_id)
 
 if bool(progress_tracker): #if not empty
@@ -236,7 +238,7 @@ for func in funcs:
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=8, mem=18, nice=True)
+                         logfile=logfile, time=8, mem=18, nice=nice, nodes=nodes)
     job_ids.append(job_id)
 
 for job_id in job_ids:

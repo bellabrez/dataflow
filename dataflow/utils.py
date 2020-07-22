@@ -146,7 +146,7 @@ class Printlog():
             f.write('\n')
             fcntl.flock(f, fcntl.LOCK_UN)
 
-def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=False, silence_print=False):
+def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=False, silence_print=False, nodes=2):
     if dep != '':
         dep = '--dependency=afterok:{} --kill-on-invalid-dep=yes '.format(dep)
  
@@ -154,7 +154,13 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=
 
     if nice: # For lowering the priority of the job
         nice = 1000000
-    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc -w sh02-07n34 --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, mem, command, dep)
+
+    if nodes == 1:
+        node_cmd = '-w sh02-07n34 '
+    else:
+        node_cmd = ''
+
+    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc {}--open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, nodes, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
     width = 120
     if not silence_print:
