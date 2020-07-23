@@ -160,7 +160,7 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=
     else:
         node_cmd = ''
 
-    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc {}--open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, nodes, mem, command, dep)
+    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc {}--open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, node_cmd, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
     width = 120
     if not silence_print:
