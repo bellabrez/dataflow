@@ -18,9 +18,8 @@ width = 120 # width of print log
 nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
-flies = ['fly_095']
-
-#fly_dirs = None
+#flies = ['fly_095']
+flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
 #####################
 ### Setup logging ###
@@ -50,7 +49,6 @@ day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
 printlog("")
-#printlog("="*width)
 
 ###################
 ### LOOP SCRIPT ###
