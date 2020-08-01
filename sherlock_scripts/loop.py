@@ -40,6 +40,19 @@ com_path = "/home/users/brezovec/projects/dataflow/sherlock_scripts/com"
 dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
 
 ###################
+### Print Title ###
+###################
+
+title = pyfiglet.figlet_format("Loop", font="cyberlarge" ) #28 #shimrod
+title_shifted = ('\n').join([' '*40+line for line in title.split('\n')][:-2])
+printlog(title_shifted)
+day_now = datetime.datetime.now().strftime("%B %d, %Y")
+time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
+printlog(F"{day_now+' | '+time_now:^{width}}")
+printlog("")
+#printlog("="*width)
+
+###################
 ### LOOP SCRIPT ###
 ###################
 
@@ -53,7 +66,7 @@ for fly in flies:
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes)
+                         logfile=logfile, time=1, mem=2, nice=nice, nodes=nodes) # 4 to 2
     job_ids.append(job_id)
 
 for job_id in job_ids:
