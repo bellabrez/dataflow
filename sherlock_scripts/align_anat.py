@@ -24,6 +24,7 @@ def main(args):
     moving_path = args['moving_path']
     fixed_fly = args['fixed_fly']
     moving_fly = args['moving_fly']
+    mirror = args['mirror']
     type_of_transform = args['type_of_transform'] # SyN or Affine
     width = 120
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
@@ -33,11 +34,13 @@ def main(args):
     ###################
 
     fixed = ants.from_numpy(np.asarray(nib.load(fixed_path).get_data(), dtype='float32'))
-    moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data(), dtype='float32'))
-    printlog(str(fixed.spacing))
-    printlog(str(moving.spacing))
+    if mirror:
+        moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data()[::-1,:,:], dtype='float32'))
+    else:
+        moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data(), dtype='float32'))
     fixed.set_spacing((0.65, 0.65, 1))
     moving.set_spacing((0.65, 0.65, 1))
+    printlog('Starting {} to {}, mirror is {}'.format(fixed_fly, moving_fly, mirror))
 
     #############
     ### Align ###
@@ -52,7 +55,10 @@ def main(args):
     ### Save ###
     ############
 
-    save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly + '.nii')
+    if mirror:
+        save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly + '.nii')
+    else:
+        save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly + '.nii')
     nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
 
 def sec_to_hms(t):
