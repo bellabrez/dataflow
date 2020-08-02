@@ -49,7 +49,7 @@ def main(args):
     ############
 
     save_file = os.path.join(save_directory, moving_fly + '2' + fixed_fly + '.nii')
-    nib.Nifti1Image(motCorr_vol['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
+    nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
 
 def sec_to_hms(t):
         secs=F"{np.floor(t%60):02.0f}"
