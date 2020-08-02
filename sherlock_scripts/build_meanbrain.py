@@ -19,7 +19,7 @@ nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 flies = ['fly_095']
-seed_fly = 'fly_091'
+#seed_fly = 'fly_091'
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200802_meanbrain"
 #flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
@@ -44,8 +44,8 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ### Print Title ###
 ###################
 
-title = pyfiglet.figlet_format("Loop", font="cyberlarge" ) #28 #shimrod
-title_shifted = ('\n').join([' '*44+line for line in title.split('\n')][:-2])
+title = pyfiglet.figlet_format("Build Meanbrain", font="cyberlarge" ) #28 #shimrod
+title_shifted = ('\n').join([' '*1+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
@@ -56,10 +56,10 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-printlog(f"\n{'   LOOP   ':=^{width}}")
+printlog(f"\n{'   Affine Iter   ':=^{width}}")
 job_ids = []
-fixed_path = os.path.join(dataset_path, seed_fly, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
-fixed_fly = seed_fly
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200802_meanbrain/seed_fly91.nii"
+fixed_fly = 'fly_91_seed'
 type_of_transform = 'SyN'
 for fly in flies:
     moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
