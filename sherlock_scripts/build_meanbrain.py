@@ -20,7 +20,7 @@ nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 flies = ['fly_095']
 seed_fly = 'fly_091'
-save_directory = 
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200802_meanbrain"
 #flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
 #####################
