@@ -19,8 +19,8 @@ def main(args):
 
     logfile = args['logfile']
     save_directory = args['save_directory']
-    fixed_path = args['fixed']
-    moving_path = args['moving']
+    fixed_path = args['fixed_path']
+    moving_path = args['moving_path']
     fixed_fly = args['fixed_fly']
     moving_fly = args['moving_fly']
     type_of_transform = args['type_of_transform'] # SyN or Affine
