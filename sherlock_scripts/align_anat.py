@@ -34,8 +34,8 @@ def main(args):
 
     fixed = ants.from_numpy(np.asarray(nib.load(fixed_path).get_data(), dtype='float32'))
     moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data(), dtype='float32'))
-    printlog(fixed.spacing)
-    printlog(moving.spacing)
+    printlog(str(fixed.spacing))
+    printlog(str(moving.spacing))
     fixed.set_spacing((0.65, 0.65, 1))
     moving.set_spacing((0.65, 0.65, 1))
 
