@@ -60,7 +60,7 @@ printlog(f"\n{'   LOOP   ':=^{width}}")
 job_ids = []
 fixed_path = os.path.join(dataset_path, seed_fly, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
 fixed_fly = seed_fly
-type_of_transform = 'Affine'
+type_of_transform = 'SyN'
 for fly in flies:
     moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
     moving_fly = fly
