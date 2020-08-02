@@ -44,8 +44,8 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ### Print Title ###
 ###################
 
-title = pyfiglet.figlet_format("Build Meanbrain", font="cyberlarge" ) #28 #shimrod
-title_shifted = ('\n').join([' '*1+line for line in title.split('\n')][:-2])
+title = pyfiglet.figlet_format("Meanbrain", font="cyberlarge" ) #28 #shimrod
+title_shifted = ('\n').join([' '*15+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
