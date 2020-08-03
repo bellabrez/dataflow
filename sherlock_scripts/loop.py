@@ -18,8 +18,8 @@ width = 120 # width of print log
 nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
-#flies = ['fly_095']
-flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
+flies = ['fly_094']
+#flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
 #####################
 ### Setup logging ###
@@ -59,12 +59,12 @@ job_ids = []
 for fly in flies:
     directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
     args = {'logfile': logfile, 'directory': directory}
-    script = 'make_mean_anat.py'
-    job_id = flow.sbatch(jobname='meananat',
+    script = 'clean_anat.py'
+    job_id = flow.sbatch(jobname='clnanat',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=1, mem=2, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 
 for job_id in job_ids:
@@ -74,7 +74,7 @@ for job_id in job_ids:
 ### Done ###
 ############
 
-time.sleep(60) # to allow any final printing
+time.sleep(30) # to allow any final printing
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog("="*width)

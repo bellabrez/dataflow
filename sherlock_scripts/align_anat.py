@@ -40,7 +40,7 @@ def main(args):
         moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data(), dtype='float32'))
     fixed.set_spacing((0.65, 0.65, 1))
     moving.set_spacing((0.65, 0.65, 1))
-    printlog('Starting {} to {}, mirror is {}'.format(fixed_fly, moving_fly, mirror))
+    printlog('Starting {} to {}, mirror is {}'.format(moving_fly, fixed_fly, mirror))
 
     #############
     ### Align ###
