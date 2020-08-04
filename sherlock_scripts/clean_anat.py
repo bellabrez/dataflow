@@ -32,10 +32,12 @@ def main(args):
     labels, label_nb = scipy.ndimage.label(brain_copy)
     brain_label = np.bincount(labels.flatten())[1:].argmax()+1
     brain_copy = brain.copy().astype('float32')
-    brain_copy[np.where(labels != brain_label)] = 0
+    brain_copy[np.where(labels != brain_label)] = np.nan
 
     ### Perform quantile normalization ###
-    brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True).reshape(brain.shape)
+    quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=False)
+    brain_out = brain_copy.reshape(brain.shape)
+    np.nan_to_num(brain_out, copy=False)
 
     ### Save brain ###
     save_file = os.path.join(directory, 'anat_red_clean.nii')
