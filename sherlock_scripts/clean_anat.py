@@ -35,8 +35,8 @@ def main(args):
     brain_copy[np.where(labels != brain_label)] = np.nan
 
     ### Perform quantile normalization ###
-    quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=False)
-    brain_out = brain_copy.reshape(brain.shape)
+    brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
+    brain_out = brain_out.reshape(brain.shape)
     np.nan_to_num(brain_out, copy=False)
 
     ### Save brain ###
