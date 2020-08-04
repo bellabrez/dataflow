@@ -54,19 +54,59 @@ time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
 printlog("")
 
-###################
-### LOOP SCRIPT ###
-###################
+################
+### Affine_0 ###
+################
+# Align all fly brains (and their mirrors) to a chosen seed brain
 
-printlog(f"\n{'   Affine Iter   ':=^{width}}")
+# printlog(f"\n{'   Affine Iter   ':=^{width}}")
+# job_ids = []
+# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/seed/seed_fly91_clean_20200803.nii"
+# fixed_fly = 'fly_91_seed'
+# type_of_transform = 'Affine'
+# for fly in flies:
+#     for mirror in [True, False]:
+#         moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
+#         moving_fly = fly
+
+#         args = {'logfile': logfile,
+#                 'save_directory': save_directory,
+#                 'fixed_path': fixed_path,
+#                 'moving_path': moving_path,
+#                 'fixed_fly': fixed_fly,
+#                 'moving_fly': moving_fly,
+#                 'type_of_transform': type_of_transform,
+#                 'mirror': mirror}
+
+#         script = 'align_anat.py'
+#         job_id = flow.sbatch(jobname='align',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=4, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+################
+### Affine_1 ###
+################
+# Align all fly brains (and their mirrors) to affine_0_mean.nii
+
+printlog(f"\n{'   Affine_1   ':=^{width}}")
 job_ids = []
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/seed/seed_fly91_clean_20200803.nii"
-fixed_fly = 'fly_91_seed'
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_0_mean.nii"
+fixed_fly = 'affine_0_mean'
 type_of_transform = 'Affine'
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_1"
+if not os.path.exists(save_directory):
+    os.mkdir(save_directory)
+
 for fly in flies:
     for mirror in [True, False]:
-        moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
         moving_fly = fly
+        moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
 
         args = {'logfile': logfile,
                 'save_directory': save_directory,
@@ -82,7 +122,7 @@ for fly in flies:
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=4, mem=4, nice=nice, nodes=nodes) # 2 to 1
+                             logfile=logfile, time=1, mem=2, nice=nice, nodes=nodes) # 2 to 1
         job_ids.append(job_id)
 
 for job_id in job_ids:
