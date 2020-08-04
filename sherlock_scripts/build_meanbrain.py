@@ -18,11 +18,11 @@ width = 120 # width of print log
 nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
-flies = ['fly_084', 'fly_087', 'fly_089', 'fly_091', 'fly_092', 'fly_093', 'fly_094', 'fly_096',
+flies = ['fly_087', 'fly_089', 'fly_091', 'fly_092', 'fly_093', 'fly_094', 'fly_096',
          'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_102', 'fly_105', 'fly_106',
          'fly_109', 'fly_110', 'fly_111']
 #seed_fly = 'fly_091'
-save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200802_meanbrain"
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain"
 #flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
 #####################
@@ -60,12 +60,12 @@ printlog("")
 
 printlog(f"\n{'   Affine Iter   ':=^{width}}")
 job_ids = []
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200802_meanbrain/seed_fly91.nii"
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/seed/seed_fly91_clean_20200803.nii"
 fixed_fly = 'fly_91_seed'
 type_of_transform = 'Affine'
 for fly in flies:
     for mirror in [True, False]:
-        moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
+        moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
         moving_fly = fly
 
         args = {'logfile': logfile,
