@@ -58,21 +58,38 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-printlog(f"\n{'   LOOP   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
-    args = {'logfile': logfile, 'directory': directory}
-    script = 'clean_anat.py'
-    job_id = flow.sbatch(jobname='clnanat',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# printlog(f"\n{'   LOOP   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
+#     args = {'logfile': logfile, 'directory': directory}
+#     script = 'clean_anat.py'
+#     job_id = flow.sbatch(jobname='clnanat',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain"
+input_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/syn_0"
+save_name = "syn_0_mean"
+
+printlog(f"\n{'   LOOP   ':=^{width}}")
+args = {'logfile': logfile,
+        'save_directory': save_directory,
+        'input_directory': input_directory,
+        'save_name': save_name}
+script = 'avg_brains.py'
+job_id = flow.sbatch(jobname='avgbrn',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
+flow.wait_for_job(job_id, logfile, com_path)
 
 ############
 ### Done ###
