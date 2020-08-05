@@ -183,7 +183,7 @@ if not os.path.exists(save_directory):
 
 
 moving_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_1"
-brain_files = os.path.listdir(moving_directory)
+brain_files = os.listdir(moving_directory)
 
 for file in brain_files:
     mirror=False
