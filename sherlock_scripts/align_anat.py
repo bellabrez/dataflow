@@ -25,6 +25,7 @@ def main(args):
     fixed_fly = args['fixed_fly']
     moving_fly = args['moving_fly']
     mirror = args['mirror']
+    resolution = args['resolution']
     type_of_transform = args['type_of_transform'] # SyN or Affine
     width = 120
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
@@ -38,8 +39,8 @@ def main(args):
         moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data()[::-1,:,:], dtype='float32'))
     else:
         moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data(), dtype='float32'))
-    fixed.set_spacing((0.65, 0.65, 1))
-    moving.set_spacing((0.65, 0.65, 1))
+    fixed.set_spacing(resolution)
+    moving.set_spacing(resolution)
     printlog('Starting {} to {}, mirror is {}'.format(moving_fly, fixed_fly, mirror))
 
     #############
