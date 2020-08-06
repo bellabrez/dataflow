@@ -47,7 +47,7 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ###################
 
 title = pyfiglet.figlet_format("Meanbrain", font="cyberlarge" ) #28 #shimrod
-title_shifted = ('\n').join([' '*15+line for line in title.split('\n')][:-2])
+title_shifted = ('\n').join([' '*30+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
@@ -175,7 +175,7 @@ printlog("")
 ##########################
 
 res_JFRC = (0.62, 0.62, 0.62)
-res_IBNWG = (0.64, 0.64, 1.41)
+res_IBNWB = (0.64, 0.64, 1.41)
 res_LUKE = (0.65, 0.65, 1)
 res_DIEGO = (0.75, 0.75, 1.0)
 res_KEVIN = (0.62,0.62,0.6)
@@ -185,9 +185,9 @@ moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/
 moving_fly = "syn_0_mean"
 moving_resolution = res_LUKE
 
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/diego.nii"
-fixed_fly = 'diego'
-fixed_resolution = res_DIEGO
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/IBNWB.nii"
+fixed_fly = 'IBNWB'
+fixed_resolution = res_IBNWB
 
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
 if not os.path.exists(save_directory):
