@@ -42,7 +42,8 @@ def main(args):
     #fixed.set_spacing(resolution)
     #moving.set_spacing(resolution)
     fixed.set_spacing((0.65, 0.65, 1))
-    moving.set_spacing((0.62, 0.62, 0.62))
+    #moving.set_spacing((0.62, 0.62, 0.62)) #JFRC
+    moving.set_spacing((0.64, 0.64, 1.41)) #IBNWG
     printlog('Starting {} to {}, mirror is {}'.format(moving_fly, fixed_fly, mirror))
 
     #############
