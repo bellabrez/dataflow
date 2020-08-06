@@ -140,7 +140,7 @@ root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200806_mea
 # if iter = 1, fixed = syn_0_mean
 # if iteration = 5, fixed = syn_4_mean, output dir = syn_5, savebrain = syn_5_mean
 
-for iteration in range(interations):
+for iteration in range(iterations):
     printlog(f"\n{'   SyN Iteration ' + str(iteration+1) + '    ':=^{width}}")
 
     if iteration == 0:
