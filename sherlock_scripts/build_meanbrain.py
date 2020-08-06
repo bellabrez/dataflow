@@ -174,19 +174,28 @@ printlog("")
 ### Template alignment ###
 ##########################
 
-printlog(f"\n{'   Affine_1   ':=^{width}}")
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/syn_0_mean.nii"
-fixed_fly = 'syn_0_mean'
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JFRCtemplate2010.nii"
-moving_fly = "JFRC_boo"
+res_JFRC = (0.62, 0.62, 0.62)
+res_IBNWG = (0.64, 0.64, 1.41)
+res_LUKE = (0.65, 0.65, 1)
+res_DIEGO = (0.75, 0.75, 1.0)
+res_KEVIN = (0.62,0.62,0.6)
 
-type_of_transform = 'SyN'
+printlog(f"\n{'   Affine_1   ':=^{width}}")
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/syn_0_mean.nii"
+moving_fly = "syn_0_mean"
+moving_resolution = res_LUKE
+
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/diego.nii"
+fixed_fly = 'diego'
+fixed_resolution = res_DIEGO
+
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
 if not os.path.exists(save_directory):
     os.mkdir(save_directory)
 
-resolution = (0.65, 0.65, 1)
-mirror = False
+type_of_transform = 'SyN'
+flip_X = False
+flip_Z = True
 
 args = {'logfile': logfile,
         'save_directory': save_directory,
@@ -195,8 +204,10 @@ args = {'logfile': logfile,
         'fixed_fly': fixed_fly,
         'moving_fly': moving_fly,
         'type_of_transform': type_of_transform,
-        'mirror': mirror,
-        'resolution': resolution}
+        'flip_X': flip_X,
+        'flip_Z': flip_Z,
+        'moving_resolution': moving_resolution,
+        'fixed_resolution': fixed_resolution}
 
 script = 'align_anat.py'
 job_id = flow.sbatch(jobname='align',

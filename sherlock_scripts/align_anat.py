@@ -24,8 +24,10 @@ def main(args):
     moving_path = args['moving_path']
     fixed_fly = args['fixed_fly']
     moving_fly = args['moving_fly']
-    mirror = args['mirror']
-    resolution = args['resolution']
+    flip_X = args['flip_X']
+    flip_Z = args['flip_Z']
+    fixed_resolution = args['fixed_resolution']
+    moving_resolution = args['moving_resolution']
     type_of_transform = args['type_of_transform'] # SyN or Affine
     width = 120
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
@@ -34,16 +36,20 @@ def main(args):
     ### Load Brains ###
     ###################
 
-    fixed = ants.from_numpy(np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32'))
-    if mirror:
-        moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data().squeeze()[::-1,:,:], dtype='float32'))
-    else:
-        moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data().squeeze()[:,:,::-1], dtype='float32'))
-    #fixed.set_spacing(resolution)
-    #moving.set_spacing(resolution)
-    fixed.set_spacing((0.65, 0.65, 1))
-    #moving.set_spacing((0.62, 0.62, 0.62)) #JFRC
-    #moving.set_spacing((0.64, 0.64, 1.41)) #IBNWG
+    fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
+    moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
+
+    if flip_X:
+        moving = moving[::-1,:,:]
+    if flip_Z:
+        moving = moving[:,:,::-1]
+
+    fixed = ants.from_numpy(fixed)
+    moving = ants.from_numpy(moving)
+
+    moving.set_spacing(moving_resolution)
+    fixed.set_spacing(fixed_resolution)
+
     printlog('Starting {} to {}, mirror is {}'.format(moving_fly, fixed_fly, mirror))
 
     #############
@@ -59,7 +65,7 @@ def main(args):
     ### Save ###
     ############
 
-    if mirror:
+    if flip_X:
         save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly + '.nii')
     else:
         save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly + '.nii')
