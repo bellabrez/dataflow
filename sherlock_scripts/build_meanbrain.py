@@ -133,42 +133,79 @@ printlog("")
 #############
 # Align all fly brains (and their mirrors) to affine_1_mean.nii
 
+# printlog(f"\n{'   Affine_1   ':=^{width}}")
+# job_ids = []
+# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_1_mean.nii"
+# fixed_fly = 'affine_1_mean'
+# type_of_transform = 'SyN'
+# save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/syn_0_4x"
+# if not os.path.exists(save_directory):
+#     os.mkdir(save_directory)
+
+# #resolution = (0.65, 0.65, 1)
+# resolution = (2.6, 2.6, 4)
+# for fly in flies:
+#     for mirror in [True, False]:
+#         moving_fly = fly
+#         moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
+
+#         args = {'logfile': logfile,
+#                 'save_directory': save_directory,
+#                 'fixed_path': fixed_path,
+#                 'moving_path': moving_path,
+#                 'fixed_fly': fixed_fly,
+#                 'moving_fly': moving_fly,
+#                 'type_of_transform': type_of_transform,
+#                 'mirror': mirror,
+#                 'resolution': resolution}
+
+#         script = 'align_anat.py'
+#         job_id = flow.sbatch(jobname='align',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+##########################
+### Template alignment ###
+##########################
+
 printlog(f"\n{'   Affine_1   ':=^{width}}")
-job_ids = []
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_1_mean.nii"
-fixed_fly = 'affine_1_mean'
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/syn_0_mean.nii"
+fixed_fly = 'syn_0_mean'
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JFRCtemplate2010.nii"
+moving_fly = "JFRC"
+
 type_of_transform = 'SyN'
-save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/syn_0_4x"
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
 if not os.path.exists(save_directory):
     os.mkdir(save_directory)
 
-#resolution = (0.65, 0.65, 1)
-resolution = (2.6, 2.6, 4)
-for fly in flies:
-    for mirror in [True, False]:
-        moving_fly = fly
-        moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
+resolution = (0.65, 0.65, 1)
+mirror = False
 
-        args = {'logfile': logfile,
-                'save_directory': save_directory,
-                'fixed_path': fixed_path,
-                'moving_path': moving_path,
-                'fixed_fly': fixed_fly,
-                'moving_fly': moving_fly,
-                'type_of_transform': type_of_transform,
-                'mirror': mirror,
-                'resolution': resolution}
+args = {'logfile': logfile,
+        'save_directory': save_directory,
+        'fixed_path': fixed_path,
+        'moving_path': moving_path,
+        'fixed_fly': fixed_fly,
+        'moving_fly': moving_fly,
+        'type_of_transform': type_of_transform,
+        'mirror': mirror,
+        'resolution': resolution}
 
-        script = 'align_anat.py'
-        job_id = flow.sbatch(jobname='align',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
+script = 'align_anat.py'
+job_id = flow.sbatch(jobname='align',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+flow.wait_for_job(job_id, logfile, com_path)
 
 #############
 ### SyN_from affine folder ###
