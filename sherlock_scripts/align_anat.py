@@ -50,7 +50,7 @@ def main(args):
     moving.set_spacing(moving_resolution)
     fixed.set_spacing(fixed_resolution)
 
-    printlog('Starting {} to {}, mirror is {}'.format(moving_fly, fixed_fly, mirror))
+    printlog('Starting {} to {}'.format(moving_fly, fixed_fly))
 
     #############
     ### Align ###
