@@ -38,12 +38,12 @@ def main(args):
     if mirror:
         moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data().squeeze()[::-1,:,:], dtype='float32'))
     else:
-        moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32'))
+        moving = ants.from_numpy(np.asarray(nib.load(moving_path).get_data().squeeze()[:,:,::-1], dtype='float32'))
     #fixed.set_spacing(resolution)
     #moving.set_spacing(resolution)
     fixed.set_spacing((0.65, 0.65, 1))
     #moving.set_spacing((0.62, 0.62, 0.62)) #JFRC
-    moving.set_spacing((0.64, 0.64, 1.41)) #IBNWG
+    #moving.set_spacing((0.64, 0.64, 1.41)) #IBNWG
     printlog('Starting {} to {}, mirror is {}'.format(moving_fly, fixed_fly, mirror))
 
     #############

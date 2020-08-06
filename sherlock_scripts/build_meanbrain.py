@@ -177,8 +177,8 @@ printlog("")
 printlog(f"\n{'   Affine_1   ':=^{width}}")
 fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/syn_0_mean.nii"
 fixed_fly = 'syn_0_mean'
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/IBNWB.nrrd"
-moving_fly = "IBNWB"
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JFRCtemplate2010.nii"
+moving_fly = "JFRC_boo"
 
 type_of_transform = 'SyN'
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
