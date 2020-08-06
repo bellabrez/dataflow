@@ -185,9 +185,9 @@ moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/
 moving_fly = "syn_0_mean"
 moving_resolution = res_LUKE
 
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/kevin.nii"
-fixed_fly = 'kevin'
-fixed_resolution = res_KEVIN
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/diego.nii"
+fixed_fly = 'diego'
+fixed_resolution = res_DIEGO
 
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
 if not os.path.exists(save_directory):
