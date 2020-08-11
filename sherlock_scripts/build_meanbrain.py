@@ -227,12 +227,12 @@ res_KEVIN = (0.62,0.62,0.6)
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
 moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/seed_syn_1_mean_0810.nii"
-moving_fly = "syn_0_mean"
+moving_fly = "seed_syn_1_mean_0810"
 moving_resolution = res_LUKE
 
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JFRCtemplate2010.nii"
-fixed_fly = 'JFRC'
-fixed_resolution = res_JFRC
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/diego.nii"
+fixed_fly = 'diego'
+fixed_resolution = res_DIEGO
 
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
 if not os.path.exists(save_directory):
