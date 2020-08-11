@@ -47,7 +47,7 @@ dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walki
 ###################
 
 title = pyfiglet.figlet_format("Meanbrain", font="cyberlarge" ) #28 #shimrod
-title_shifted = ('\n').join([' '*30+line for line in title.split('\n')][:-2])
+title_shifted = ('\n').join([' '*27+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
@@ -230,9 +230,9 @@ moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/
 moving_fly = "seed_syn_1_mean_0810"
 moving_resolution = res_LUKE
 
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/IBNWB.nii"
-fixed_fly = 'IBNWB'
-fixed_resolution = res_IBNWB
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/kevin.nii"
+fixed_fly = 'kevin'
+fixed_resolution = res_KEVIN
 
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
 if not os.path.exists(save_directory):
