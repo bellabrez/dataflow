@@ -134,7 +134,7 @@ printlog("")
 # Align all fly brains (and their mirrors) to affine_1_mean.nii
 
 iterations = 1
-root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200810_meanbrain"
+root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200811_meanbrain"
 
 # if iter = 0, fixed = seed, 
 # if iter = 1, fixed = syn_0_mean
