@@ -134,7 +134,7 @@ printlog("")
 # Align all fly brains (and their mirrors) to affine_1_mean.nii
 
 iterations = 2
-root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200807_meanbrain"
+root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200810_meanbrain"
 
 # if iter = 0, fixed = seed, 
 # if iter = 1, fixed = syn_0_mean
@@ -144,7 +144,7 @@ for iteration in range(iterations):
     printlog(f"\n{'   SyN Iteration ' + str(iteration+1) + '    ':=^{width}}")
 
     if iteration == 0:
-        fixed_fly = "syn_4_sharp.nii"
+        fixed_fly = "syn_1_mean_sharp.nii"
     else:
         fixed_fly = "syn_{}_mean.nii".format(iteration-1) # use mean from previous iter round
     fixed_path = os.path.join(root_directory, fixed_fly)
@@ -162,7 +162,7 @@ for iteration in range(iterations):
     for fly in flies:
         for flip_X in [True, False]:
             moving_fly = fly
-            moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
+            moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
 
             args = {'logfile': logfile,
                     'save_directory': output_directory,
