@@ -21,7 +21,7 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     ### Load brain ###
-    file = os.path.join(root_directory, 'anat_red_clean.nii') 
+    file = os.path.join(directory, 'anat_red_clean.nii') 
     brain = np.asarray(nib.load(file).get_data(), dtype='float32')
 
     # renormalize to .3-.7
