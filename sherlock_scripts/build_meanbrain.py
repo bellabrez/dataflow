@@ -133,7 +133,7 @@ printlog("")
 ################
 # Align all fly brains (and their mirrors) to affine_1_mean.nii
 
-iterations = 2
+iterations = 1
 root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200810_meanbrain"
 
 # if iter = 0, fixed = seed, 
@@ -144,7 +144,7 @@ for iteration in range(iterations):
     printlog(f"\n{'   SyN Iteration ' + str(iteration+1) + '    ':=^{width}}")
 
     if iteration == 0:
-        fixed_fly = "syn_1_mean_sharp.nii"
+        fixed_fly = "seed_syn_1_mean.nii"
     else:
         fixed_fly = "syn_{}_mean.nii".format(iteration-1) # use mean from previous iter round
     fixed_path = os.path.join(root_directory, fixed_fly)
@@ -155,6 +155,7 @@ for iteration in range(iterations):
 
     moving_resolution = (0.65, 0.65, 1)
     fixed_resolution = (0.65, 0.65, 1)
+    mimic_resolution = (0.65, 0.65, 1)
     flip_Z = False
     type_of_transform = 'SyN'
 
@@ -163,6 +164,9 @@ for iteration in range(iterations):
         for flip_X in [True, False]:
             moving_fly = fly
             moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
+
+            mimic_fly = fly
+            mimic_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
 
             args = {'logfile': logfile,
                     'save_directory': output_directory,
@@ -174,7 +178,10 @@ for iteration in range(iterations):
                     'flip_X': flip_X,
                     'flip_Z': flip_Z,
                     'moving_resolution': moving_resolution,
-                    'fixed_resolution': fixed_resolution}
+                    'fixed_resolution': fixed_resolution
+                    'mimic_path': mimic_path,
+                    'mimic_fly': mimic_fly,
+                    'mimic_resolution': mimic_resolution}
 
             script = 'align_anat.py'
             job_id = flow.sbatch(jobname='align',

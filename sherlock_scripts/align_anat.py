@@ -11,6 +11,8 @@ from contextlib import contextmanager
 import warnings
 warnings.filterwarnings("ignore")
 
+from shutil import copyfile
+
 import platform
 if platform.system() != 'Windows':
     sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
@@ -20,15 +22,23 @@ def main(args):
 
     logfile = args['logfile']
     save_directory = args['save_directory']
-    fixed_path = args['fixed_path']
-    moving_path = args['moving_path']
-    fixed_fly = args['fixed_fly']
-    moving_fly = args['moving_fly']
     flip_X = args['flip_X']
     flip_Z = args['flip_Z']
-    fixed_resolution = args['fixed_resolution']
-    moving_resolution = args['moving_resolution']
     type_of_transform = args['type_of_transform'] # SyN or Affine
+    #save_warp_params = args['save_warp_params']
+
+    fixed_path = args['fixed_path']
+    fixed_fly = args['fixed_fly']
+    fixed_resolution = args['fixed_resolution']
+
+    moving_path = args['moving_path']
+    moving_fly = args['moving_fly']
+    moving_resolution = args['moving_resolution']
+
+    mimic_path = args['mimic_path']
+    mimic_fly = args['mimic_fly']
+    mimic_resolution = args['mimic_resolution']
+
     width = 120
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
@@ -38,19 +48,28 @@ def main(args):
 
     fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
     moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
+    if mimic_path is not None:
+        mimic = np.asarray(nib.load(mimic_path).get_data().squeeze(), dtype='float32')
 
     if flip_X:
         moving = moving[::-1,:,:]
+        mimic = mimic[::-1,:,:]
     if flip_Z:
         moving = moving[:,:,::-1]
+        mimic = mimic[:,:,::-1]
 
     fixed = ants.from_numpy(fixed)
     moving = ants.from_numpy(moving)
+    mimic = ants.from_numpy(mimic)
 
     moving.set_spacing(moving_resolution)
     fixed.set_spacing(fixed_resolution)
+    mimic.set_spacing(mimic_resolution)
 
-    printlog('Starting {} to {}'.format(moving_fly, fixed_fly))
+    if mimic_path is None:
+        printlog('Starting {} to {}'.format(moving_fly, fixed_fly))
+    else:
+        printlog('Starting {} to {}, with mimic {}'.format(moving_fly, fixed_fly, mimic_fly))
 
     #############
     ### Align ###
@@ -61,15 +80,40 @@ def main(args):
         moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
     printlog('Fixed: {}, {} | Moving: {}, {} | {} | {}'.format(fixed_fly, fixed_path.split('/')[-1], moving_fly, moving_path.split('/')[-1], type_of_transform, sec_to_hms(time()-t0)))
 
+    ################################
+    ### Save warp params if True ###
+    ################################
+
+    # if save_warp_params:
+    #     fwdtransformlist = moco['fwdtransforms']
+    #     for source_path in fwdtransformlist:
+    #         source_file = source_path.split('/')[-1]
+    #         target_path = os.path.join(save_directory, 'fwdtransforms', source_file)
+    #         copyfile(source_path, target_path)
+
+    ##################################
+    ### Apply warp params to mimic ###
+    ##################################
+
+    if mimic_path is not None:
+        mimic_moco = ants.apply_transforms(fixed, mimic, moco['fwdtransforms'])
+
     ############
     ### Save ###
     ############
 
+    # ONLY SAVING MIMIC <------ CHANGE
     if flip_X:
-        save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly + '.nii')
+        save_file = os.path.join(save_directory, mimic_fly + '_m' + '-to-' + fixed_fly + '.nii')
     else:
-        save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly + '.nii')
-    nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
+        save_file = os.path.join(save_directory, mimic_fly + '-to-' + fixed_fly + '.nii')
+    nib.Nifti1Image(mimic_moco.numpy(), np.eye(4)).to_filename(save_file)
+
+    # if flip_X:
+    #     save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly + '.nii')
+    # else:
+    #     save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly + '.nii')
+    # nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
 
 def sec_to_hms(t):
         secs=F"{np.floor(t%60):02.0f}"
