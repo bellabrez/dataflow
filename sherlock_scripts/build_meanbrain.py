@@ -178,7 +178,7 @@ for iteration in range(iterations):
                     'flip_X': flip_X,
                     'flip_Z': flip_Z,
                     'moving_resolution': moving_resolution,
-                    'fixed_resolution': fixed_resolution
+                    'fixed_resolution': fixed_resolution,
                     'mimic_path': mimic_path,
                     'mimic_fly': mimic_fly,
                     'mimic_resolution': mimic_resolution}
