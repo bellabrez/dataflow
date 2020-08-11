@@ -35,9 +35,14 @@ def main(args):
     moving_fly = args['moving_fly']
     moving_resolution = args['moving_resolution']
 
-    mimic_path = args['mimic_path']
-    mimic_fly = args['mimic_fly']
-    mimic_resolution = args['mimic_resolution']
+    try:
+        mimic_path = args['mimic_path']
+        mimic_fly = args['mimic_fly']
+        mimic_resolution = args['mimic_resolution']
+    except:
+        mimic_path = None
+        mimic_fly = None
+        mimic_resolution = None
 
     width = 120
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
@@ -46,30 +51,32 @@ def main(args):
     ### Load Brains ###
     ###################
 
+    ### Fixed
     fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
-    moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
-    if mimic_path is not None:
-        mimic = np.asarray(nib.load(mimic_path).get_data().squeeze(), dtype='float32')
+    fixed = ants.from_numpy(fixed)
+    fixed.set_spacing(fixed_resolution)
 
+    ### Moving
+    moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
     if flip_X:
         moving = moving[::-1,:,:]
-        mimic = mimic[::-1,:,:]
     if flip_Z:
         moving = moving[:,:,::-1]
-        mimic = mimic[:,:,::-1]
-
-    fixed = ants.from_numpy(fixed)
     moving = ants.from_numpy(moving)
-    mimic = ants.from_numpy(mimic)
-
     moving.set_spacing(moving_resolution)
-    fixed.set_spacing(fixed_resolution)
-    mimic.set_spacing(mimic_resolution)
 
-    if mimic_path is None:
-        printlog('Starting {} to {}'.format(moving_fly, fixed_fly))
-    else:
+    ### Mimic
+    if mimic_path is not None:
+        mimic = np.asarray(nib.load(mimic_path).get_data().squeeze(), dtype='float32')
+        if flip_X:
+            mimic = mimic[::-1,:,:]
+        if flip_Z:
+            mimic = mimic[:,:,::-1]
+        mimic = ants.from_numpy(mimic)
+        mimic.set_spacing(mimic_resolution)
         printlog('Starting {} to {}, with mimic {}'.format(moving_fly, fixed_fly, mimic_fly))
+    else:
+        printlog('Starting {} to {}'.format(moving_fly, fixed_fly))
 
     #############
     ### Align ###
@@ -104,10 +111,13 @@ def main(args):
 
     # ONLY SAVING MIMIC <------ CHANGE
     if flip_X:
-        save_file = os.path.join(save_directory, mimic_fly + '_m' + '-to-' + fixed_fly + '.nii')
+        save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly + '.nii')
+        #save_file = os.path.join(save_directory, mimic_fly + '_m' + '-to-' + fixed_fly + '.nii')
     else:
-        save_file = os.path.join(save_directory, mimic_fly + '-to-' + fixed_fly + '.nii')
-    nib.Nifti1Image(mimic_moco.numpy(), np.eye(4)).to_filename(save_file)
+        save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly + '.nii')
+        #save_file = os.path.join(save_directory, mimic_fly + '-to-' + fixed_fly + '.nii')
+    #nib.Nifti1Image(mimic_moco.numpy(), np.eye(4)).to_filename(save_file)
+    nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
 
     # if flip_X:
     #     save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly + '.nii')
