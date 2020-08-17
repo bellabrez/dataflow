@@ -29,7 +29,7 @@ def main(args):
     X = brain[:,:,:,:].reshape(-1,brain.shape[-1]).T
     brain = None
     printlog('X is time by voxels {}'.format(X.shape))
-    printlog('Reshape duration: {}'.format(time()-t0))
+    printlog('Reshape duration: {}'.format(time.time()-t0))
 
     t0 = time.time()
     pca = PCA().fit(X)
