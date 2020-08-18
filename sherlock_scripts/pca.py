@@ -16,9 +16,11 @@ def main(args):
 
     logfile = args['logfile']
     directory = args['directory'] # full fly func path
+    file = args['file']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
-    brain_path = os.path.join(directory, 'brain_zscored_green.nii')
+    brain_path = os.path.join(directory, file)
+    #brain_path = os.path.join(directory, 'brain_zscored_green.nii')
     printlog("Performing PCA on {}".format(brain_path))
     brain = np.asarray(nib.load(brain_path).get_data(), dtype='float32')
     dim_y, dim_x, dim_z, dim_t = brain.shape

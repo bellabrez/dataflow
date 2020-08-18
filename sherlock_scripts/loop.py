@@ -19,7 +19,7 @@ width = 120 # width of print log
 nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
-flies = ['fly_089', 'fly_094']
+flies = ['fly_094']
 # flies = ['fly_087', 'fly_089', 'fly_091', 'fly_092', 'fly_093', 'fly_094', 'fly_096',
 #          'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_102', 'fly_105', 'fly_106',
 #          'fly_109', 'fly_110', 'fly_111']
@@ -58,11 +58,27 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
+printlog(f"\n{'   ZSCORE   ':=^{width}}")
+job_ids = []
+for fly in flies:
+    directory = os.path.join(dataset_path, fly, 'func_0')
+    args = {'logfile': logfile, 'directory': directory, 'smooth': True, 'colors': ['green']}
+    script = 'zscore.py'
+    job_id = flow.sbatch(jobname='zscore',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=8, mem=18, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
+
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
+
 printlog(f"\n{'   PCA   ':=^{width}}")
 job_ids = []
 for fly in flies:
     directory = os.path.join(dataset_path, fly, 'func_0')
-    args = {'logfile': logfile, 'directory': directory}
+    args = {'logfile': logfile, 'directory': directory, 'file': 'brain_zscored_green_smooth.nii'}
     script = 'pca.py'
     job_id = flow.sbatch(jobname='pca',
                          script=os.path.join(scripts_path, script),
