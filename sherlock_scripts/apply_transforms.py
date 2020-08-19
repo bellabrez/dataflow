@@ -57,12 +57,12 @@ def main(args):
     ########################
     ### Apply Transforms ###
     ########################
-    moco = ants.apply_transforms(fixed, moving, transforms)
+    moco = ants.apply_transforms(fixed, moving, transforms, interpolator='genericLabel')
 
     ############
     ### Save ###
     ############
-    save_file = os.path.join(save_directory, moving_fly + '-applied-' + fixed_fly + '.nii')
+    save_file = os.path.join(save_directory, moving_fly + '-applied2-' + fixed_fly + '.nii')
     nib.Nifti1Image(moco.numpy(), np.eye(4)).to_filename(save_file)
 
 def sec_to_hms(t):
