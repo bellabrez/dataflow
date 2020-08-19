@@ -25,7 +25,7 @@ def main(args):
     flip_X = args['flip_X']
     flip_Z = args['flip_Z']
     type_of_transform = args['type_of_transform'] # SyN or Affine
-    #save_warp_params = args['save_warp_params']
+    save_warp_params = args['save_warp_params']
 
     fixed_path = args['fixed_path']
     fixed_fly = args['fixed_fly']
@@ -91,12 +91,15 @@ def main(args):
     ### Save warp params if True ###
     ################################
 
-    # if save_warp_params:
-    #     fwdtransformlist = moco['fwdtransforms']
-    #     for source_path in fwdtransformlist:
-    #         source_file = source_path.split('/')[-1]
-    #         target_path = os.path.join(save_directory, 'fwdtransforms', source_file)
-    #         copyfile(source_path, target_path)
+    if save_warp_params:
+        fwdtransformlist = moco['fwdtransforms']
+        fwdtransforms_save_dir = os.path.join(save_directory, '{}-to-{}_fwdtransforms'.format(moving_fly, fixed_fly))
+        if not os.path.exists(fwdtransforms_save_dir):
+            os.mkdir(fwdtransforms_save_dir)
+        for source_path in fwdtransformlist:
+            source_file = source_path.split('/')[-1]
+            target_path = os.path.join(fwdtransforms_save_dir, source_file)
+            copyfile(source_path, target_path)
 
     ##################################
     ### Apply warp params to mimic ###
