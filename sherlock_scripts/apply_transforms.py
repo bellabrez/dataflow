@@ -57,7 +57,7 @@ def main(args):
     ########################
     ### Apply Transforms ###
     ########################
-    moco = ants.apply_transforms(fixed, moving, transforms, interpolator='genericLabel')
+    moco = ants.apply_transforms(fixed, moving, transforms)
 
     ############
     ### Save ###

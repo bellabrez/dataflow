@@ -20,7 +20,7 @@ nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 #flies = ['fly_094']
-fly = 'fly_094'
+fly = 'fly_089'
 # flies = ['fly_087', 'fly_089', 'fly_091', 'fly_092', 'fly_093', 'fly_094', 'fly_096',
 #          'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_102', 'fly_105', 'fly_106',
 #          'fly_109', 'fly_110', 'fly_111']
@@ -58,43 +58,58 @@ printlog("")
 ###################
 ### LOOP SCRIPT ###
 ###################
-
-## Apply transforms
-res_anat = (0.65, 0.65, 1)
-res_func = (2.6, 2.6, 5)
-
-printlog(f"\n{'   Alignment   ':=^{width}}")
-fly_directory = os.path.join(dataset_path, fly)
-
-moving_path = os.path.join(fly_directory, 'func_0', 'temp_corr.nii')
-moving_fly = 'corr'
-moving_resolution = res_func
-
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
-fixed_fly = 'meanbrain'
-fixed_resolution = res_anat
-
-save_directory = os.path.join(fly_directory, 'warp')
-if not os.path.exists(save_directory):
-    os.mkdir(save_directory)
+directory = os.path.join(dataset_path, fly, 'func_0')
 
 args = {'logfile': logfile,
-        'save_directory': save_directory,
-        'fixed_path': fixed_path,
-        'moving_path': moving_path,
-        'fixed_fly': fixed_fly,
-        'moving_fly': moving_fly,
-        'moving_resolution': moving_resolution,
-        'fixed_resolution': fixed_resolution}
+        'directory': directory}
 
-script = 'apply_transforms.py'
-job_id = flow.sbatch(jobname='aplytrns',
+script = 'correlation.py'
+job_id = flow.sbatch(jobname='corr',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
 
 flow.wait_for_job(job_id, logfile, com_path)
+
+########################
+### Apply transforms ###
+########################
+# res_anat = (0.65, 0.65, 1)
+# res_func = (2.6, 2.6, 5)
+
+# printlog(f"\n{'   Alignment   ':=^{width}}")
+# fly_directory = os.path.join(dataset_path, fly)
+
+# moving_path = os.path.join(fly_directory, 'func_0', 'temp_corr.nii')
+# moving_fly = 'corr'
+# moving_resolution = res_func
+
+# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+# fixed_fly = 'meanbrain'
+# fixed_resolution = res_anat
+
+# save_directory = os.path.join(fly_directory, 'warp')
+# if not os.path.exists(save_directory):
+#     os.mkdir(save_directory)
+
+# args = {'logfile': logfile,
+#         'save_directory': save_directory,
+#         'fixed_path': fixed_path,
+#         'moving_path': moving_path,
+#         'fixed_fly': fixed_fly,
+#         'moving_fly': moving_fly,
+#         'moving_resolution': moving_resolution,
+#         'fixed_resolution': fixed_resolution}
+
+# script = 'apply_transforms.py'
+# job_id = flow.sbatch(jobname='aplytrns',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
+
+# flow.wait_for_job(job_id, logfile, com_path)
 
 # ### Align func to anat
 # res_anat = (0.65, 0.65, 1)
