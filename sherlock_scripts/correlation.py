@@ -10,6 +10,8 @@ import nibabel as nib
 import bigbadbrain as bbb
 import dataflow as flow
 
+import scipy
+
 def main(args):
 
     logfile = args['logfile']
