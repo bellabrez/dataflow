@@ -20,10 +20,10 @@ nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 #flies = ['fly_094']
-fly = 'fly_089'
-# flies = ['fly_087', 'fly_089', 'fly_091', 'fly_092', 'fly_093', 'fly_094', 'fly_096',
-#          'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_102', 'fly_105', 'fly_106',
-#          'fly_109', 'fly_110', 'fly_111']
+#fly = 'fly_089'
+flies = ['fly_086', 'fly_087', 'fly_089', 'fly_092', 'fly_093', 'fly_094', 'fly_095', 'fly_096',
+         'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_102', 'fly_103', 'fly_104', 'fly_105', 'fly_106',
+         'fly_107', 'fly_109', 'fly_110', 'fly_111']
 #flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
 #####################
@@ -58,58 +58,65 @@ printlog("")
 ###################
 ### LOOP SCRIPT ###
 ###################
-directory = os.path.join(dataset_path, fly, 'func_0')
+printlog(f"\n{'   correlation   ':=^{width}}")
+job_ids = []
+for fly in flies:
+    directory = os.path.join(dataset_path, fly, 'func_0')
+    args = {'logfile': logfile,
+            'directory': directory}
+    script = 'correlation.py'
+    job_id = flow.sbatch(jobname='corr',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
-args = {'logfile': logfile,
-        'directory': directory}
-
-script = 'correlation.py'
-job_id = flow.sbatch(jobname='corr',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
-
-flow.wait_for_job(job_id, logfile, com_path)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 ########################
 ### Apply transforms ###
 ########################
-# res_anat = (0.65, 0.65, 1)
-# res_func = (2.6, 2.6, 5)
+res_anat = (0.65, 0.65, 1)
+res_func = (2.6, 2.6, 5)
 
-# printlog(f"\n{'   Alignment   ':=^{width}}")
-# fly_directory = os.path.join(dataset_path, fly)
+printlog(f"\n{'   Alignment   ':=^{width}}")
+job_ids = []
+for fly in flies:
+    fly_directory = os.path.join(dataset_path, fly)
 
-# moving_path = os.path.join(fly_directory, 'func_0', 'temp_corr.nii')
-# moving_fly = 'corr'
-# moving_resolution = res_func
+    moving_path = os.path.join(fly_directory, 'func_0', 'corr', 'corr_all_v.nii')
+    moving_fly = 'corr'
+    moving_resolution = res_func
 
-# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
-# fixed_fly = 'meanbrain'
-# fixed_resolution = res_anat
+    fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+    fixed_fly = 'meanbrain'
+    fixed_resolution = res_anat
 
-# save_directory = os.path.join(fly_directory, 'warp')
-# if not os.path.exists(save_directory):
-#     os.mkdir(save_directory)
+    save_directory = os.path.join(fly_directory, 'warp')
+    if not os.path.exists(save_directory):
+        os.mkdir(save_directory)
 
-# args = {'logfile': logfile,
-#         'save_directory': save_directory,
-#         'fixed_path': fixed_path,
-#         'moving_path': moving_path,
-#         'fixed_fly': fixed_fly,
-#         'moving_fly': moving_fly,
-#         'moving_resolution': moving_resolution,
-#         'fixed_resolution': fixed_resolution}
+    args = {'logfile': logfile,
+            'save_directory': save_directory,
+            'fixed_path': fixed_path,
+            'moving_path': moving_path,
+            'fixed_fly': fixed_fly,
+            'moving_fly': moving_fly,
+            'moving_resolution': moving_resolution,
+            'fixed_resolution': fixed_resolution}
 
-# script = 'apply_transforms.py'
-# job_id = flow.sbatch(jobname='aplytrns',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
+    script = 'apply_transforms.py'
+    job_id = flow.sbatch(jobname='aplytrns',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
-# flow.wait_for_job(job_id, logfile, com_path)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # ### Align func to anat
 # res_anat = (0.65, 0.65, 1)
