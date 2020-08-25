@@ -11,6 +11,7 @@ import bigbadbrain as bbb
 import dataflow as flow
 
 import scipy
+from scipy.interpolate import interp1d
 
 def main(args):
 
