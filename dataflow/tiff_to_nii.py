@@ -106,10 +106,31 @@ def tiff_to_nii_v2(xml_file):
     # Get all volumes
     sequences = root.findall('Sequence')
 
+     # Check if bidirectional - will affect loading order
+    isBidirectionalZ = sequences[0].get('bidirectionalZ')
+    if isBidirectionalZ == 'True':
+        isBidirectionalZ = True
+    else:
+        isBidirectionalZ = False
+    print('BidirectionalZ is {}'.format(isBidirectionalZ))
+
     # Get axis dims
+    if root.find('Sequence').get('type') == 'TSeries Timed Element': # Plane time series
+        num_timepoints = len(sequences[0].findall('Frame'))
+        num_z = 1
+        isVolumeSeries = False
+    elif root.find('Sequence').get('type') == 'TSeries ZSeries Element': # Volume time series
+        num_timepoints = len(sequences)
+        num_z = len(sequences[0].findall('Frame'))
+        isVolumeSeries = True
+    else: # Default to: Volume time series
+        num_timepoints = len(sequences)
+        num_z = len(sequences[0].findall('Frame'))
+        isVolumeSeries = True
+
+    print('isVolumeSeries is {}'.format(isVolumeSeries))
+
     num_channels = get_num_channels(sequences[0])
-    num_timepoints = len(sequences)
-    num_z = len(sequences[0].findall('Frame'))
     test_file = sequences[0].findall('Frame')[0].findall('File')[0].get('filename')
     fullfile = os.path.join(data_dir, test_file)
     img = imread(fullfile)
@@ -121,38 +142,35 @@ def tiff_to_nii_v2(xml_file):
     print('num_y: {}'.format(num_y))
     print('num_x: {}'.format(num_x))
 
-    # Check if bidirectional - will affect loading order
-    isBidirectionalZ = sequences[0].get('bidirectionalZ')
-    if isBidirectionalZ == 'True':
-        isBidirectionalZ = True
-    else:
-        isBidirectionalZ = False
-    print('BidirectionalZ is {}'.format(isBidirectionalZ))
-
     # loop over channels
     for channel in range(num_channels):
         last_num_z = None
         image_array = np.zeros((num_timepoints, num_z, num_y, num_x), dtype=np.uint16)
         print('Created empty array of shape {}'.format(image_array.shape))
         # loop over time
-        for i, sequence in enumerate(sequences):
-            print('{}/{}'.format(i+1, len(sequences)))
-            # For a given volume, get all frames
-            frames = sequence.findall('Frame')
+        for i in range(num_timepoints):
+            if i%10 == 0:
+                print('{}/{}'.format(i+1, num_timepoints))
+            
+            if isVolumeSeries: # For a given volume, get all frames
+                frames = sequences[i].findall('Frame')
+                current_num_z = len(frames)
+                # Handle aborted scans for volumes
+                if last_num_z is not None:
+                    if current_num_z != last_num_z:
+                        print('Inconsistent number of z-slices (scan aborted).')
+                        print('Tossing last volume.')
+                        aborted = True
+                        break
+                last_num_z = current_num_z
 
-            # Handle aborted scans
-            current_num_z = len(frames)
-            if last_num_z is not None:
-                if current_num_z != last_num_z:
-                    print('Inconsistent number of z-slices (scan aborted).')
-                    print('Tossing last volume.')
-                    aborted = True
-                    break
-            last_num_z = current_num_z
+                # Flip frame order if a bidirectionalZ upstroke (odd i)
+                if isBidirectionalZ and (i%2 != 0):
+                    frames = frames[::-1]
 
-            # Flip frame order if a bidirectionalZ upstroke (odd i)
-            if isBidirectionalZ and (i%2 != 0):
-                frames = frames[::-1]
+            else: # Plane series: Get frame
+                frames = [sequences[0].findall('Frame')[i]]
+
             # loop over depth (z-dim)
             for j, frame in enumerate(frames):
                 # For a given frame, get filename
@@ -163,20 +181,28 @@ def tiff_to_nii_v2(xml_file):
                 # Read in file
                 img = imread(fullfile)
                 image_array[i,j,:,:] = img
+
                  
             if i%10 == 0:
                 memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
                 print('Current memory usage: {:.2f}GB'.format(memory_usage))
                 sys.stdout.flush()
 
-        # Will start as t,z,x,y. Want y,x,z,t
-        image_array = np.moveaxis(image_array,1,-1) # Now t,x,y,z
-        image_array = np.moveaxis(image_array,0,-1) # Now x,y,z,t
-        image_array = np.swapaxes(image_array,0,1) # Now y,x,z,t
+        if isVolumeSeries:
+            # Will start as t,z,x,y. Want y,x,z,t
+            image_array = np.moveaxis(image_array,1,-1) # Now t,x,y,z
+            image_array = np.moveaxis(image_array,0,-1) # Now x,y,z,t
+            image_array = np.swapaxes(image_array,0,1) # Now y,x,z,t
 
-        # Toss last volume if aborted
-        if aborted:
-            image_array = image_array[:,:,:,:-1]
+            # Toss last volume if aborted
+            if aborted:
+                image_array = image_array[:,:,:,:-1]
+        else:
+            image_array = np.squeeze(image_array) # t, x, y
+            image_array = np.moveaxis(image_array, 0, -1) # x, y, t
+            image_array = np.swapaxes(image_array, 0, 1) # y, x, t
+
+        print('Final array shape = {}'.format(image_array.shape))
 
         memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
         print('Current memory usage: {:.2f}GB'.format(memory_usage))
@@ -189,7 +215,10 @@ def tiff_to_nii_v2(xml_file):
 
         aff = np.eye(4)
         save_name = xml_file[:-4] + '_channel_{}'.format(channel+1) + '.nii'
-        img = nib.Nifti1Image(image_array, aff)
+        if isVolumeSeries:
+            img = nib.Nifti1Image(image_array, aff) # 32 bit: maxes out at 32767 in any one dimension
+        else:
+            img = nib.Nifti2Image(image_array, aff) # 64 bit 
         image_array = None # for memory
         print('Saving nii as {}'.format(save_name))
         img.to_filename(save_name)
