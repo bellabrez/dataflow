@@ -17,6 +17,7 @@ def main(args):
     logfile = args['logfile']
     directory = args['directory'] # full fly func path
     file = args['file']
+    save_subfolder = args['save_subfolder']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     brain_path = os.path.join(directory, file)
@@ -45,6 +46,10 @@ def main(args):
 
     pca_directory = os.path.join(directory, 'pca')
     if not os.path.exists(pca_directory):
+        os.mkdir(pca_directory)
+
+    if save_subfolder:
+        pca_directory = os.path.join(pca_directory, save_subfolder)
         os.mkdir(pca_directory)
 
     save_file = os.path.join(pca_directory, 'scores_(spatial).npy')
