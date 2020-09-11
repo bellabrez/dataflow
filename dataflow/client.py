@@ -41,7 +41,7 @@ def socket_recursive_copy(source, target):
         print(source_path)
         # Check if item is a directory
         if os.path.isdir(source_path):
-            print("is dir: {}".format(source_path))
+            #print("is dir: {}".format(source_path))
             # Create same directory in target
             command = "mkdir"
             s.send(f"{command}{SEPARATOR}{target_path}".encode())
@@ -49,7 +49,7 @@ def socket_recursive_copy(source, target):
 
         # If the item is a file
         if os.path.isfile(source_path):
-            print("is file: {}".format(source_path))
+            #print("is file: {}".format(source_path))
             command = "cpfile"
             s.send(f"{command}{SEPARATOR}{target_path}".encode())
             socket_file_copy(source_path, target_path)
@@ -58,6 +58,8 @@ def socket_recursive_copy(source, target):
             print("error")
 
 def socket_file_copy(source_path, target_path):
+    filename = os.path.basename(source_path) # for printing purposes only
+
     # get and send the file size
     filesize = os.path.getsize(source_path)
     command = None
