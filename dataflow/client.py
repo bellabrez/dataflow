@@ -33,7 +33,7 @@ print(F"First sending: {command}{SEPARATOR}{target_directory}")
 s.send(f"{command}{SEPARATOR}{target_directory}".encode())
 
 def socket_recursive_copy(source, target):
-    for item in os.listdir(source_directory):
+    for item in os.listdir(source):
         # Create full path to item
 
         source_path = source + '/' + item
@@ -41,6 +41,7 @@ def socket_recursive_copy(source, target):
         print(source_path)
         # Check if item is a directory
         if os.path.isdir(source_path):
+            print("is dir: {}".format(source_path))
             # Create same directory in target
             command = "mkdir"
             s.send(f"{command}{SEPARATOR}{target_path}".encode())
@@ -48,6 +49,7 @@ def socket_recursive_copy(source, target):
 
         # If the item is a file
         if os.path.isfile(source_path):
+            print("is file: {}".format(source_path))
             command = "cpfile"
             s.send(f"{command}{SEPARATOR}{target_path}".encode())
             socket_file_copy(source_path, target_path)
