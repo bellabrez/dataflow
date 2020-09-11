@@ -13,12 +13,12 @@ target_directory = "G:/ftp_imports"
 sock = socket()
 sock.bind((SERVER_HOST, SERVER_PORT))
 sock.listen(1)
-print(f"[*] Listening as {SERVER_HOST}:{SERVER_PORT}")
 
 # Make a directory for the received files.
 #os.makedirs('server',exist_ok=True)
 
 while True:
+    print(f"[*] Listening as {SERVER_HOST}:{SERVER_PORT}")
     client,address = sock.accept()
     print(f"[+] {address} is connected.")
     with client,client.makefile('rb') as clientfile:
