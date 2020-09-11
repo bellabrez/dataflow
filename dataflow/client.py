@@ -35,10 +35,10 @@ s.send(f"{command}{SEPARATOR}{target_directory}".encode())
 def socket_recursive_copy(source, target):
     for item in os.listdir(source_directory):
         # Create full path to item
-        print(source_path)
+
         source_path = source + '/' + item
         target_path = target + '/' + item
-
+        print(source_path)
         # Check if item is a directory
         if os.path.isdir(source_path):
             # Create same directory in target
