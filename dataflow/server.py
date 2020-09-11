@@ -28,22 +28,6 @@ print(f"[+] {address} is connected.")
 
 master_directory = "G:/ftp_imports"
 
-#todo: create user's folder in ftp_imports if first time running
-while True:
-    message = client_socket.recv(BUFFER_SIZE)
-    print("message: {}".format(message))
-    command, item = message.decode().split(SEPARATOR)
-    item_path = os.path.join(master_directory, item)
-
-    if command == "mkdir":
-        os.mkdir(item_path)
-        print("making directory: {}".format(item_path))
-    if command == "cpfile":
-        #get filesize
-        command, filesize = client_socket.recv(BUFFER_SIZE).decode().split(SEPARATOR)
-        socket_file_copy(item_path, filesize)
-
-
 def socket_file_copy(item_path, filesize):
     filename = os.path.basename(item_path) # for printing purposes only
 
@@ -68,6 +52,22 @@ def socket_file_copy(item_path, filesize):
                 f.write(bytes_read)
                 # update the progress bar
                 progress.update(len(bytes_read))
+
+#todo: create user's folder in ftp_imports if first time running
+while True:
+    message = client_socket.recv(BUFFER_SIZE)
+    print("message: {}".format(message))
+    command, item = message.decode().split(SEPARATOR)
+    item_path = os.path.join(master_directory, item)
+
+    if command == "mkdir":
+        os.mkdir(item_path)
+        print("making directory: {}".format(item_path))
+    if command == "cpfile":
+        #get filesize
+        command, filesize = client_socket.recv(BUFFER_SIZE).decode().split(SEPARATOR)
+        socket_file_copy(item_path, filesize)
+
 
 # close the client socket
 client_socket.close()
