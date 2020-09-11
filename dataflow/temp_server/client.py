@@ -7,16 +7,14 @@ BUFFER_SIZE = 4096 # send 4096 bytes each time step
 
 # the ip address or hostname of the server, the receiver
 #host = "192.168.1.101"
-host = "10.30.115.186" # Luke's laptop
-host = "171.65.17.84" # Desktop
+host = "10.30.115.186"
 # the port, let's use 5001
 port = 5001
 # the name of file we want to send, make sure it exists
 #filename = "data.csv"
-#filename = "G:/ftp_imports/20200613/fly1/func_0/SingleImage-06132020-1058-001/SingleImage-06132020-1058-001_Cycle00001_Ch1_000001.ome.tif"
-filename = "G:/luke/20200725__flag__/fly1/func_0/TSeries-12172018-1322-002/CYCLE_000001_RAWDATA_000001"
-#source_directory = "G:/luke/20200725__flag__"
 
+filename = "G:/ftp_imports/20200613/fly1/func_0/SingleImage-06132020-1058-001/SingleImage-06132020-1058-001_Cycle00001_Ch1_000001.ome.tif"
+#source_directory = "G:/luke/20200725__flag__"
 # get the file size
 filesize = os.path.getsize(filename)
 

@@ -146,7 +146,7 @@ class Printlog():
             f.write('\n')
             fcntl.flock(f, fcntl.LOCK_UN)
 
-def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=False, silence_print=False):
+def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=False, silence_print=False, nodes=2):
     if dep != '':
         dep = '--dependency=afterok:{} --kill-on-invalid-dep=yes '.format(dep)
  
@@ -154,7 +154,13 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=
 
     if nice: # For lowering the priority of the job
         nice = 1000000
-    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc --open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, mem, command, dep)
+
+    if nodes == 1:
+        node_cmd = '-w sh02-07n34 '
+    else:
+        node_cmd = ''
+
+    sbatch_command = "sbatch -J {} -o ./com/%j.out -e {} -t {}:00:00 --nice={} --partition=trc {}--open-mode=append --cpus-per-task={} --wrap='{}' {}".format(jobname, logfile, time, nice, node_cmd, mem, command, dep)
     sbatch_response = subprocess.getoutput(sbatch_command)
     width = 120
     if not silence_print:
@@ -175,7 +181,8 @@ def get_job_status(job_id, logfile, should_print=False):
                 jobname = temp.split('\n')[0].split('|')[4]
                 num_cores = int(temp.split('\n')[0].split('|')[3])
                 memory_used = float(temp.split('\n')[1].split('|')[2]) # in bytes
-            except IndexError:
+            except (IndexError, ValueError) as e:
+                printlog(str(e))
                 printlog(F"Failed to parse sacct subprocess: {temp}")
                 return status
             core_memory = 7.77 * 1024 * 1024 * 1024 #GB to MB to KB to bytes
@@ -196,7 +203,7 @@ def get_job_status(job_id, logfile, should_print=False):
             pretty = '+' + '-' * (width-2) + '+'
             sep = ' | '
             printlog(F"{pretty}\n"
-                     F"{'| '+jobname+sep+job_id+sep+status+sep+duration+sep+str(num_cores)+' cores'+sep+memory_to_print+' (' + percent_mem + '%)':{width-1}}|\n"
+                     F"{'| SLURM | '+jobname+sep+job_id+sep+status+sep+duration+sep+str(num_cores)+' cores'+sep+memory_to_print+' (' + percent_mem + '%)':{width-1}}|\n"
                      F"{pretty}")
         else:
             printlog('Job {} Status: {}'.format(job_id, status))
@@ -229,11 +236,11 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
         expt_print.append(funcanat.split('/')[-1])
         total_vol.append(progress[funcanat]['total_vol'])
         complete_vol.append(progress[funcanat]['complete_vol'])
-        printlog("{}, {}".format(progress[funcanat]['total_vol'], progress[funcanat]['complete_vol']))
+        #printlog("{}, {}".format(progress[funcanat]['total_vol'], progress[funcanat]['complete_vol']))
 
     total_vol_sum = np.sum([int(x) for x in total_vol])
     complete_vol_sum = np.sum([int(x) for x in complete_vol])
-    printlog("{}, {}".format(total_vol_sum, complete_vol_sum))
+    #printlog("{}, {}".format(total_vol_sum, complete_vol_sum))
     fraction_complete = complete_vol_sum/total_vol_sum
     num_columns = len(fly_print)
     column_width = int((120-20)/num_columns)
@@ -272,8 +279,8 @@ def print_progress_table(progress, logfile, start_time, print_header=False, prin
 
     if print_footer:
         printlog('|--------+' + '+'.join([F"{'':-^{column_width}}"]*num_columns) + '+--------|')
-        for funcanat in progress:
-            printlog("{} {} {}".format(funcanat, progress[funcanat]['complete_vol'], progress[funcanat]['total_vol']))
+        #for funcanat in progress:
+        #    printlog("{} {} {}".format(funcanat, progress[funcanat]['complete_vol'], progress[funcanat]['total_vol']))
 
 def progress_bar(iteration, total, length, fill = '█'):
     filledLength = int(length * iteration // total)
@@ -327,4 +334,55 @@ def moco_progress(progress_tracker, logfile, com_path):
             print_progress_table(progress_tracker, logfile, start_time, print_footer=True) # print final 100% complete line
             return
         else:
-            sleep(60)
+            sleep(int(60*5))
+
+def tryint(s):
+    try:
+        return int(s)
+    except:
+        return s
+
+def alphanum_key(s):
+    return [tryint(c) for c in re.split('([0-9]+)', s)]
+
+def sort_nicely(x):
+    x.sort(key=alphanum_key)
+
+def get_resolution(xml_file):
+    """ Gets the x,y,z resolution of a Bruker recording.
+
+    Units of microns.
+
+    Parameters
+    ----------
+    xml_file: string to full path of Bruker xml file.
+
+    Returns
+    -------
+    x: float of x resolution
+    y: float of y resolution
+    z: float of z resolution """
+
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    statevalues = root.findall('PVStateShard')[0].findall('PVStateValue')
+    for statevalue in statevalues:
+        key = statevalue.get('key')
+        if key == 'micronsPerPixel':
+            indices = statevalue.findall('IndexedValue')
+            for index in indices:
+                axis = index.get('index')
+                if axis == 'XAxis':
+                    x = float(index.get('value'))
+                elif axis == 'YAxis':
+                    y = float(index.get('value'))
+                elif axis == 'ZAxis':
+                    z = float(index.get('value'))
+                else:
+                    print('Error')
+    return x, y, z
+
+
+
+
+

@@ -7,7 +7,6 @@ import datetime
 import pyfiglet
 import textwrap
 import dataflow as flow
-import bigbadbrain as bbb
 
 modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
 
@@ -16,7 +15,10 @@ modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz
 #########################
 
 width = 120 # width of print log
-fly_dirs = ['fly1'] # set to None, or a list of fly dirs in the import dir
+fly_dirs = ['fly_4'] # set to None, or a list of fly dirs in the import dir
+#fly_dirs = None
+nodes = 2 # 1 or 2
+nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 #####################
 ### Setup logging ###
@@ -35,9 +37,10 @@ scripts_path = "/home/users/brezovec/projects/dataflow/sherlock_scripts"
 com_path = "/home/users/brezovec/projects/dataflow/sherlock_scripts/com"
 dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
 
-######################
-### Check for flag ###
-######################
+###################
+### Print Title ###
+###################
+
 title = pyfiglet.figlet_format("Dataflow", font="cyberlarge" ) #28 #shimrod
 title_shifted = ('\n').join([' '*28+line for line in title.split('\n')][:-2])
 printlog(title_shifted)
@@ -45,33 +48,40 @@ day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog(F"{day_now+' | '+time_now:^{width}}")
 printlog("")
-printlog("="*width)
+#printlog("="*width)
+
+######################
+### Check for flag ###
+######################
+
+printlog(f"\n{'   CHECK FOR FLAG   ':=^{width}}")
 args = {'logfile': logfile, 'imports_path': imports_path}
 script = 'check_for_flag.py'
 job_id = flow.sbatch(jobname='flagchk',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=1, mem=1, nice=True)
+                     logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
 flagged_dir = flow.wait_for_job(job_id, logfile, com_path)
 
 ###################
 ### Build flies ###
 ###################
 
+printlog(f"\n{'   BUILD FLIES   ':=^{width}}")
 args = {'logfile': logfile, 'flagged_dir': flagged_dir.strip('\n'), 'dataset_path': dataset_path, 'fly_dirs': fly_dirs}
 script = 'fly_builder.py'
 job_id = flow.sbatch(jobname='bldfly',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=1, mem=1, nice=True)
+                     logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
 func_and_anats = flow.wait_for_job(job_id, logfile, com_path)
 func_and_anats = func_and_anats.split('\n')[:-1]
 funcs = [x.split(':')[1] for x in func_and_anats if 'func:' in x] # will be full paths to fly/expt
 anats = [x.split(':')[1] for x in func_and_anats if 'anat:' in x]
-bbb.sort_nicely(funcs)
-bbb.sort_nicely(anats)
+flow.sort_nicely(funcs)
+flow.sort_nicely(anats)
 funcanats = funcs + anats
 dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 
@@ -79,13 +89,14 @@ dirtypes = ['func']*len(funcs) + ['anat']*len(anats)
 #funcanats = funcs
 #dirtypes = ['func']*len(funcs)
 
-funcanats = anats
-dirtypes = ['anat']*len(anats)
+#funcanats = anats
+#dirtypes = ['anat']*len(anats)
 
 ##################
 ### Fictrac QC ###
 ##################
 
+printlog(f"\n{'   FICTRAC QC   ':=^{width}}")
 job_ids = []
 for func in funcs:
     directory = os.path.join(func, 'fictrac')
@@ -96,7 +107,7 @@ for func in funcs:
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=1, mem=1, nice=False)
+                             logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
         job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
@@ -105,6 +116,7 @@ for job_id in job_ids:
 ### Bleaching QC ###
 ####################
 
+printlog(f"\n{'   BLEACHING QC   ':=^{width}}")
 job_ids = []
 for funcanat, dirtype in zip(funcanats, dirtypes):
     directory = os.path.join(funcanat, 'imaging')
@@ -114,7 +126,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=1, nice=False)
+                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
     job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
@@ -123,6 +135,7 @@ for job_id in job_ids:
 ### Create mean brains ###
 ##########################
 
+printlog(f"\n{'   MEAN BRAINS   ':=^{width}}")
 job_ids = []
 for funcanat, dirtype in zip(funcanats, dirtypes):
     directory = os.path.join(funcanat, 'imaging')
@@ -132,7 +145,7 @@ for funcanat, dirtype in zip(funcanats, dirtypes):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=1, nice=False)
+                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes)
     job_ids.append(job_id)
 
 timepointss = []
@@ -143,7 +156,11 @@ for job_id in job_ids:
 ##################
 ### Start MOCO ###
 ##################
+# timepointss = [100]
+# funcanats = [os.path.join(dataset_path, 'fly_170', 'anat_0')]
+# dirtypes = ['anat']
 
+printlog(f"\n{'   MOTION CORRECTION   ':=^{width}}")
 # This will immediately launch all partial mocos and their corresponding dependent moco stitchers
 stitcher_job_ids = []
 progress_tracker = {}
@@ -157,13 +174,13 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
         os.makedirs(moco_dir)
 
     if dirtype == 'func':
-        step = 10
-        mem = 2
-        time_moco = 1
-    elif dirtype == 'anat':
-        step = 5
+        step = 100 ### <================ compare speed with different step/mem combos
         mem = 4
-        time_moco = 3
+        time_moco = 4
+    elif dirtype == 'anat':
+        step = 10
+        mem = 7
+        time_moco = 6
 
     starts = list(range(0,timepoints,step))
     stops = starts[1:] + [timepoints]
@@ -179,7 +196,7 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=time_moco, mem=mem, nice=True, silence_print=True)
+                             logfile=logfile, time=time_moco, mem=mem, nice=nice, silence_print=True, nodes=nodes)
         job_ids.append(job_id)
 
     #to_print = F"| moco_partials | SUBMITTED | {fly_print} | {expt_print} | {len(job_ids)} jobs, {step} vols each |"
@@ -193,16 +210,17 @@ for funcanat, dirtype, timepoints in zip(funcanats, dirtypes, timepointss):
     ### Create dependent stitcher ###
     #################################
 
-    args = {'logfile': logfile, 'directory': moco_dir}
+    args = {'logfile': logfile, 'directory': moco_dir, 'dirtype': dirtype}
     script = 'moco_stitcher.py'
     job_id = flow.sbatch(jobname='stitch',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=2, mem=4, dep=job_ids_colons, nice=True)
+                         logfile=logfile, time=2, mem=12, dep=job_ids_colons, nice=nice, nodes=nodes)
     stitcher_job_ids.append(job_id)
 
-flow.moco_progress(progress_tracker, logfile, com_path)
+if bool(progress_tracker): #if not empty
+    flow.moco_progress(progress_tracker, logfile, com_path)
 
 for job_id in stitcher_job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
@@ -211,15 +229,16 @@ for job_id in stitcher_job_ids:
 ### Z-Score ###
 ###############
 
+printlog(f"\n{'   Z-SCORE   ':=^{width}}")
 job_ids = []
-for funcanat in funcanats:
-    args = {'logfile': logfile, 'directory': funcanat}
+for func in funcs:
+    args = {'logfile': logfile, 'directory': func}
     script = 'zscore.py'
     job_id = flow.sbatch(jobname='zscore',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=2, mem=14, nice=True)
+                         logfile=logfile, time=8, mem=18, nice=nice, nodes=nodes)
     job_ids.append(job_id)
 
 for job_id in job_ids:
@@ -229,6 +248,7 @@ for job_id in job_ids:
 ### Done ###
 ############
 
+time.sleep(60) # to allow any final printing
 day_now = datetime.datetime.now().strftime("%B %d, %Y")
 time_now = datetime.datetime.now().strftime("%I:%M:%S %p")
 printlog("="*width)
