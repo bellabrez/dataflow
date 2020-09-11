@@ -30,7 +30,7 @@ source_directory = "G:/luke/20200725__flag__"
 target_directory = '/'.join(source_directory.split('/')[-2:]) # user/folder. will be sent to server
 command = "mkdir"
 print(F"First sending: {command}{SEPARATOR}{target_directory}")
-s.send(f"{command}{SEPARATOR}{target_directory}".encode())
+s.sendall(f"{command}{SEPARATOR}{target_directory}".encode())
 
 def socket_recursive_copy(source, target):
     for item in os.listdir(source):
@@ -44,14 +44,14 @@ def socket_recursive_copy(source, target):
             #print("is dir: {}".format(source_path))
             # Create same directory in target
             command = "mkdir"
-            s.send(f"{command}{SEPARATOR}{target_path}".encode())
+            s.sendall(f"{command}{SEPARATOR}{target_path}".encode())
             socket_recursive_copy(source_path, target_path)
 
         # If the item is a file
         if os.path.isfile(source_path):
             #print("is file: {}".format(source_path))
             command = "cpfile"
-            s.send(f"{command}{SEPARATOR}{target_path}".encode())
+            s.sendall(f"{command}{SEPARATOR}{target_path}".encode())
             socket_file_copy(source_path, target_path)
 
         else:
@@ -63,7 +63,7 @@ def socket_file_copy(source_path, target_path):
     # get and send the file size
     filesize = os.path.getsize(source_path)
     command = None
-    s.send(f"{command}{SEPARATOR}{filesize}".encode())
+    s.sendall(f"{command}{SEPARATOR}{filesize}".encode())
 
     # start sending the file
     progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
