@@ -7,7 +7,7 @@ CHUNKSIZE = 1_000_000
 # port = 5000
 # source_directory = "/Users/lukebrezovec/Desktop/test"
 
-host = "10.30.115.186"
+host = "171.65.17.84"
 port = 5001
 source_directory = "/Users/lukebrezovec/Desktop/test"
 
