@@ -30,7 +30,9 @@ master_directory = "G:/ftp_imports"
 
 #todo: create user's folder in ftp_imports if first time running
 while True:
-    command, item = client_socket.recv(BUFFER_SIZE).decode().split(SEPARATOR)
+    message = client_socket.recv(BUFFER_SIZE)
+    print(message)
+    command, item = message.decode().split(SEPARATOR)
     item_path = os.path.join(master_directory, item)
 
     if command == "mkdir":
