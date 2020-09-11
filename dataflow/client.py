@@ -29,6 +29,7 @@ source_directory = "G:/luke/20200725__flag__"
 # Make basefolder 
 target_directory = '/'.join(source_directory.split('/')[-2:]) # user/folder. will be sent to server
 command = "mkdir"
+print(F"First sending: {command}{SEPARATOR}{target_directory}")
 s.send(f"{command}{SEPARATOR}{target_directory}".encode())
 
 def socket_recursive_copy(source, target):
