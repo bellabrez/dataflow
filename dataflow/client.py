@@ -14,11 +14,7 @@ port = 5001
 # the name of file we want to send, make sure it exists
 #filename = "data.csv"
 #filename = "G:/ftp_imports/20200613/fly1/func_0/SingleImage-06132020-1058-001/SingleImage-06132020-1058-001_Cycle00001_Ch1_000001.ome.tif"
-filename = "G:/luke/20200725__flag__/fly1/func_0/TSeries-12172018-1322-002/CYCLE_000001_RAWDATA_000001"
-#source_directory = "G:/luke/20200725__flag__"
-
-# get the file size
-filesize = os.path.getsize(filename)
+#filename = "G:/luke/20200725__flag__/fly1/func_0/TSeries-12172018-1322-002/CYCLE_000001_RAWDATA_000001"
 
 # create the client socket
 s = socket.socket()
@@ -27,22 +23,59 @@ print(f"[+] Connecting to {host}:{port}")
 s.connect((host, port))
 print("[+] Connected.")
 
-# send the filename and filesize
-s.send(f"{filename}{SEPARATOR}{filesize}".encode())
 
-# start sending the file
-progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
-with open(filename, "rb") as f:
-    for _ in progress:
-        # read the bytes from the file
-        bytes_read = f.read(BUFFER_SIZE)
-        if not bytes_read:
-            # file transmitting is done
-            break
-        # we use sendall to assure transimission in 
-        # busy networks
-        s.sendall(bytes_read)
-        # update the progress bar
-        progress.update(len(bytes_read))
+source_directory = "G:/luke/20200725__flag__"
+
+# Make basefolder 
+target_directory = '/'.join(source_directory.split('/')[-2:]) # user/folder. will be sent to server
+command = "mkdir"
+s.send(f"{command}{SEPARATOR}{target_directory}".encode())
+
+socket_recursive_copy(source_directory, target_directory)
+
+def socket_recursive_copy(source, target):
+    for item in os.listdir(source_directory):
+        # Create full path to item
+        source_path = source + '/' + item
+        target_path = target + '/' + item
+
+        # Check if item is a directory
+        if os.path.isdir(source_path):
+            # Create same directory in target
+            command = "mkdir"
+            s.send(f"{command}{SEPARATOR}{target_path}".encode())
+            socket_recursive_copy(source_path, target_path)
+
+        # If the item is a file
+        if os.path.isfile(source_path):
+            command = "cpfile"
+            s.send(f"{command}{SEPARATOR}{target_path}".encode())
+            socket_file_copy(source_path, target_path)
+
+        else:
+            print("error")
+
+
+def socket_file_copy(source_path, target_path):
+    # get and send the file size
+    filesize = os.path.getsize(source_path)
+    s.send(f"{"filesize"}{SEPARATOR}{filesize}".encode())
+
+    # start sending the file
+    progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
+    with open(filename, "rb") as f:
+        for _ in progress:
+            # read the bytes from the file
+            bytes_read = f.read(BUFFER_SIZE)
+            if not bytes_read:
+                # file transmitting is done
+                break
+            # we use sendall to assure transimission in 
+            # busy networks
+            s.sendall(bytes_read)
+            # update the progress bar
+            progress.update(len(bytes_read))
+
+
 # close the socket
 s.close()

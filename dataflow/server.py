@@ -26,30 +26,45 @@ client_socket, address = s.accept()
 # if below code is executed, that means the sender is connected
 print(f"[+] {address} is connected.")
 
-# receive the file infos
-# receive using client socket, not server socket
-received = client_socket.recv(BUFFER_SIZE).decode()
-filename, filesize = received.split(SEPARATOR)
-# remove absolute path if there is
-filename = os.path.basename(filename)
-# convert to integer
-filesize = int(filesize)
+master_directory = "G:/ftp_imports"
 
-# start receiving the file from the socket
-# and writing to the file stream
-progress = tqdm.tqdm(range(filesize), f"Receiving {filename}", unit="B", unit_scale=True, unit_divisor=1024)
-with open(filename, "wb") as f:
-    for _ in progress:
-        # read 1024 bytes from the socket (receive)
-        bytes_read = client_socket.recv(BUFFER_SIZE)
-        if not bytes_read:    
-            # nothing is received
-            # file transmitting is done
-            break
-        # write to the file the bytes we just received
-        f.write(bytes_read)
-        # update the progress bar
-        progress.update(len(bytes_read))
+#todo: create user's folder in ftp_imports if first time running
+while True:
+    command, item = client_socket.recv(BUFFER_SIZE).decode().split(SEPARATOR)
+    item_path = os.path.join(master_directory, item)
+
+    if command == "mkdir":
+        os.mkdir(item_path)
+    if command == "cpfile":
+        #get filesize
+        command, filesize = client_socket.recv(BUFFER_SIZE).decode().split(SEPARATOR)
+        socket_file_copy(item_path, filesize)
+
+
+def socket_file_copy(item_path, filesize):
+    filename = os.path.basename(item_path) # for printing purposes only
+
+    # convert to integer
+    filesize = int(filesize)
+
+    # start receiving the file from the socket
+    # and writing to the file stream
+    progress = tqdm.tqdm(range(filesize), f"Receiving {filename}", unit="B", unit_scale=True, unit_divisor=1024)
+    with open(item_path, "wb") as f:
+        for _ in progress:
+            # read 1024 bytes from the socket (receive)
+            bytes_read = client_socket.recv(BUFFER_SIZE)
+
+            try:
+                # this split operation will fail if there is no separator
+                # which means the file is still being copied, so the exception clause will be entered
+                _, _ = bytes_read.decode().split(SEPARATOR)
+                break
+            except:    
+                # write to the file the bytes we just received
+                f.write(bytes_read)
+                # update the progress bar
+                progress.update(len(bytes_read))
 
 # close the client socket
 client_socket.close()
