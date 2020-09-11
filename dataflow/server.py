@@ -1,75 +1,50 @@
-import socket
-import tqdm
+from socket import *
 import os
-# device's IP address
+
+CHUNKSIZE = 1_000_000
 SERVER_HOST = "0.0.0.0"
 SERVER_PORT = 5001
-# receive 4096 bytes each time
-BUFFER_SIZE = 4096
-SEPARATOR = "<SEPARATOR>"
+target_directory = "G:/ftp_imports"
 
-# create the server socket
-# TCP socket
-s = socket.socket()
+# SERVER_HOST = ""
+# SERVER_PORT = 5000
+# target_directory = "/Users/lukebrezovec/projects/dataflow/dataflow/target"
 
-# bind the socket to our local address
-s.bind((SERVER_HOST, SERVER_PORT))
-
-# enabling our server to accept connections
-# 5 here is the number of unaccepted connections that
-# the system will allow before refusing new connections
-s.listen(5)
+sock = socket()
+sock.bind((SERVER_HOST, SERVER_PORT))
+sock.listen(1)
 print(f"[*] Listening as {SERVER_HOST}:{SERVER_PORT}")
 
-# accept connection if there is any
-client_socket, address = s.accept() 
-# if below code is executed, that means the sender is connected
+# Make a directory for the received files.
+#os.makedirs('server',exist_ok=True)
+
+client,address = sock.accept()
 print(f"[+] {address} is connected.")
+with client,client.makefile('rb') as clientfile:
+    while True:
+        raw = clientfile.readline()
+        if not raw: break # no more files, server closed connection.
 
-master_directory = "G:/ftp_imports"
+        filename = raw.strip().decode()
+        length = int(clientfile.readline())
+        print(f'Downloading {filename}...\n  Expecting {length:,} bytes...',end='',flush=True)
 
-def socket_file_copy(item_path, filesize):
-    filename = os.path.basename(item_path) # for printing purposes only
+        path = os.path.join(target_directory,filename)
+        os.makedirs(os.path.dirname(path),exist_ok=True)
 
-    # convert to integer
-    filesize = int(filesize)
-
-    # start receiving the file from the socket
-    # and writing to the file stream
-    progress = tqdm.tqdm(range(filesize), f"Receiving {filename}", unit="B", unit_scale=True, unit_divisor=1024)
-    with open(item_path, "wb") as f:
-        for _ in progress:
-            # read 1024 bytes from the socket (receive)
-            bytes_read = client_socket.recv(BUFFER_SIZE)
-
-            try:
-                # this split operation will fail if there is no separator
-                # which means the file is still being copied, so the exception clause will be entered
-                _, _ = bytes_read.decode().split(SEPARATOR)
-                break
-            except:    
-                # write to the file the bytes we just received
-                f.write(bytes_read)
-                # update the progress bar
-                progress.update(len(bytes_read))
-
-#todo: create user's folder in ftp_imports if first time running
-while True:
-    message = client_socket.recv(BUFFER_SIZE)
-    print("message: {}".format(message))
-    command, item = message.decode().split(SEPARATOR)
-    item_path = os.path.join(master_directory, item)
-
-    if command == "mkdir":
-        os.mkdir(item_path)
-        print("making directory: {}".format(item_path))
-    if command == "cpfile":
-        #get filesize
-        command, filesize = client_socket.recv(BUFFER_SIZE).decode().split(SEPARATOR)
-        socket_file_copy(item_path, filesize)
-
+        # Read the data in chunks so it can handle large files.
+        with open(path,'wb') as f:
+            while length:
+                chunk = min(length,CHUNKSIZE)
+                data = clientfile.read(chunk)
+                if not data: break
+                f.write(data)
+                length -= len(data)
+            else: # only runs if while doesn't break and length==0
+                print('Complete')
+                continue
 
 # close the client socket
-client_socket.close()
+client.close()
 # close the server socket
-s.close()
+sock.close()
