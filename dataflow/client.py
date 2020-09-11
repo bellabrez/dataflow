@@ -59,7 +59,8 @@ def socket_recursive_copy(source, target):
 def socket_file_copy(source_path, target_path):
     # get and send the file size
     filesize = os.path.getsize(source_path)
-    s.send(f"{"filesize"}{SEPARATOR}{filesize}".encode())
+    command = None
+    s.send(f"{command}{SEPARATOR}{filesize}".encode())
 
     # start sending the file
     progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
