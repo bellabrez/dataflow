@@ -31,8 +31,6 @@ target_directory = '/'.join(source_directory.split('/')[-2:]) # user/folder. wil
 command = "mkdir"
 s.send(f"{command}{SEPARATOR}{target_directory}".encode())
 
-socket_recursive_copy(source_directory, target_directory)
-
 def socket_recursive_copy(source, target):
     for item in os.listdir(source_directory):
         # Create full path to item
@@ -55,7 +53,6 @@ def socket_recursive_copy(source, target):
         else:
             print("error")
 
-
 def socket_file_copy(source_path, target_path):
     # get and send the file size
     filesize = os.path.getsize(source_path)
@@ -77,6 +74,7 @@ def socket_file_copy(source_path, target_path):
             # update the progress bar
             progress.update(len(bytes_read))
 
+socket_recursive_copy(source_directory, target_directory)
 
 # close the socket
 s.close()
