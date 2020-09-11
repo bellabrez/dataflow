@@ -57,6 +57,7 @@ def socket_recursive_copy(source, target):
             s.sendall(f"{command}{SEPARATOR}{target_path}".encode())
             time.sleep(1)
             socket_file_copy(source_path, target_path)
+            time.sleep(1)
 
         else:
             print("error")
