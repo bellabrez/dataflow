@@ -69,6 +69,7 @@ def socket_file_copy(source_path, target_path):
     filesize = os.path.getsize(source_path)
     command = None
     s.sendall(f"{command}{SEPARATOR}{filesize}".encode())
+    time.sleep(1)
 
     # start sending the file
     progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
