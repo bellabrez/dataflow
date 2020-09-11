@@ -67,7 +67,7 @@ def socket_file_copy(source_path, target_path):
 
     # start sending the file
     progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
-    with open(filename, "rb") as f:
+    with open(source_path, "rb") as f:
         for _ in progress:
             # read the bytes from the file
             bytes_read = f.read(BUFFER_SIZE)
