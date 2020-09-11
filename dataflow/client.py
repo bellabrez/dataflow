@@ -1,7 +1,7 @@
 import socket
 import tqdm
 import os
-import sleep
+import time
 
 SEPARATOR = "<SEPARATOR>"
 BUFFER_SIZE = 4096 # send 4096 bytes each time step
@@ -32,7 +32,7 @@ target_directory = '/'.join(source_directory.split('/')[-2:]) # user/folder. wil
 command = "mkdir"
 print(F"First sending: {command}{SEPARATOR}{target_directory}")
 s.sendall(f"{command}{SEPARATOR}{target_directory}".encode())
-sleep.sleep(1)
+time.sleep(1)
 
 def socket_recursive_copy(source, target):
     for item in os.listdir(source):
@@ -47,7 +47,7 @@ def socket_recursive_copy(source, target):
             # Create same directory in target
             command = "mkdir"
             s.sendall(f"{command}{SEPARATOR}{target_path}".encode())
-            sleep.sleep(1)
+            time.sleep(1)
             socket_recursive_copy(source_path, target_path)
 
         # If the item is a file
@@ -55,7 +55,7 @@ def socket_recursive_copy(source, target):
             #print("is file: {}".format(source_path))
             command = "cpfile"
             s.sendall(f"{command}{SEPARATOR}{target_path}".encode())
-            sleep.sleep(1)
+            time.sleep(1)
             socket_file_copy(source_path, target_path)
 
         else:
