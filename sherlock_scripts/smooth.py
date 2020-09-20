@@ -31,7 +31,7 @@ def main(args):
 
     ### Apply Smooth Correction ###
     t0 = time.time()
-    brain_corrected = brain - smoothed[:,:,:,None] + np.mean(brain, axis=3)[:,:,:,None] #need to add back in mean to preserve offset
+    brain_corrected = brain - smoothed + np.mean(brain, axis=3)[:,:,:,None] #need to add back in mean to preserve offset
     printlog("brain corrected duration: ({})".format(time.time()-t0))
 
     ### Save Brain ###
