@@ -276,11 +276,11 @@ printlog(f"\n{'   PCA   ':=^{width}}")
 job_ids = []
 for fly in flies:
     directory = os.path.join(dataset_path, fly, 'func_0')
-    save_subfolder = '20200922_on_masked'
+    save_subfolder = '20200929_on_masked'
     #save_subfolder = None
     args = {'logfile': logfile,
             'directory': directory,
-            'file': 'brain_zscored_green_high_pass_masked.nii',
+            'file': 'brain_zscored_green_masked.nii',
             'save_subfolder': save_subfolder}
     script = 'pca.py'
     job_id = flow.sbatch(jobname='pca',
