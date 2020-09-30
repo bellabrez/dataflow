@@ -23,7 +23,7 @@ def main(args):
     printlog("masking {}".format(file))
     
     ### Load Brain ###
-    brain = np.asarray(nib.load(brain_file).get_data(), copy=True)
+    brain = np.array(nib.load(brain_file).get_data(), copy=True)
 
     ### Load brain to use as mask ###
     brain_file = os.path.join(directory, 'imaging', 'functional_channel_2_mean.nii')

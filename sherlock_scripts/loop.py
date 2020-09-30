@@ -258,23 +258,23 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-printlog(f"\n{'   SMOOTH   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    args = {'logfile': logfile,
-            'directory': directory,
-            'file': 'brain_zscored_green.nii'}
-    script = 'smooth.py'
-    job_id = flow.sbatch(jobname='smooth',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# printlog(f"\n{'   SMOOTH   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     args = {'logfile': logfile,
+#             'directory': directory,
+#             'file': 'brain_zscored_green.nii'}
+#     script = 'smooth.py'
+#     job_id = flow.sbatch(jobname='smooth',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 printlog(f"\n{'   MASK   ':=^{width}}")
 job_ids = []
@@ -288,7 +288,7 @@ for fly in flies:
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=8, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=1, mem=10, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 
 for job_id in job_ids:
