@@ -32,7 +32,7 @@ def main(args):
     brain = np.array(nib.load(brain_file).get_data(), copy=True)
 
     ### Load brain to use as mask ###
-    brain_file = os.path.join(directory, 'imaging', 'functional_channel_2_mean.nii')
+    brain_file = os.path.join(directory, 'imaging', 'functional_channel_1_mean.nii')
     brain_mean = np.array(nib.load(brain_file).get_data(), copy=True)
 
     ### Mask ###
@@ -56,11 +56,21 @@ def main(args):
     mask[np.where(labels != brain_label)] = 0 # np.nan here failed with PCA
     
     # Undo previous erosion
-    mask = ndimage.binary_dilation(mask, structure=np.ones((5,5,1)))
+    mask = ndimage.binary_dilation(mask, structure=np.ones((5,5,1))).astype(int)
 
+    # Mask edges with zeros
+    mask[:,(0,1,-1,-2),:] = 0
+    mask[(0,1,-1,-2),:,:] = 0
+    mask[:,:,(0,-1)] = 0
+
+    # save mask
+    brain_save_file = os.path.join(directory, 'mask.nii')
+    nib.Nifti1Image(mask, np.eye(4)).to_filename(brain_save_file)
+
+    # apply mask
     brain = brain*mask[:,:,:,None]
 
-    ### Save Brain ###
+    # Save masked brain
     brain_save_file = os.path.join(directory, 'brain_zscored_green_high_pass_masked.nii')
     nib.Nifti1Image(brain, np.eye(4)).to_filename(brain_save_file)
 

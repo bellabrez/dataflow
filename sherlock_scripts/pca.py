@@ -23,7 +23,7 @@ def main(args):
     brain_path = os.path.join(directory, file)
     #brain_path = os.path.join(directory, 'brain_zscored_green.nii')
     printlog("Performing PCA on {}".format(brain_path))
-    brain = np.asarray(nib.load(brain_path).get_data(), dtype='float32')
+    brain = np.asarray(nib.load(brain_path).get_data(), copy=True)
     dim_y, dim_x, dim_z, dim_t = brain.shape
     printlog('brain shape is x,y,z,t {}'.format(brain.shape))
     printlog('or, {} {} {} {}'.format(dim_y, dim_x, dim_z, dim_t))
