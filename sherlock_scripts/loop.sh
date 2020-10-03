@@ -7,6 +7,7 @@
 #SBATCH --output=./logs/mainlog.out
 #SBATCH --open-mode=append
 #SBATCH --mail-type=ALL
+#SBACTH --nodelist=sh02-07n34
 
 ml python/3.6.1
 date
