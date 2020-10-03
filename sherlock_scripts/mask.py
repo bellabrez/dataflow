@@ -26,7 +26,7 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     brain_file = os.path.join(directory, file)
-    printlog("masking {}".format(file))
+    printlog("masking {}".format(brain_file))
     
     ### Load Brain ###
     brain = np.array(nib.load(brain_file).get_data(), copy=True)
