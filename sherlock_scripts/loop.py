@@ -217,26 +217,26 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-printlog(f"\n{'   PCA   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    save_subfolder = '20201002_on_high_pass_masked'
-    #save_subfolder = None
-    args = {'logfile': logfile,
-            'directory': directory,
-            'file': 'brain_zscored_green_high_pass_masked.nii',
-            'save_subfolder': save_subfolder}
-    script = 'pca.py'
-    job_id = flow.sbatch(jobname='pca',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# printlog(f"\n{'   PCA   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     save_subfolder = '20201002_on_high_pass_masked'
+#     #save_subfolder = None
+#     args = {'logfile': logfile,
+#             'directory': directory,
+#             'file': 'brain_zscored_green_high_pass_masked.nii',
+#             'save_subfolder': save_subfolder}
+#     script = 'pca.py'
+#     job_id = flow.sbatch(jobname='pca',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 ###############
 ### Fit GLM ###
@@ -247,6 +247,7 @@ job_ids = []
 for fly in flies:
     directory = os.path.join(dataset_path, fly, 'func_0')
     pca_subfolder = '20201002_on_high_pass_masked'
+    glm_date = '20201002'
     args = {'logfile': logfile,
             'directory': directory,
             'pca_subfolder': pca_subfolder}

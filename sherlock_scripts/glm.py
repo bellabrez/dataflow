@@ -18,6 +18,7 @@ def main(args):
     logfile = args['logfile']
     directory = args['directory'] # full fly func path
     pca_subfolder = args['pca_subfolder']
+    glm_date = args['glm_date']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     ### Load PCA ###
@@ -75,11 +76,11 @@ def main(args):
         if not os.path.exists(glm_directory):
             os.mkdir(glm_directory)
 
-        save_file = os.path.join(glm_directory, '20200930_{}.nii'.format(behavior))
+        save_file = os.path.join(glm_directory, '{}_{}.nii'.format(glm_date, behavior))
         nib.Nifti1Image(spatial_map, np.eye(4)).to_filename(save_file)
 
         ### Save scores ###
-        score_file = os.path.join(glm_directory, '20200930_score_{}.txt'.format(behavior))
+        score_file = os.path.join(glm_directory, '{}_score_{}.txt'.format(glm_date, behavior))
         with open(score_file, "a") as f:
             f.write("{}:{}".format(behavior, models[behavior]['score']))
 
