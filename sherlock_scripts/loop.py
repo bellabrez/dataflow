@@ -250,7 +250,8 @@ for fly in flies:
     glm_date = '20201002'
     args = {'logfile': logfile,
             'directory': directory,
-            'pca_subfolder': pca_subfolder}
+            'pca_subfolder': pca_subfolder,
+            'glm_date': glm_date}
     script = 'glm.py'
     job_id = flow.sbatch(jobname='glm',
                          script=os.path.join(scripts_path, script),
