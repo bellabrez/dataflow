@@ -74,150 +74,190 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-##############
-### SMOOTH ###
-##############
+# ##############
+# ### SMOOTH ###
+# ##############
 
-printlog(f"\n{'   SMOOTH   ':=^{width}}")
+# printlog(f"\n{'   SMOOTH   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     args = {'logfile': logfile,
+#             'directory': directory,
+#             'file': 'brain_zscored_green.nii'}
+#     script = 'smooth.py'
+#     job_id = flow.sbatch(jobname='smooth',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+# ############
+# ### MASK ###
+# ############
+
+# printlog(f"\n{'   MASK   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     args = {'logfile': logfile,
+#             'directory': directory,
+#             'file': 'brain_zscored_green_high_pass.nii'}
+#     script = 'mask.py'
+#     job_id = flow.sbatch(jobname='mask',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=1, mem=10, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+# ###########
+# ### PCA ###
+# ###########
+
+# printlog(f"\n{'   PCA   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     save_subfolder = '20201009_on_high_pass_masked' #         <---------------------------------------------------------------------------
+#     #save_subfolder = None
+#     args = {'logfile': logfile,
+#             'directory': directory,
+#             'file': 'brain_zscored_green_high_pass_masked.nii',
+#             'save_subfolder': save_subfolder}
+#     script = 'pca.py'
+#     job_id = flow.sbatch(jobname='pca',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+# ###########
+# ### GLM ###
+# ###########
+
+# printlog(f"\n{'   GLM   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     pca_subfolder = '20201009_on_high_pass_masked'#         <---------------------------------------------------------------------------
+#     glm_date = '20201009'#         <---------------------------------------------------------------------------------------------------------------
+#     args = {'logfile': logfile,
+#             'directory': directory,
+#             'pca_subfolder': pca_subfolder,
+#             'glm_date': glm_date}
+#     script = 'glm.py'
+#     job_id = flow.sbatch(jobname='glm',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=1, mem=8, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+# #################
+# ### func2anat ###
+# #################
+
+# res_anat = (0.65, 0.65, 1)
+# res_func = (2.6, 2.6, 5)
+
+# printlog(f"\n{'   func2anat   ':=^{width}}")
+
+# job_ids = []
+# for fly in flies:
+#     fly_directory = os.path.join(dataset_path, fly)
+
+#     moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_1_mean.nii')
+#     moving_fly = 'func'
+#     moving_resolution = res_func
+
+
+#     fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
+#     fixed_fly = 'anat'
+#     fixed_resolution = res_anat
+
+#     save_directory = os.path.join(fly_directory, 'warp')
+#     if not os.path.exists(save_directory):
+#         os.mkdir(save_directory)
+
+#     type_of_transform = 'Affine'
+#     save_warp_params = True
+#     flip_X = False
+#     flip_Z = False
+
+#     args = {'logfile': logfile,
+#             'save_directory': save_directory,
+#             'fixed_path': fixed_path,
+#             'moving_path': moving_path,
+#             'fixed_fly': fixed_fly,
+#             'moving_fly': moving_fly,
+#             'type_of_transform': type_of_transform,
+#             'flip_X': flip_X,
+#             'flip_Z': flip_Z,
+#             'moving_resolution': moving_resolution,
+#             'fixed_resolution': fixed_resolution,
+#             'save_warp_params': save_warp_params}
+
+#     script = 'align_anat.py'
+#     job_id = flow.sbatch(jobname='align',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+##################
+### Clean Anat ###
+##################
+
+printlog(f"\n{'   Clean Anat   ':=^{width}}")
 job_ids = []
 for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    args = {'logfile': logfile,
-            'directory': directory,
-            'file': 'brain_zscored_green.nii'}
-    script = 'smooth.py'
-    job_id = flow.sbatch(jobname='smooth',
+    directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
+    args = {'logfile': logfile, 'directory': directory}
+    script = 'clean_anat.py'
+    job_id = flow.sbatch(jobname='clnanat',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
-############
-### MASK ###
-############
+###############
+### Sharpen ###
+###############
 
-printlog(f"\n{'   MASK   ':=^{width}}")
+printlog(f"\n{'   Sharpen   ':=^{width}}")
 job_ids = []
 for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    args = {'logfile': logfile,
-            'directory': directory,
-            'file': 'brain_zscored_green_high_pass.nii'}
-    script = 'mask.py'
-    job_id = flow.sbatch(jobname='mask',
+    directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
+    args = {'logfile': logfile, 'directory': directory}
+    script = 'sharpen_anat.py'
+    job_id = flow.sbatch(jobname='shrpanat',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=1, mem=10, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
-
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
-
-###########
-### PCA ###
-###########
-
-printlog(f"\n{'   PCA   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    save_subfolder = '20201009_on_high_pass_masked' #         <---------------------------------------------------------------------------
-    #save_subfolder = None
-    args = {'logfile': logfile,
-            'directory': directory,
-            'file': 'brain_zscored_green_high_pass_masked.nii',
-            'save_subfolder': save_subfolder}
-    script = 'pca.py'
-    job_id = flow.sbatch(jobname='pca',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
-
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
-
-###########
-### GLM ###
-###########
-
-printlog(f"\n{'   GLM   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    pca_subfolder = '20201009_on_high_pass_masked'#         <---------------------------------------------------------------------------
-    glm_date = '20201009'#         <---------------------------------------------------------------------------------------------------------------
-    args = {'logfile': logfile,
-            'directory': directory,
-            'pca_subfolder': pca_subfolder,
-            'glm_date': glm_date}
-    script = 'glm.py'
-    job_id = flow.sbatch(jobname='glm',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=1, mem=8, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
-
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
-
-#################
-### func2anat ###
-#################
-
-res_anat = (0.65, 0.65, 1)
-res_func = (2.6, 2.6, 5)
-
-printlog(f"\n{'   func2anat   ':=^{width}}")
-
-job_ids = []
-for fly in flies:
-    fly_directory = os.path.join(dataset_path, fly)
-
-    moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_1_mean.nii')
-    moving_fly = 'func'
-    moving_resolution = res_func
-
-
-    fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
-    fixed_fly = 'anat'
-    fixed_resolution = res_anat
-
-    save_directory = os.path.join(fly_directory, 'warp')
-    if not os.path.exists(save_directory):
-        os.mkdir(save_directory)
-
-    type_of_transform = 'Affine'
-    save_warp_params = True
-    flip_X = False
-    flip_Z = False
-
-    args = {'logfile': logfile,
-            'save_directory': save_directory,
-            'fixed_path': fixed_path,
-            'moving_path': moving_path,
-            'fixed_fly': fixed_fly,
-            'moving_fly': moving_fly,
-            'type_of_transform': type_of_transform,
-            'flip_X': flip_X,
-            'flip_Z': flip_Z,
-            'moving_resolution': moving_resolution,
-            'fixed_resolution': fixed_resolution,
-            'save_warp_params': save_warp_params}
-
-    script = 'align_anat.py'
-    job_id = flow.sbatch(jobname='align',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 
 for job_id in job_ids:
@@ -409,22 +449,6 @@ for job_id in job_ids:
 
 
 ###################################################################################################################
-
-# printlog(f"\n{'   Sharpen   ':=^{width}}")
-# job_ids = []
-# for fly in flies:
-#     directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
-#     args = {'logfile': logfile, 'directory': directory}
-#     script = 'sharpen_anat.py'
-#     job_id = flow.sbatch(jobname='shrpanat',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
-
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
 
 # save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain"
 # input_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/syn_0"
