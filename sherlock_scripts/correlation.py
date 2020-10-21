@@ -34,7 +34,7 @@ def main(args):
     fictrac_interp = interp_fictrac(fictrac_raw, fps, resolution, expt_len, timestamps, behavior)
     xnew = np.arange(0,expt_len,resolution)
 
-    printlog("Performing Correlation on {}".format(brain_path))
+    printlog("Performing Correlation on {}; behavior: {}".format(brain_path, behavior))
     corr_brain = np.zeros((256,128,49))
     for z in range(49):
         for i in range(256):
@@ -47,6 +47,7 @@ def main(args):
 
     save_file = os.path.join(corr_directory, '20201020_corr_{}.nii'.format(behavior))
     nib.Nifti1Image(corr_brain, np.eye(4)).to_filename(save_file)
+    printlog("Saved {}".format(save_file))
     
 def interp_fictrac(fictrac, fps, resolution, expt_len, timestamps, behavior):
     camera_rate = 1/fps * 1000 # camera frame rate in ms
