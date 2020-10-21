@@ -48,7 +48,7 @@ def main(args):
     save_file = os.path.join(corr_directory, '20201020_corr_{}.nii'.format(behavior))
     nib.Nifti1Image(corr_brain, np.eye(4)).to_filename(save_file)
     
-def interp_fictrac(fictrac_raw, fps, resolution, expt_len, timestamp, behavior):
+def interp_fictrac(fictrac, fps, resolution, expt_len, timestamp, behavior):
     camera_rate = 1/fps * 1000 # camera frame rate in ms
     
     x_original = np.arange(0,expt_len,camera_rate)
