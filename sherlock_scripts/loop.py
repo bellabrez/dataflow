@@ -37,7 +37,9 @@ nice = True # true to lower priority of jobs. ie, other users jobs go first
 #          'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105',
 #          'fly_106', 'fly_110', 'fly_111']
 
-flies = ['fly_086', 'fly_095', 'fly_103', 'fly_104', 'fly_107']
+#flies = ['fly_086', 'fly_095', 'fly_103', 'fly_104', 'fly_107']
+
+flies = ['fly_087', 'fly_089', 'fly_094', 'fly_095', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
 
 #flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
@@ -317,6 +319,31 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
+###################
+### Correlation ###
+###################
+
+printlog(f"\n{'   correlation   ':=^{width}}")
+job_ids = []
+for fly in flies:
+    directory = os.path.join(dataset_path, fly, 'func_0')
+
+    behaviors = ['Y', 'Z_abs', 'Z_pos', 'Z_neg']
+    for behavior in behaviors:
+        args = {'logfile': logfile,
+                'directory': directory,
+                'behavior': behavior}
+        script = 'correlation.py'
+        job_id = flow.sbatch(jobname='corr',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
+        job_ids.append(job_id)
+
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
+
 ########################
 ### Apply transforms ###
 ########################
@@ -328,10 +355,10 @@ job_ids = []
 for fly in flies:
     fly_directory = os.path.join(dataset_path, fly)
 
-    behaviors = ['Y', 'Z']
+    behaviors = ['Y', 'Z_abs', 'Z_pos', 'Z_neg']
     for behavior in behaviors:
-        moving_path = os.path.join(fly_directory, 'func_0', 'glm', '20201009_{}.nii'.format(behavior))#<---------------------------------------
-        moving_fly = 'glm_{}'.format(behavior)
+        moving_path = os.path.join(fly_directory, 'func_0', 'corr', '20201020_corr_{}.nii'.format(behavior))#<---------------------------------------
+        moving_fly = 'corr_{}'.format(behavior)
         moving_resolution = res_func
 
         fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
@@ -362,26 +389,7 @@ for fly in flies:
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
-###################
-### Correlation ###
-###################
 
-# printlog(f"\n{'   correlation   ':=^{width}}")
-# job_ids = []
-# for fly in flies:
-#     directory = os.path.join(dataset_path, fly, 'func_0')
-#     args = {'logfile': logfile,
-#             'directory': directory}
-#     script = 'correlation.py'
-#     job_id = flow.sbatch(jobname='corr',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
-
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   MASK   ':=^{width}}")
 # job_ids = []

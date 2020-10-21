@@ -17,18 +17,21 @@ def main(args):
 
     logfile = args['logfile']
     directory = args['directory'] # full fly func path
+    behavior = args['behavior']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
-    brain_path = os.path.join(directory, 'brain_zscored_green.nii')
+    #brain_path = os.path.join(directory, 'brain_zscored_green.nii')
+    brain_path = os.path.join(directory, 'brain_zscored_green_high_pass_masked.nii')
     brain = np.asarray(nib.load(brain_path).get_data(), dtype='float32')
 
     timestamps = bbb.load_timestamps(os.path.join(directory, 'imaging'))
-    fictrac = bbb.load_fictrac(os.path.join(directory, 'fictrac'))
+    fictrac_raw = bbb.load_fictrac(os.path.join(directory, 'fictrac'))
 
     resolution = 10 #desired resolution in ms
     expt_len = 1000*30*60
     fps = 50 #of fictrac camera
-    fictrac_interp = interp_fictrac(fictrac, fps, resolution, expt_len, timestamps)
+
+    fictrac_interp = interp_fictrac(fictrac_raw, fps, resolution, expt_len, timestamps, behavior)
     xnew = np.arange(0,expt_len,resolution)
 
     printlog("Performing Correlation on {}".format(brain_path))
@@ -42,10 +45,10 @@ def main(args):
     if not os.path.exists(corr_directory):
         os.mkdir(corr_directory)
 
-    save_file = os.path.join(corr_directory, 'corr_all_v.nii')
+    save_file = os.path.join(corr_directory, '20201020_corr_{}.nii'.format(behavior))
     nib.Nifti1Image(corr_brain, np.eye(4)).to_filename(save_file)
     
-def interp_fictrac(fictrac, fps, resolution, expt_len, timestamps):
+def interp_fictrac(fictrac_raw, fps, resolution, expt_len, timestamp, behavior):
     camera_rate = 1/fps * 1000 # camera frame rate in ms
     
     x_original = np.arange(0,expt_len,camera_rate)
@@ -56,7 +59,16 @@ def interp_fictrac(fictrac, fps, resolution, expt_len, timestamps):
     dx = scipy.signal.savgol_filter(dx,25,3)
     dy = scipy.signal.savgol_filter(dy,25,3)
     dz = scipy.signal.savgol_filter(dz,25,3)
-    fictrac_smoothed = np.sqrt(dx*dx + dy*dy + dz*dz)
+    #fictrac_smoothed = np.sqrt(dx*dx + dy*dy + dz*dz)
+
+    if behavior == 'Y':
+        fictrac_smoothed = dy
+    if behavior == 'Z_abs':
+        fictrac_smoothed = np.abs(dz)
+    if behavior == 'Z_pos':
+        fictrac_smoothed = np.clip(dz, a_min=0, a_max=None)
+    if behavior == 'Z_neg':
+        fictrac_smoothed = np.clip(dz, a_min=None, a_max=0)
     
     fictrac_smoothed = np.abs(fictrac_smoothed)
     fictrac_interp_temp = interp1d(x_original, fictrac_smoothed, bounds_error = False)
