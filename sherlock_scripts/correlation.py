@@ -71,7 +71,7 @@ def interp_fictrac(fictrac, fps, resolution, expt_len, timestamps, behavior):
     if behavior == 'Z_neg':
         fictrac_smoothed = np.clip(dz, a_min=None, a_max=0)
     
-    fictrac_smoothed = np.abs(fictrac_smoothed)
+    #fictrac_smoothed = np.abs(fictrac_smoothed)
     fictrac_interp_temp = interp1d(x_original, fictrac_smoothed, bounds_error = False)
     xnew = np.arange(0,expt_len,resolution) #0 to last time at subsample res
     fictrac_interp = fictrac_interp_temp(timestamps[:,25])
