@@ -333,7 +333,7 @@ for fly in flies:
         args = {'logfile': logfile,
                 'directory': directory,
                 'behavior': behavior}
-        script = 'correlation.py'
+        script = 'correlation_z_correction.py'
         job_id = flow.sbatch(jobname='corr',
                              script=os.path.join(scripts_path, script),
                              modules=modules,
