@@ -328,7 +328,7 @@ job_ids = []
 for fly in flies:
     directory = os.path.join(dataset_path, fly, 'func_0')
 
-    behaviors = ['Y', 'Z_abs', 'Z_pos', 'Z_neg']
+    behaviors = ['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
     for behavior in behaviors:
         args = {'logfile': logfile,
                 'directory': directory,
@@ -355,9 +355,9 @@ job_ids = []
 for fly in flies:
     fly_directory = os.path.join(dataset_path, fly)
 
-    behaviors = ['Y', 'Z_abs', 'Z_pos', 'Z_neg']
+    behaviors = ['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
     for behavior in behaviors:
-        moving_path = os.path.join(fly_directory, 'func_0', 'corr', '20201020_corr_{}.nii'.format(behavior))#<---------------------------------------
+        moving_path = os.path.join(fly_directory, 'func_0', 'corr', '20201104_corr_{}.nii'.format(behavior))#<---------------------------------------
         moving_fly = 'corr_{}'.format(behavior)
         moving_resolution = res_func
 
@@ -388,8 +388,6 @@ for fly in flies:
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
-
-
 
 # printlog(f"\n{'   MASK   ':=^{width}}")
 # job_ids = []
