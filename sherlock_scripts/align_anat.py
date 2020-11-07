@@ -35,6 +35,8 @@ def main(args):
     moving_fly = args['moving_fly']
     moving_resolution = args['moving_resolution']
 
+    low_res = args['low_res']
+
     try:
         mimic_path = args['mimic_path']
         mimic_fly = args['mimic_fly']
@@ -55,6 +57,8 @@ def main(args):
     fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
     fixed = ants.from_numpy(fixed)
     fixed.set_spacing(fixed_resolution)
+    if low_res:
+        fixed = ants.resample_image(fixed,(256,128,49),1,0)
 
     ### Moving
     moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
@@ -64,6 +68,8 @@ def main(args):
         moving = moving[:,:,::-1]
     moving = ants.from_numpy(moving)
     moving.set_spacing(moving_resolution)
+    if low_res:
+        moving = ants.resample_image(moving,(256,128,49),1,0)
 
     ### Mimic
     if mimic_path is not None:
@@ -94,6 +100,8 @@ def main(args):
     if save_warp_params:
         fwdtransformlist = moco['fwdtransforms']
         fwdtransforms_save_dir = os.path.join(save_directory, '{}-to-{}_fwdtransforms'.format(moving_fly, fixed_fly))
+        if low_res:
+            fwdtransforms_save_dir += '_lowres'
         if not os.path.exists(fwdtransforms_save_dir):
             os.mkdir(fwdtransforms_save_dir)
         for source_path in fwdtransformlist:

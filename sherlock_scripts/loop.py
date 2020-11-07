@@ -40,7 +40,7 @@ nice = True # true to lower priority of jobs. ie, other users jobs go first
 #flies = ['fly_086', 'fly_095', 'fly_103', 'fly_104', 'fly_107']
 
 flies = ['fly_087', 'fly_089', 'fly_094', 'fly_095', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
-
+flies = ['fly_094']
 #flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
 #####################
@@ -170,61 +170,6 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-# #################
-# ### func2anat ###
-# #################
-
-# res_anat = (0.65, 0.65, 1)
-# res_func = (2.6, 2.6, 5)
-
-# printlog(f"\n{'   func2anat   ':=^{width}}")
-
-# job_ids = []
-# for fly in flies:
-#     fly_directory = os.path.join(dataset_path, fly)
-
-#     moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_1_mean.nii')
-#     moving_fly = 'func'
-#     moving_resolution = res_func
-
-
-#     fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
-#     fixed_fly = 'anat'
-#     fixed_resolution = res_anat
-
-#     save_directory = os.path.join(fly_directory, 'warp')
-#     if not os.path.exists(save_directory):
-#         os.mkdir(save_directory)
-
-#     type_of_transform = 'Affine'
-#     save_warp_params = True
-#     flip_X = False
-#     flip_Z = False
-
-#     args = {'logfile': logfile,
-#             'save_directory': save_directory,
-#             'fixed_path': fixed_path,
-#             'moving_path': moving_path,
-#             'fixed_fly': fixed_fly,
-#             'moving_fly': moving_fly,
-#             'type_of_transform': type_of_transform,
-#             'flip_X': flip_X,
-#             'flip_Z': flip_Z,
-#             'moving_resolution': moving_resolution,
-#             'fixed_resolution': fixed_resolution,
-#             'save_warp_params': save_warp_params}
-
-#     script = 'align_anat.py'
-#     job_id = flow.sbatch(jobname='align',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
-
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
-
 # ##################
 # ### Clean Anat ###
 # ##################
@@ -265,129 +210,188 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-# #################
-# ### anat2mean ###
-# #################
+#################
+### func2anat ###
+#################
 
-# res_anat = (0.65, 0.65, 1)
-
-# printlog(f"\n{'   anat2mean   ':=^{width}}")
-
-# job_ids = []
-# for fly in flies:
-#     fly_directory = os.path.join(dataset_path, fly)
-
-#     moving_path = os.path.join(fly_directory, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
-#     moving_fly = 'anat'
-#     moving_resolution = res_anat
-
-
-#     fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
-#     fixed_fly = 'meanbrain'
-#     fixed_resolution = res_anat
-
-#     save_directory = os.path.join(fly_directory, 'warp')
-#     if not os.path.exists(save_directory):
-#         os.mkdir(save_directory)
-
-#     type_of_transform = 'SyN'
-#     save_warp_params = True
-#     flip_X = False
-#     flip_Z = False
-
-#     args = {'logfile': logfile,
-#             'save_directory': save_directory,
-#             'fixed_path': fixed_path,
-#             'moving_path': moving_path,
-#             'fixed_fly': fixed_fly,
-#             'moving_fly': moving_fly,
-#             'type_of_transform': type_of_transform,
-#             'flip_X': flip_X,
-#             'flip_Z': flip_Z,
-#             'moving_resolution': moving_resolution,
-#             'fixed_resolution': fixed_resolution,
-#             'save_warp_params': save_warp_params}
-
-#     script = 'align_anat.py'
-#     job_id = flow.sbatch(jobname='align',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
-
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
-
-###################
-### Correlation ###
-###################
-
-printlog(f"\n{'   correlation   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-
-    behaviors = ['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
-    for behavior in behaviors:
-        args = {'logfile': logfile,
-                'directory': directory,
-                'behavior': behavior}
-        script = 'correlation_z_correction.py'
-        job_id = flow.sbatch(jobname='corr',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
-
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
-
-########################
-### Apply transforms ###
-########################
 res_anat = (0.65, 0.65, 1)
 res_func = (2.6, 2.6, 5)
 
-printlog(f"\n{'   Alignment   ':=^{width}}")
+printlog(f"\n{'   func2anat   ':=^{width}}")
+
 job_ids = []
 for fly in flies:
     fly_directory = os.path.join(dataset_path, fly)
 
-    behaviors = ['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
-    for behavior in behaviors:
-        moving_path = os.path.join(fly_directory, 'func_0', 'corr', '20201104_corr_{}.nii'.format(behavior))#<---------------------------------------
-        moving_fly = 'corr_{}'.format(behavior)
-        moving_resolution = res_func
+    moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_1_mean.nii')
+    moving_fly = 'func'
+    moving_resolution = res_func
 
-        fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
-        fixed_fly = 'meanbrain'
-        fixed_resolution = res_anat
 
-        save_directory = os.path.join(fly_directory, 'warp')
-        if not os.path.exists(save_directory):
-            os.mkdir(save_directory)
+    fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
+    fixed_fly = 'anat'
+    fixed_resolution = res_anat
 
-        args = {'logfile': logfile,
-                'save_directory': save_directory,
-                'fixed_path': fixed_path,
-                'moving_path': moving_path,
-                'fixed_fly': fixed_fly,
-                'moving_fly': moving_fly,
-                'moving_resolution': moving_resolution,
-                'fixed_resolution': fixed_resolution}
+    save_directory = os.path.join(fly_directory, 'warp')
+    if not os.path.exists(save_directory):
+        os.mkdir(save_directory)
 
-        script = 'apply_transforms.py'
-        job_id = flow.sbatch(jobname='aplytrns',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
+    type_of_transform = 'Affine'
+    save_warp_params = True
+    flip_X = False
+    flip_Z = False
+    low_res = True
+
+    args = {'logfile': logfile,
+            'save_directory': save_directory,
+            'fixed_path': fixed_path,
+            'moving_path': moving_path,
+            'fixed_fly': fixed_fly,
+            'moving_fly': moving_fly,
+            'type_of_transform': type_of_transform,
+            'flip_X': flip_X,
+            'flip_Z': flip_Z,
+            'moving_resolution': moving_resolution,
+            'fixed_resolution': fixed_resolution,
+            'save_warp_params': save_warp_params,
+            'low_res': low_res}
+
+    script = 'align_anat.py'
+    job_id = flow.sbatch(jobname='align',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
+
+#################
+### anat2mean ###
+#################
+
+res_anat = (0.65, 0.65, 1)
+
+printlog(f"\n{'   anat2mean   ':=^{width}}")
+
+job_ids = []
+for fly in flies:
+    fly_directory = os.path.join(dataset_path, fly)
+
+    moving_path = os.path.join(fly_directory, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
+    moving_fly = 'anat'
+    moving_resolution = res_anat
+
+
+    fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+    fixed_fly = 'meanbrain'
+    fixed_resolution = res_anat
+
+    save_directory = os.path.join(fly_directory, 'warp')
+    if not os.path.exists(save_directory):
+        os.mkdir(save_directory)
+
+    type_of_transform = 'SyN'
+    save_warp_params = True
+    flip_X = False
+    flip_Z = False
+    low_res = True
+
+    args = {'logfile': logfile,
+            'save_directory': save_directory,
+            'fixed_path': fixed_path,
+            'moving_path': moving_path,
+            'fixed_fly': fixed_fly,
+            'moving_fly': moving_fly,
+            'type_of_transform': type_of_transform,
+            'flip_X': flip_X,
+            'flip_Z': flip_Z,
+            'moving_resolution': moving_resolution,
+            'fixed_resolution': fixed_resolution,
+            'save_warp_params': save_warp_params,
+            'low_res': low_res}
+
+    script = 'align_anat.py'
+    job_id = flow.sbatch(jobname='align',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
+
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
+
+# ###################
+# ### Correlation ###
+# ###################
+
+# printlog(f"\n{'   correlation   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+
+#     behaviors = ['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
+#     for behavior in behaviors:
+#         args = {'logfile': logfile,
+#                 'directory': directory,
+#                 'behavior': behavior}
+#         script = 'correlation_z_correction.py'
+#         job_id = flow.sbatch(jobname='corr',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+# ########################
+# ### Apply transforms ###
+# ########################
+# res_anat = (0.65, 0.65, 1)
+# res_func = (2.6, 2.6, 5)
+
+# printlog(f"\n{'   Alignment   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     fly_directory = os.path.join(dataset_path, fly)
+
+#     behaviors = ['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
+#     for behavior in behaviors:
+#         moving_path = os.path.join(fly_directory, 'func_0', 'corr', '20201104_corr_{}.nii'.format(behavior))#<---------------------------------------
+#         moving_fly = 'corr_{}'.format(behavior)
+#         moving_resolution = res_func
+
+#         fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+#         fixed_fly = 'meanbrain'
+#         fixed_resolution = res_anat
+
+#         save_directory = os.path.join(fly_directory, 'warp')
+#         if not os.path.exists(save_directory):
+#             os.mkdir(save_directory)
+
+#         args = {'logfile': logfile,
+#                 'save_directory': save_directory,
+#                 'fixed_path': fixed_path,
+#                 'moving_path': moving_path,
+#                 'fixed_fly': fixed_fly,
+#                 'moving_fly': moving_fly,
+#                 'moving_resolution': moving_resolution,
+#                 'fixed_resolution': fixed_resolution}
+
+#         script = 'apply_transforms.py'
+#         job_id = flow.sbatch(jobname='aplytrns',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   MASK   ':=^{width}}")
 # job_ids = []
