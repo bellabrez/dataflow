@@ -333,35 +333,34 @@ printlog(f"\n{'   Alignment   ':=^{width}}")
 job_ids = []
 for fly in flies:
     fly_directory = os.path.join(dataset_path, fly)
+    moving_path = os.path.join(fly_directory, 'func_0', 'brain_zscored_green_high_pass_masked.nii')#<---------------------------------------
+    moving_fly = 'raw'
+    moving_resolution = res_func
 
-        moving_path = os.path.join(fly_directory, 'func_0', 'brain_zscored_green_high_pass_masked.nii')#<---------------------------------------
-        moving_fly = 'raw'
-        moving_resolution = res_func
+    fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+    fixed_fly = 'meanbrain'
+    fixed_resolution = res_anat
 
-        fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
-        fixed_fly = 'meanbrain'
-        fixed_resolution = res_anat
+    warp_directory = os.path.join(fly_directory, 'warp')
+    save_directory = os.path.join(fly_directory, 'func_0')
 
-        warp_directory = os.path.join(fly_directory, 'warp')
-        save_directory = os.path.join(fly_directory, 'func_0')
+    args = {'logfile': logfile,
+            'warp_directory': warp_directory,
+            'save_directory': save_directory,
+            'fixed_path': fixed_path,
+            'moving_path': moving_path,
+            'fixed_fly': fixed_fly,
+            'moving_fly': moving_fly,
+            'moving_resolution': moving_resolution,
+            'fixed_resolution': fixed_resolution}
 
-        args = {'logfile': logfile,
-                'warp_directory': warp_directory,
-                'save_directory': save_directory,
-                'fixed_path': fixed_path,
-                'moving_path': moving_path,
-                'fixed_fly': fixed_fly,
-                'moving_fly': moving_fly,
-                'moving_resolution': moving_resolution,
-                'fixed_resolution': fixed_resolution}
-
-        script = 'apply_transforms_to_raw_data.py'
-        job_id = flow.sbatch(jobname='aplytrns',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=2, mem=8, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
+    script = 'apply_transforms_to_raw_data.py'
+    job_id = flow.sbatch(jobname='aplytrns',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=2, mem=8, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
