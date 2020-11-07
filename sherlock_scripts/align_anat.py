@@ -120,7 +120,7 @@ def main(args):
     ### Save ###
     ############
 
-    # ONLY SAVING MIMIC <------ CHANGE
+    # NOT SAVING MIMIC <------ MAY NEED TO CHANGE
     if flip_X:
         save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly)
         #save_file = os.path.join(save_directory, mimic_fly + '_m' + '-to-' + fixed_fly + '.nii')
