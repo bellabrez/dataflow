@@ -122,12 +122,15 @@ def main(args):
 
     # ONLY SAVING MIMIC <------ CHANGE
     if flip_X:
-        save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly + '.nii')
+        save_file = os.path.join(save_directory, moving_fly + '_m' + '-to-' + fixed_fly)
         #save_file = os.path.join(save_directory, mimic_fly + '_m' + '-to-' + fixed_fly + '.nii')
     else:
-        save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly + '.nii')
+        save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly)
         #save_file = os.path.join(save_directory, mimic_fly + '-to-' + fixed_fly + '.nii')
     #nib.Nifti1Image(mimic_moco.numpy(), np.eye(4)).to_filename(save_file)
+    if low_res:
+        save_file += '_lowres'
+    save_file += '.nii'
     nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
 
     # if flip_X:
