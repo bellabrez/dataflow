@@ -39,8 +39,9 @@ nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 #flies = ['fly_086', 'fly_095', 'fly_103', 'fly_104', 'fly_107']
 
-#flies = ['fly_087', 'fly_089', 'fly_094', 'fly_095', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
-flies = ['fly_094']
+flies = ['fly_087', 'fly_089', 'fly_094', 'fly_095', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
+flies = ['fly_087', 'fly_089', 'fly_095', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
+
 #flies = ['fly_' + str(x).zfill(3) for x in list(range(84,112))]
 
 #####################
