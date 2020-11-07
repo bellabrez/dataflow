@@ -355,7 +355,7 @@ for fly in flies:
                 'moving_resolution': moving_resolution,
                 'fixed_resolution': fixed_resolution}
 
-        script = 'apply_transforms.py'
+        script = 'apply_transforms_to_raw_data.py'
         job_id = flow.sbatch(jobname='aplytrns',
                              script=os.path.join(scripts_path, script),
                              modules=modules,
