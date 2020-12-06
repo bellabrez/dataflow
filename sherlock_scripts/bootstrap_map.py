@@ -236,7 +236,7 @@ def main(args):
         r_diffs.append(r_diff)
         sigs.append(zero_idx)
         if cluster%10 == 0:
-            printlog(cluster)
+            printlog(str(cluster))
 
     #####################
     ### Save Map Data ###
