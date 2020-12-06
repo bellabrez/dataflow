@@ -236,14 +236,14 @@ def main(args):
         r_diffs.append(r_diff)
         sigs.append(zero_idx)
         if cluster%10 == 0:
-            printlog(cluster, ':', r_diff, zero_idx, time.time()-t0)
+            printlog(cluster)
 
     #####################
     ### Save Map Data ###
     #####################
-    save_file = os.path.join(save_directory, 'rot_neg_pos_rdiff')
+    save_file = os.path.join(save_directory, 'rot_neg_pos_rdiff_z{}'.format(z))
     np.save(save_file, np.asarray(r_diffs))
-    save_file = os.path.join(save_directory, 'rot_neg_pos_sig')
+    save_file = os.path.join(save_directory, 'rot_neg_pos_sig_z{}'.format(z))
     np.save(save_file, np.asarray(sigs))
     #img = nib.Nifti1Image(brain, np.eye(4)).to_filename(save_file)
     # printlog("brain save duration: ({})".format(time.time()-t0))
