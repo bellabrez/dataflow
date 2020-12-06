@@ -77,6 +77,32 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
+#################
+### Bootstrap ###
+#################
+
+printlog(f"\n{'   BOOTSTRAP   ':=^{width}}")
+job_ids = []
+for z in [20]:
+
+    save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap/rot_corr"
+    if not os.path.exists(save_directory):
+        os.mkdir(save_directory)
+        
+    args = {'logfile': logfile,
+            'save_directory': save_directory,
+            'z': z}
+    script = 'bootstrap_map.py'
+    job_id = flow.sbatch(jobname='bootstrp',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=2, mem=8, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
+
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
+
 # ##############
 # ### SMOOTH ###
 # ##############
