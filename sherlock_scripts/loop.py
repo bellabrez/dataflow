@@ -84,11 +84,7 @@ printlog("")
 printlog(f"\n{'   BOOTSTRAP   ':=^{width}}")
 job_ids = []
 for z in [20]:
-
     save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap/rot_corr"
-    if not os.path.exists(save_directory):
-        os.mkdir(save_directory)
-        
     args = {'logfile': logfile,
             'save_directory': save_directory,
             'z': z}
