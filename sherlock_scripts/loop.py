@@ -90,7 +90,7 @@ job_params = ['correlation|Y_pos|Z_pos|True',
 
 job_ids = []
 for job in job_params:
-    bootstrap_type = job_params.split('|')[0]
+    bootstrap_type = job.split('|')[0]
     values_a = job_params.split('|')[1]
     values_b = job_params.split('|')[2]
     comparison = job_params.split('|')[3]
