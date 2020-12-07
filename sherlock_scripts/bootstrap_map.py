@@ -207,7 +207,7 @@ def main(args):
     #######################
     ### Load Superslice ###
     #######################
-    brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201110_analysis_superfly_supervoxels/superslice_{}.nii".format(z)
+    brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z)
     brain = np.array(nib.load(brain_file).get_data(), copy=True)
 
     #####################
