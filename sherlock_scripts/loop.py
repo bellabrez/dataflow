@@ -82,19 +82,34 @@ printlog("")
 #################
 
 printlog(f"\n{'   BOOTSTRAP   ':=^{width}}")
+
+
+job_params = ['correlation|Y_pos|Z_pos|True',
+              'state|stop_times|moving_times|True',
+              'correlation|Y_pos|None|False']
+
 job_ids = []
-for z in [20]:
-    save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap/rot_corr"
-    args = {'logfile': logfile,
-            'save_directory': save_directory,
-            'z': z}
-    script = 'bootstrap_map.py'
-    job_id = flow.sbatch(jobname='bootstrp',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+for job in job_params:
+    bootstrap_type = job_params.split('|')[0]
+    values_a = job_params.split('|')[1]
+    values_b = job_params.split('|')[2]
+    comparison = job_params.split('|')[3]
+    for z in [20]:
+        save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap"
+        args = {'logfile': logfile,
+                'save_directory': save_directory,
+                'bootstrap_type' = bootstrap_type
+                'values_a' = values_a
+                'values_b' = values_b
+                'comparison' = comparison
+                'z': z}
+        script = 'bootstrap_map.py'
+        job_id = flow.sbatch(jobname='bootstrp',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
+        job_ids.append(job_id)
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)

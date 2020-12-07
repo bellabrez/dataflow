@@ -19,7 +19,13 @@ def main(args):
     logfile = args['logfile']
     save_directory = args['save_directory']
     z = args['z']
+    bootstrap_type = args['bootstrap_type']
+    values_a = args['values_a']
+    values_b = args['values_b']
+    comparison = args['comparison']
+
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
+    printlog('{},{},{},{},{}'.format(z, bootstrap_type, values_a, values_b, comparison))
 
     fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_095', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
     dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
@@ -152,6 +158,52 @@ def main(args):
             self.fictrac['YZ'] = np.sqrt(np.power(self.fictrac['Y'],2), np.power(self.fictrac['Z'],2))
             self.fictrac['YZh'] = np.sqrt(np.power(self.fictrac['Yh'],2), np.power(self.fictrac['Zh'],2))
 
+def get_behavior_times(fly):
+    Y = flies[fly].fictrac.fictrac['Y']
+    Z = flies[fly].fictrac.fictrac['Z']
+    # create bounding boxes
+    forward_min = 2
+    forward_max = 12
+    forward_width = 1
+
+    rotation_min = 0 #2
+    rotation_max = 12
+    rotation_forward_bias = 12 #2
+    rotation_reverse_bias = 0
+
+    stop_r = 0.2
+
+    f1 = np.where(Y>forward_min)[0]
+    f2 = np.where(np.abs(Z)<forward_width)[0]
+    f3 = np.where(Y<forward_max)[0]
+    forward_times = [i for i in f1 if i in f2 and i in f3]
+
+    r1 = np.where(Z>rotation_min)[0]
+    r2 = np.where(Z<rotation_max)[0]
+    r3 = np.where(Y>rotation_reverse_bias)[0]
+    r4 = np.where(Y<rotation_forward_bias)[0]
+    rotation_pos_times = [i for i in r1 if i in r2 and i in r3 and i in r4]
+
+    r1 = np.where(Z<-rotation_min)[0]
+    r2 = np.where(Z>-rotation_max)[0]
+    r3 = np.where(Y>rotation_reverse_bias)[0]
+    r4 = np.where(Y<rotation_forward_bias)[0]
+    rotation_neg_times = [i for i in r1 if i in r2 and i in r3 and i in r4]
+
+    rotation_times = rotation_pos_times + rotation_neg_times
+
+    stop_times = np.where(Y**2 + Z**2 < stop_r**2)[0]
+    moving_times = [i for i in range(len(Y)) if i not in stop_times]
+    
+    behavior_times = {'stop_times': stop_times,
+                      'moving_times': moving_times,
+                      'forward_times': forward_times,
+                      'rotation_pos_times': rotation_pos_times,
+                      'rotation_neg_times': rotation_neg_times}
+    
+    flies[fly].behavior_times = behavior_times
+    return behavior_times
+
     #######################
     ### Load Superslice ###
     #######################
@@ -204,46 +256,114 @@ def main(args):
             flies[fly].fictrac.fictrac[behavior] = flies[fly].fictrac.fictrac[behavior]/stds[std_key]
         pooled_behavior[behavior] = pooled_behavior[behavior]/stds[std_key]
 
-    #############################
-    ### Bootstrap Comparisons ###
-    #############################
-    r_diffs = []
-    sigs = []
-    for cluster in range(n_clusters):
-        t0=time.time()
 
-        pooled_activity = []
-        for fly in flies:
-            pooled_activity.append(flies[fly].cluster_signals[cluster])
-        pooled_activity = np.asarray(pooled_activity).flatten()
 
-        Y_var = pooled_activity
-        X_var_a = pooled_behavior['Z_neg']
-        X_var_b = pooled_behavior['Z_pos']
+    ###########################################
+    ### Bootstrap - Correlation Comparisons ###
+    ###########################################
+    if bootstrap_type == 'correlation':
+        r_diffs = []
+        sigs = []
+        for cluster in range(n_clusters):
+            t0=time.time()
 
-        rs = []
-        num_reps=1000
-        for _ in range(num_reps):
-            idx = np.random.choice(len(Y_var), len(Y_var))
-            a=scipy.stats.pearsonr(X_var_a[idx], Y_var[idx])[0]
-            b=scipy.stats.pearsonr(X_var_b[idx], Y_var[idx])[0]
-            rs.append(a-b)
+            pooled_activity = []
+            for fly in flies:
+                pooled_activity.append(flies[fly].cluster_signals[cluster])
+            pooled_activity = np.asarray(pooled_activity).flatten()
 
-        r_diff = np.mean(rs) # get mean difference
-        #Get p-value (see if zero is within the 95% confidence interval)
-        zero_idx = np.searchsorted(np.sort(rs), 0)
 
-        r_diffs.append(r_diff)
-        sigs.append(zero_idx)
-        if cluster%10 == 0:
-            printlog(str(cluster))
+
+            if comparison:
+                Y_var = pooled_activity
+                X_var_a = pooled_behavior[values_a]
+                X_var_b = pooled_behavior[values_b]
+
+                rs = []
+                num_reps=1000
+                for _ in range(num_reps):
+                    idx = np.random.choice(len(Y_var), len(Y_var))
+                    a=scipy.stats.pearsonr(X_var_a[idx], Y_var[idx])[0]
+                    b=scipy.stats.pearsonr(X_var_b[idx], Y_var[idx])[0]
+                    rs.append(a-b)
+            else:
+                Y_var = pooled_activity
+                X_var_a = pooled_behavior[values_a]
+
+                rs = []
+                num_reps=1000
+                for _ in range(num_reps):
+                    idx = np.random.choice(len(Y_var), len(Y_var))
+                    a=scipy.stats.pearsonr(X_var_a[idx], Y_var[idx])[0]
+                    rs.append(a)
+
+
+
+            r_diff = np.mean(rs) # get mean difference
+            zero_idx = np.searchsorted(np.sort(rs), 0)
+
+            r_diffs.append(r_diff)
+            sigs.append(zero_idx)
+            if cluster%10 == 0:
+                printlog(str(cluster))
+    
+
+    #####################################
+    ### Bootstrap - State Comparisons ###
+    #####################################
+    if bootstrap_type == 'state':
+        pooled_behavior_times = {'stop_times': [],'moving_times': [],
+                             'forward_times': [], 'rotation_pos_times': [], 'rotation_neg_times': []}
+        for i, fly in enumerate(flies):
+            bts = get_behavior_times(fly)
+            for bt in pooled_behavior_times:
+                pooled_behavior_times[bt].extend([j+3384*i for j in bts[bt]])
+
+        r_diffs = []
+        sigs = []
+        for cluster in range(n_clusters):
+            t0=time.time()
+
+            pooled_activity = []
+            for fly in flies:
+                pooled_activity.append(flies[fly].cluster_signals[cluster])
+            pooled_activity = np.asarray(pooled_activity).flatten()
+
+
+            if comparison:
+                sample_a = pooled_activity[pooled_behavior_times[values_a]]
+                sample_b = pooled_activity[pooled_behavior_times[values_b]]
+
+                rs = []
+                num_reps=1000
+                for _ in range(num_reps):
+                    a_mean = np.random.choice(sample_a, len(sample_a)).mean()
+                    b_mean = np.random.choice(sample_b, len(sample_b)).mean()
+                    rs.append(a_mean-b_mean)
+            else:
+                sample_a = pooled_activity[pooled_behavior_times[values_a]]
+
+                rs = []
+                num_reps=1000
+                for _ in range(num_reps):
+                    a_mean = np.random.choice(sample_a, len(sample_a)).mean()
+                    rs.append(a_mean)
+
+
+            r_diff = np.mean(rs)
+            zero_idx = np.searchsorted(np.sort(rs), 0)
+
+            r_diffs.append(r_diff)
+            sigs.append(zero_idx)
+            if cluster%10 == 0:
+                printlog(str(cluster))
 
     #####################
     ### Save Map Data ###
     #####################
-    save_file = os.path.join(save_directory, 'rot_neg_pos_rdiff_z{}'.format(z))
+    save_file = os.path.join(save_directory, '{}_{}_{}_values_z{}'.format(bootstrap_type, values_a, values_b, z))
     np.save(save_file, np.asarray(r_diffs))
-    save_file = os.path.join(save_directory, 'rot_neg_pos_sig_z{}'.format(z))
+    save_file = os.path.join(save_directory, '{}_{}_{}_sigs_z{}'.format(bootstrap_type, values_a, values_b, z))
     np.save(save_file, np.asarray(sigs))
     #img = nib.Nifti1Image(brain, np.eye(4)).to_filename(save_file)
     # printlog("brain save duration: ({})".format(time.time()-t0))
