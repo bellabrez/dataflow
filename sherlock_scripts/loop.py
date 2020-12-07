@@ -16,7 +16,7 @@ modules = 'py-numpy/1.14.3_py36 viz py-pandas/0.23.0_py36'
 #########################
 
 width = 120 # width of print log
-nodes = 2 # 1 or 2
+nodes = 1 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 #flies = ['fly_087']
@@ -83,14 +83,15 @@ printlog("")
 
 printlog(f"\n{'   BOOTSTRAP   ':=^{width}}")
 
-
-job_params = ['correlation|Z_pos|Z_neg|True',
-              'correlation|Y_pos|None|False',
-              'correlation|Y_neg|None|False']
+#DONE:
+# job_params = ['correlation|Z_pos|Z_neg|True',
+#               'correlation|Y_pos|None|False',
+#               'correlation|Y_neg|None|False']
               
-#              'correlation|Z_pos|None|False',
-#              'correlation|Z_neg|None|False'
-#'state|stop_times|moving_times|True'
+job_params = ['correlation|Z_pos|None|False',
+              'correlation|Z_neg|None|False',
+              'state|stop_times|moving_times|True']
+
 
 job_ids = []
 for job in job_params:
@@ -112,7 +113,7 @@ for job in job_params:
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
+                             logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
         job_ids.append(job_id)
 
 for job_id in job_ids:
