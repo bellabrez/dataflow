@@ -98,10 +98,10 @@ for job in job_params:
         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap"
         args = {'logfile': logfile,
                 'save_directory': save_directory,
-                'bootstrap_type' = bootstrap_type
-                'values_a' = values_a
-                'values_b' = values_b
-                'comparison' = comparison
+                'bootstrap_type': bootstrap_type,
+                'values_a': values_a,
+                'values_b': values_b,
+                'comparison': comparison,
                 'z': z}
         script = 'bootstrap_map.py'
         job_id = flow.sbatch(jobname='bootstrp',
