@@ -274,7 +274,7 @@ def main(args):
 
 
 
-            if comparison:
+            if comparison == 'True':
                 Y_var = pooled_activity
                 X_var_a = pooled_behavior[values_a]
                 X_var_b = pooled_behavior[values_b]
@@ -330,7 +330,7 @@ def main(args):
             pooled_activity = np.asarray(pooled_activity).flatten()
 
 
-            if comparison:
+            if comparison == 'True':
                 sample_a = pooled_activity[pooled_behavior_times[values_a]]
                 sample_b = pooled_activity[pooled_behavior_times[values_b]]
 
