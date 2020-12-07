@@ -304,7 +304,7 @@ def main(args):
 
             r_diffs.append(r_diff)
             sigs.append(zero_idx)
-            if cluster%10 == 0:
+            if cluster%100 == 0:
                 printlog(str(cluster))
     
 
@@ -355,7 +355,7 @@ def main(args):
 
             r_diffs.append(r_diff)
             sigs.append(zero_idx)
-            if cluster%10 == 0:
+            if cluster%100 == 0:
                 printlog(str(cluster))
 
     #####################
