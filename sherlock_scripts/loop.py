@@ -84,9 +84,13 @@ printlog("")
 printlog(f"\n{'   BOOTSTRAP   ':=^{width}}")
 
 
-job_params = ['correlation|Y_pos|Z_pos|True',
-              'state|stop_times|moving_times|True',
-              'correlation|Y_pos|None|False']
+job_params = ['correlation|Z_pos|Z_neg|True',
+              'correlation|Y_pos|None|False',
+              'correlation|Y_neg|None|False']
+              
+#              'correlation|Z_pos|None|False',
+#              'correlation|Z_neg|None|False'
+#'state|stop_times|moving_times|True'
 
 job_ids = []
 for job in job_params:
@@ -94,7 +98,7 @@ for job in job_params:
     values_a = job.split('|')[1]
     values_b = job.split('|')[2]
     comparison = job.split('|')[3]
-    for z in [20, 21]:
+    for z in range(49):
         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap"
         args = {'logfile': logfile,
                 'save_directory': save_directory,
