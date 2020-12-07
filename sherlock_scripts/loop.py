@@ -91,9 +91,9 @@ job_params = ['correlation|Y_pos|Z_pos|True',
 job_ids = []
 for job in job_params:
     bootstrap_type = job.split('|')[0]
-    values_a = job_params.split('|')[1]
-    values_b = job_params.split('|')[2]
-    comparison = job_params.split('|')[3]
+    values_a = job.split('|')[1]
+    values_b = job.split('|')[2]
+    comparison = job.split('|')[3]
     for z in [20]:
         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap"
         args = {'logfile': logfile,
