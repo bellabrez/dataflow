@@ -158,51 +158,51 @@ def main(args):
             self.fictrac['YZ'] = np.sqrt(np.power(self.fictrac['Y'],2), np.power(self.fictrac['Z'],2))
             self.fictrac['YZh'] = np.sqrt(np.power(self.fictrac['Yh'],2), np.power(self.fictrac['Zh'],2))
 
-def get_behavior_times(fly):
-    Y = flies[fly].fictrac.fictrac['Y']
-    Z = flies[fly].fictrac.fictrac['Z']
-    # create bounding boxes
-    forward_min = 2
-    forward_max = 12
-    forward_width = 1
+    def get_behavior_times(fly):
+        Y = flies[fly].fictrac.fictrac['Y']
+        Z = flies[fly].fictrac.fictrac['Z']
+        # create bounding boxes
+        forward_min = 2
+        forward_max = 12
+        forward_width = 1
 
-    rotation_min = 0 #2
-    rotation_max = 12
-    rotation_forward_bias = 12 #2
-    rotation_reverse_bias = 0
+        rotation_min = 0 #2
+        rotation_max = 12
+        rotation_forward_bias = 12 #2
+        rotation_reverse_bias = 0
 
-    stop_r = 0.2
+        stop_r = 0.2
 
-    f1 = np.where(Y>forward_min)[0]
-    f2 = np.where(np.abs(Z)<forward_width)[0]
-    f3 = np.where(Y<forward_max)[0]
-    forward_times = [i for i in f1 if i in f2 and i in f3]
+        f1 = np.where(Y>forward_min)[0]
+        f2 = np.where(np.abs(Z)<forward_width)[0]
+        f3 = np.where(Y<forward_max)[0]
+        forward_times = [i for i in f1 if i in f2 and i in f3]
 
-    r1 = np.where(Z>rotation_min)[0]
-    r2 = np.where(Z<rotation_max)[0]
-    r3 = np.where(Y>rotation_reverse_bias)[0]
-    r4 = np.where(Y<rotation_forward_bias)[0]
-    rotation_pos_times = [i for i in r1 if i in r2 and i in r3 and i in r4]
+        r1 = np.where(Z>rotation_min)[0]
+        r2 = np.where(Z<rotation_max)[0]
+        r3 = np.where(Y>rotation_reverse_bias)[0]
+        r4 = np.where(Y<rotation_forward_bias)[0]
+        rotation_pos_times = [i for i in r1 if i in r2 and i in r3 and i in r4]
 
-    r1 = np.where(Z<-rotation_min)[0]
-    r2 = np.where(Z>-rotation_max)[0]
-    r3 = np.where(Y>rotation_reverse_bias)[0]
-    r4 = np.where(Y<rotation_forward_bias)[0]
-    rotation_neg_times = [i for i in r1 if i in r2 and i in r3 and i in r4]
+        r1 = np.where(Z<-rotation_min)[0]
+        r2 = np.where(Z>-rotation_max)[0]
+        r3 = np.where(Y>rotation_reverse_bias)[0]
+        r4 = np.where(Y<rotation_forward_bias)[0]
+        rotation_neg_times = [i for i in r1 if i in r2 and i in r3 and i in r4]
 
-    rotation_times = rotation_pos_times + rotation_neg_times
+        rotation_times = rotation_pos_times + rotation_neg_times
 
-    stop_times = np.where(Y**2 + Z**2 < stop_r**2)[0]
-    moving_times = [i for i in range(len(Y)) if i not in stop_times]
-    
-    behavior_times = {'stop_times': stop_times,
-                      'moving_times': moving_times,
-                      'forward_times': forward_times,
-                      'rotation_pos_times': rotation_pos_times,
-                      'rotation_neg_times': rotation_neg_times}
-    
-    flies[fly].behavior_times = behavior_times
-    return behavior_times
+        stop_times = np.where(Y**2 + Z**2 < stop_r**2)[0]
+        moving_times = [i for i in range(len(Y)) if i not in stop_times]
+        
+        behavior_times = {'stop_times': stop_times,
+                          'moving_times': moving_times,
+                          'forward_times': forward_times,
+                          'rotation_pos_times': rotation_pos_times,
+                          'rotation_neg_times': rotation_neg_times}
+        
+        flies[fly].behavior_times = behavior_times
+        return behavior_times
 
     #######################
     ### Load Superslice ###
