@@ -16,7 +16,7 @@ modules = 'py-numpy/1.14.3_py36 viz py-pandas/0.23.0_py36'
 #########################
 
 width = 120 # width of print log
-nodes = 1 # 1 or 2
+nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 #flies = ['fly_087']
