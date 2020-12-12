@@ -87,10 +87,14 @@ printlog(f"\n{'   BOOTSTRAP   ':=^{width}}")
 # job_params = ['correlation|Z_pos|Z_neg|True',
 #               'correlation|Y_pos|None|False',
 #               'correlation|Y_neg|None|False']
-              
-job_params = ['correlation|Z_pos|None|False',
-              'correlation|Z_neg|None|False',
-              'state|stop_times|moving_times|True']
+
+#DONE:              
+# job_params = ['correlation|Z_pos|None|False',
+#               'correlation|Z_neg|None|False',
+#               'state|stop_times|moving_times|True']
+
+job_params = ['correlation|Y_pos|Z_pos|True',
+              'correlation|Y_pos|Z_neg|True']
 
 
 job_ids = []
