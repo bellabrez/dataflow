@@ -256,8 +256,6 @@ def main(args):
             flies[fly].fictrac.fictrac[behavior] = flies[fly].fictrac.fictrac[behavior]/stds[std_key]
         pooled_behavior[behavior] = pooled_behavior[behavior]/stds[std_key]
 
-
-
     ###########################################
     ### Bootstrap - Correlation Comparisons ###
     ###########################################
@@ -307,6 +305,27 @@ def main(args):
             if cluster%100 == 0:
                 printlog(str(cluster))
     
+    if bootstrap_type == 'no_bootstrap':
+        r_diffs = []
+        sigs = []
+        for cluster in range(n_clusters):
+            t0=time.time()
+
+            pooled_activity = []
+            for fly in flies:
+                pooled_activity.append(flies[fly].cluster_signals[cluster])
+            pooled_activity = np.asarray(pooled_activity).flatten()
+
+            Y_var = pooled_activity
+            X_var_a = pooled_behavior[values_a]
+
+            r_value, p_value = scipy.stats.pearsonr(X_var_a, Y_var)
+
+            r_diffs.append(r_value) #note r_diffs and sigs name don't make much sense - just keeping consistent
+            sigs.append(p_value)
+
+            if cluster%100 == 0:
+                printlog(str(cluster))
 
     #####################################
     ### Bootstrap - State Comparisons ###
