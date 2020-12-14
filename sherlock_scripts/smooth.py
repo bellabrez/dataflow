@@ -35,7 +35,7 @@ def main(args):
     printlog("brain corrected duration: ({})".format(time.time()-t0))
 
     ### Save Brain ###
-    corrected_brain_file = os.path.join(directory, 'brain_zscored_green_high_pass.nii')
+    corrected_brain_file = os.path.join(directory, 'brain_zscored_red_high_pass.nii') #<-----------------------
     nib.Nifti1Image(brain_corrected, np.eye(4)).to_filename(corrected_brain_file)
 
 if __name__ == '__main__':

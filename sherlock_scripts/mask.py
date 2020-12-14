@@ -70,8 +70,8 @@ def main(args):
     # apply mask
     brain = brain*mask[:,:,:,None]
 
-    # Save masked brain
-    brain_save_file = os.path.join(directory, 'brain_zscored_green_high_pass_masked.nii')
+    # Save masked brain 
+    brain_save_file = os.path.join(directory, 'brain_zscored_red_high_pass_masked.nii') #<---------------------------------------
     nib.Nifti1Image(brain, np.eye(4)).to_filename(brain_save_file)
 
 if __name__ == '__main__':
