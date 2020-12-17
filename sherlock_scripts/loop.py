@@ -104,10 +104,10 @@ printlog("")
 # #               'state|forward_times|rotation_pos_times|True']
 #job_params = ['no_bootstrap|Y_pos|None|False']
 
-job_params = ['no_bootstrap|Y_pos|None|False']
-              #'no_bootstrap|Z_pos|None|False',
-              #'no_bootstrap|Z_neg|None|False',
-              #'no_bootstrap|Y_neg|None|False']
+#job_params = ['no_bootstrap|Y_pos|None|False']
+job_params = ['no_bootstrap|Z_pos|None|False',
+              'no_bootstrap|Z_neg|None|False',
+              'no_bootstrap|Y_neg|None|False']
 
 job_ids = []
 for job in job_params:
