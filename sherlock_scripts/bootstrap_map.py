@@ -218,6 +218,7 @@ def main(args):
     if load_clusters:
         labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/cluster_labels.npy'
         cluster_model_labels = np.load(labels_file)
+        cluster_model_labels = cluster_model_labels[z,:]
     else:
         cluster_model = create_clusters(brain, n_clusters)
         cluster_model_labels = cluster_model.labels_
