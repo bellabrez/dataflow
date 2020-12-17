@@ -60,34 +60,34 @@ def main(args):
         def load_anatomy (self):
             to_load = os.path.join(dataset_path, self.fly_name, 'warp', 'anat-to-meanbrain.nii')
             self.anatomy = np.array(nib.load(to_load).get_data(), copy=True)
-        def get_cluster_averages (self, cluster_model, n_clusters):
+        def get_cluster_averages (self, cluster_model_labels, n_clusters):
             neural_data = self.brain.reshape(-1, 3384)
             signals = []
             self.cluster_indicies = []
             for cluster_num in range(n_clusters):
-                cluster_indicies = np.where(cluster_model.labels_==cluster_num)[0]
+                cluster_indicies = np.where(cluster_model_labels==cluster_num)[0]
                 mean_signal = np.mean(neural_data[cluster_indicies,:], axis=0)
                 signals.append(mean_signal)
                 self.cluster_indicies.append(cluster_indicies) # store for later
             self.cluster_signals=np.asarray(signals)
-        def make_corr_map (self, n_clusters, cluster_model, behavior):
-            corrs = []
-            # remove zeros from correlation
-            behavior_vector = flies[fly].fictrac.fictrac[behavior]
-            non_zero_entries = np.where(behavior_vector != 0)[0]
-            for i in range(n_clusters):
-                cluster_indicies = np.where(cluster_model.labels_==i)[0]
-                if len(cluster_indicies) > 2000:
-                    corrs.append(0)
-                else:
-                    corrs.append(scipy.stats.pearsonr(behavior_vector[non_zero_entries],
-                                                      self.cluster_signals[i,non_zero_entries])[0])
-            colored_by_betas = np.zeros(256*128)
-            for cluster_num in range(n_clusters):
-                cluster_indicies = np.where(cluster_model.labels_==cluster_num)[0]
-                colored_by_betas[cluster_indicies] = corrs[cluster_num]
-            colored_by_betas = colored_by_betas.reshape(256,128)
-            self.maps[behavior] = colored_by_betas
+        # def make_corr_map (self, n_clusters, cluster_model, behavior):
+        #     corrs = []
+        #     # remove zeros from correlation
+        #     behavior_vector = flies[fly].fictrac.fictrac[behavior]
+        #     non_zero_entries = np.where(behavior_vector != 0)[0]
+        #     for i in range(n_clusters):
+        #         cluster_indicies = np.where(cluster_model.labels_==i)[0]
+        #         if len(cluster_indicies) > 2000:
+        #             corrs.append(0)
+        #         else:
+        #             corrs.append(scipy.stats.pearsonr(behavior_vector[non_zero_entries],
+        #                                               self.cluster_signals[i,non_zero_entries])[0])
+        #     colored_by_betas = np.zeros(256*128)
+        #     for cluster_num in range(n_clusters):
+        #         cluster_indicies = np.where(cluster_model.labels_==cluster_num)[0]
+        #         colored_by_betas[cluster_indicies] = corrs[cluster_num]
+        #     colored_by_betas = colored_by_betas.reshape(256,128)
+        #     self.maps[behavior] = colored_by_betas
         def get_cluster_id (self, x, y):
             ax_vec = x*128 + y
             for i in range(n_clusters):
@@ -207,14 +207,20 @@ def main(args):
     #######################
     ### Load Superslice ###
     #######################
-    brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z)
+    brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/red/superslice_{}.nii".format(z) #<----------
     brain = np.array(nib.load(brain_file).get_data(), copy=True)
 
     #####################
     ### Make Clusters ###
     #####################
+    load_clusters = True
     n_clusters = 2000
-    cluster_model = create_clusters(brain, n_clusters)
+    if load_clusters:
+        labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/cluster_labels.npy'
+        cluster_model_labels = np.load(labels_file)
+    else:
+        cluster_model = create_clusters(brain, n_clusters)
+        cluster_model_labels = cluster_model.labels_
 
     ###################
     ### Build Flies ###
@@ -226,7 +232,7 @@ def main(args):
         flies[fly].load_fictrac()
         flies[fly].fictrac.interp_fictrac(z)
         flies[fly].load_brain_slice()
-        flies[fly].get_cluster_averages(cluster_model, n_clusters)
+        flies[fly].get_cluster_averages(cluster_model_labels, n_clusters)
 
     #####################
     ### Pool behavior ###
