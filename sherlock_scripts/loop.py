@@ -115,7 +115,7 @@ for job in job_params:
     values_a = job.split('|')[1]
     values_b = job.split('|')[2]
     comparison = job.split('|')[3]
-    for z in [20]:
+    for z in range(49):
         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap/red"
         args = {'logfile': logfile,
                 'save_directory': save_directory,
