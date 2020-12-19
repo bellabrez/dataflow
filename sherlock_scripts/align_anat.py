@@ -109,6 +109,19 @@ def main(args):
             target_path = os.path.join(fwdtransforms_save_dir, source_file)
             copyfile(source_path, target_path)
 
+    # Added this saving of inv transforms 2020 Dec 19
+    if save_warp_params:
+        fwdtransformlist = moco['invtransforms']
+        fwdtransforms_save_dir = os.path.join(save_directory, '{}-to-{}_invtransforms'.format(moving_fly, fixed_fly))
+        if low_res:
+            fwdtransforms_save_dir += '_lowres'
+        if not os.path.exists(fwdtransforms_save_dir):
+            os.mkdir(fwdtransforms_save_dir)
+        for source_path in fwdtransformlist:
+            source_file = source_path.split('/')[-1]
+            target_path = os.path.join(fwdtransforms_save_dir, source_file)
+            copyfile(source_path, target_path)
+
     ##################################
     ### Apply warp params to mimic ###
     ##################################
