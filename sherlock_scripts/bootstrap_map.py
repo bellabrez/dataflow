@@ -207,14 +207,14 @@ def main(args):
     #######################
     ### Load Superslice ###
     #######################
-    brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/red/superslice_{}.nii".format(z) #<----------
+    brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z) #<---------- !!!
     brain = np.array(nib.load(brain_file).get_data(), copy=True)
 
     #####################
     ### Make Clusters ###
     #####################
-    load_clusters = True
-    n_clusters = 2000
+    load_clusters = False
+    n_clusters = 6000
     if load_clusters:
         labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/cluster_labels.npy'
         cluster_model_labels = np.load(labels_file)
