@@ -104,10 +104,9 @@ printlog("")
 # #               'state|forward_times|rotation_pos_times|True']
 #job_params = ['no_bootstrap|Y_pos|None|False']
 
-job_params = ['no_bootstrap|Y_pos|None|False']
-#job_params = ['no_bootstrap|Z_pos|None|False',
-#               'no_bootstrap|Z_neg|None|False',
-#               'no_bootstrap|Y_neg|None|False']
+job_params = ['no_bootstrap|Y_pos|None|False',
+              'no_bootstrap|Z_pos|None|False',
+              'no_bootstrap|Z_neg|None|False']
 
 job_ids = []
 for job in job_params:
@@ -115,7 +114,7 @@ for job in job_params:
     values_a = job.split('|')[1]
     values_b = job.split('|')[2]
     comparison = job.split('|')[3]
-    for z in [20]:
+    for z in range(49):
         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap/6000_clusters"
         args = {'logfile': logfile,
                 'save_directory': save_directory,
