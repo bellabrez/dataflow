@@ -129,7 +129,7 @@ for job in job_params:
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
+                             logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
         job_ids.append(job_id)
 
 for job_id in job_ids:
