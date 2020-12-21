@@ -162,7 +162,7 @@ def main(args):
 	cluster_responses = []
 	for cluster_num in range(n_clusters):
 	    if cluster_num%100 == 0:
-	        printlog(cluster_num)
+	        printlog(str(cluster_num))
 	    ###############################################################
 	    ### Build Y vector for a single supervoxel (with all flies) ###
 	    ###############################################################
