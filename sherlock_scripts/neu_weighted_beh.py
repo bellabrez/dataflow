@@ -26,40 +26,40 @@ def main(args):
 	high_res_timepoints = np.arange(0,expt_len,resolution) #0 to last time at subsample res
 
 	class Fly:
-	def __init__ (self, fly_name, fly_idx):
-		self.dir = os.path.join(dataset_path, fly_name, 'func_0')
-		self.fly_idx = fly_idx
-		self.fly_name = fly_name
-		self.maps = {}
-	def load_timestamps (self):
-		self.timestamps = bbb.load_timestamps(os.path.join(self.dir, 'imaging'))
-	def load_fictrac (self):
-		self.fictrac = Fictrac(self.dir, self.timestamps)
-	def load_brain_slice (self):
-		self.brain = brain[:,:,:,self.fly_idx]
-	def load_anatomy (self):
-		to_load = os.path.join(dataset_path, self.fly_name, 'warp', 'anat-to-meanbrain.nii')
-		self.anatomy = np.array(nib.load(to_load).get_data(), copy=True)
-	def load_z_depth_correction (self):
-		to_load = os.path.join(dataset_path, self.fly_name, 'warp', '20201220_warped_z_depth.nii')
-		self.z_correction = np.array(nib.load(to_load).get_data(), copy=True)
-	def get_cluster_averages (self, cluster_model_labels, n_clusters):
-		neural_data = self.brain.reshape(-1, 3384)
-		signals = []
-		self.cluster_indicies = []
-		for cluster_num in range(n_clusters):
-			cluster_indicies = np.where(cluster_model_labels==cluster_num)[0]
-			mean_signal = np.mean(neural_data[cluster_indicies,:], axis=0)
-			signals.append(mean_signal)
-			self.cluster_indicies.append(cluster_indicies) # store for later
-		self.cluster_signals=np.asarray(signals)
-	def get_cluster_id (self, x, y):
-		ax_vec = x*128 + y
-		for i in range(n_clusters):
-			if ax_vec in self.cluster_indicies[i]:
-				cluster_id = i
-				break
-		return cluster_id
+		def __init__ (self, fly_name, fly_idx):
+			self.dir = os.path.join(dataset_path, fly_name, 'func_0')
+			self.fly_idx = fly_idx
+			self.fly_name = fly_name
+			self.maps = {}
+		def load_timestamps (self):
+			self.timestamps = bbb.load_timestamps(os.path.join(self.dir, 'imaging'))
+		def load_fictrac (self):
+			self.fictrac = Fictrac(self.dir, self.timestamps)
+		def load_brain_slice (self):
+			self.brain = brain[:,:,:,self.fly_idx]
+		def load_anatomy (self):
+			to_load = os.path.join(dataset_path, self.fly_name, 'warp', 'anat-to-meanbrain.nii')
+			self.anatomy = np.array(nib.load(to_load).get_data(), copy=True)
+		def load_z_depth_correction (self):
+			to_load = os.path.join(dataset_path, self.fly_name, 'warp', '20201220_warped_z_depth.nii')
+			self.z_correction = np.array(nib.load(to_load).get_data(), copy=True)
+		def get_cluster_averages (self, cluster_model_labels, n_clusters):
+			neural_data = self.brain.reshape(-1, 3384)
+			signals = []
+			self.cluster_indicies = []
+			for cluster_num in range(n_clusters):
+				cluster_indicies = np.where(cluster_model_labels==cluster_num)[0]
+				mean_signal = np.mean(neural_data[cluster_indicies,:], axis=0)
+				signals.append(mean_signal)
+				self.cluster_indicies.append(cluster_indicies) # store for later
+			self.cluster_signals=np.asarray(signals)
+		def get_cluster_id (self, x, y):
+			ax_vec = x*128 + y
+			for i in range(n_clusters):
+				if ax_vec in self.cluster_indicies[i]:
+					cluster_id = i
+					break
+			return cluster_id
 
 	class Fictrac:
 		def __init__ (self, fly_dir, timestamps):
