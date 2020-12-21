@@ -153,7 +153,7 @@ def main(args):
 	#####################
 	### Load Master X ###
 	#####################
-	file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201221_neural_weighted_behavior/master_X"
+	file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201221_neural_weighted_behavior/master_X.npy"
 	X = np.load(file)
 
 	#################
