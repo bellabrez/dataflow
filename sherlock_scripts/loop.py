@@ -104,32 +104,49 @@ printlog("")
 # #               'state|forward_times|rotation_pos_times|True']
 #job_params = ['no_bootstrap|Y_pos|None|False']
 
-job_params = ['no_bootstrap|Y_pos|None|False',
-              'no_bootstrap|Z_pos|None|False',
-              'no_bootstrap|Z_neg|None|False']
+# job_params = ['no_bootstrap|Y_pos|None|False',
+#               'no_bootstrap|Z_pos|None|False',
+#               'no_bootstrap|Z_neg|None|False']
 
+# job_ids = []
+# for job in job_params:
+#     bootstrap_type = job.split('|')[0]
+#     values_a = job.split('|')[1]
+#     values_b = job.split('|')[2]
+#     comparison = job.split('|')[3]
+#     for z in range(49):
+#         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap/6000_clusters"
+#         args = {'logfile': logfile,
+#                 'save_directory': save_directory,
+#                 'bootstrap_type': bootstrap_type,
+#                 'values_a': values_a,
+#                 'values_b': values_b,
+#                 'comparison': comparison,
+#                 'z': z}
+#         script = 'bootstrap_map.py'
+#         job_id = flow.sbatch(jobname='bootstrp',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+################################
+### NEURAL WEIGHTED BEHAVIOR ###
+################################
 job_ids = []
-for job in job_params:
-    bootstrap_type = job.split('|')[0]
-    values_a = job.split('|')[1]
-    values_b = job.split('|')[2]
-    comparison = job.split('|')[3]
-    for z in range(49):
-        save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201206_bootstrap/6000_clusters"
-        args = {'logfile': logfile,
-                'save_directory': save_directory,
-                'bootstrap_type': bootstrap_type,
-                'values_a': values_a,
-                'values_b': values_b,
-                'comparison': comparison,
-                'z': z}
-        script = 'bootstrap_map.py'
-        job_id = flow.sbatch(jobname='bootstrp',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
+for z in [20]:
+    args = {'logfile': logfile, 'z': z}
+    script = 'neu_weighted_beh.py'
+    job_id = flow.sbatch(jobname='neuwebeh',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
