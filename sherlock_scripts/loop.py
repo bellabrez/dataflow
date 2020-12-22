@@ -138,7 +138,7 @@ printlog("")
 ### NEURAL WEIGHTED BEHAVIOR ###
 ################################
 job_ids = []
-for z in range(49):
+for z in [20]:
     args = {'logfile': logfile, 'z': z}
     script = 'neu_weighted_beh.py'
     job_id = flow.sbatch(jobname='neuwebeh',

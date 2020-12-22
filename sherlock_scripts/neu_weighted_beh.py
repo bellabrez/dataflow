@@ -126,7 +126,7 @@ def main(args):
 	#######################
 	### Load Superslice ###
 	#######################
-	brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z) #<---------- !!!
+	brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/red/superslice_{}.nii".format(z) #<---------- !!!
 	brain = np.array(nib.load(brain_file).get_data(), copy=True)
 
 	#####################
@@ -196,7 +196,7 @@ def main(args):
 	######################
 	### Save Responses ###
 	######################
-	save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201221_neural_weighted_behavior/responses_{z}"
+	save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201221_neural_weighted_behavior/red/responses_{z}"
 	np.save(save_file, cluster_responses)
 
 if __name__ == '__main__':
