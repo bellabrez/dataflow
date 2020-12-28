@@ -134,18 +134,35 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-################################
-### NEURAL WEIGHTED BEHAVIOR ###
-################################
+# ################################
+# ### NEURAL WEIGHTED BEHAVIOR ###
+# ################################
+# job_ids = []
+# for z in [20]:
+#     args = {'logfile': logfile, 'z': z}
+#     script = 'neu_weighted_beh.py'
+#     job_id = flow.sbatch(jobname='neuwebeh',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+##########################
+### CLUSTERING FILTERS ###
+##########################
 job_ids = []
 for z in [20]:
-    args = {'logfile': logfile, 'z': z}
-    script = 'neu_weighted_beh.py'
-    job_id = flow.sbatch(jobname='neuwebeh',
+    args = {'logfile': logfile}
+    script = 'cluster_filters.py'
+    job_id = flow.sbatch(jobname='clstfilt',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=12, mem=22, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 
 for job_id in job_ids:
