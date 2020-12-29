@@ -388,7 +388,7 @@ for fly in flies:
     save_warp_params = True
     flip_X = False
     flip_Z = False
-    low_res = True
+    low_res = False
 
     args = {'logfile': logfile,
             'save_directory': save_directory,
