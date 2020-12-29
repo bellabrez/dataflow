@@ -19,7 +19,7 @@ width = 120 # width of print log
 nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
-flies = ['fly_088']
+flies = ['fly_084', 'fly_088', 'fly_091', 'fly_108']
 #flies = ['fly_089', 'fly_094', 'fly_100']
 
 #fly = 'fly_089'
