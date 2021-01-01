@@ -172,7 +172,7 @@ def main(args):
         ### Save Map Data ###
         #####################
         save_dir = os.path.join(save_directory, fly)
-        is not os.path.exists(save_dir):
+        if not os.path.exists(save_dir):
             os.mkdir(save_dir)
 
         save_file = os.path.join(save_dir, 'rvalues_{}_z{}'.format(behavior_to_corr, z))
