@@ -92,12 +92,12 @@ for behavior_to_corr in behaviors:
                 'save_directory': save_directory,
                 'behavior_to_corr': behavior_to_corr,
                 'z': z}
-        script = 'final_9_correlation.py'
+        script = 'final_9_idv_correlation.py'
         job_id = flow.sbatch(jobname='corr',
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
+                             logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
         job_ids.append(job_id)
 
 for job_id in job_ids:

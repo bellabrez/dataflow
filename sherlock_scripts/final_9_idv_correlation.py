@@ -137,7 +137,6 @@ def main(args):
     #####################
     ### Load Clusters ###
     #####################
-
     n_clusters = 2000
     labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/final_9_cluster_labels_2000.npy'
     cluster_model_labels = np.load(labels_file)
@@ -155,60 +154,32 @@ def main(args):
         flies[fly].load_brain_slice()
         flies[fly].get_cluster_averages(cluster_model_labels, n_clusters)
 
-    #####################
-    ### Pool behavior ###
-    #####################
-    not_clipped_behaviors = ['Y', 'Z', 'Ya', 'Za']
-    clipped_behaviors = ['Y_pos', 'Y_neg',
-                         'Z_pos', 'Z_neg',
-                         'Ya_pos', 'Ya_neg',
-                         'Za_pos', 'Za_neg']
-    all_behaviors = not_clipped_behaviors + clipped_behaviors
+    #################
+    ### Correlate ###
+    #################
+    for fly in flies:
+        r_values = []
+        p_values = []
+        for cluster in range(n_clusters):
+            Y = flies[fly].cluster_signals[cluster]
+            X = flies[fly].fictrac.fictrac[behavior_to_corr]
 
-    pooled_behavior = {}
-    for j, behavior in enumerate(all_behaviors):
-        pooled_behavior[behavior] = []
-        for i,fly in enumerate(flies):
-            pooled_behavior[behavior].append(flies[fly].fictrac.fictrac[behavior])
-        pooled_behavior[behavior] = np.asarray(pooled_behavior[behavior]).flatten()
+            r, p = scipy.stats.pearsonr(X, Y)
+            r_values.append(r)
+            p_values.append(p)
 
-    ###################
-    ### Correlation ###
-    ###################
-    
-    r_values = []
-    p_values = []
-    for cluster in range(n_clusters):
-        pooled_activity = []
-        for fly in flies:
-            pooled_activity.append(flies[fly].cluster_signals[cluster])
-        pooled_activity = np.asarray(pooled_activity).flatten()
+        #####################
+        ### Save Map Data ###
+        #####################
+        save_dir = os.path.join(save_directory, fly)
+        is not os.path.exists(save_dir):
+            os.mkdir(save_dir)
 
-        Y = pooled_activity
-        X = pooled_behavior[behavior_to_corr]
+        save_file = os.path.join(save_dir, 'rvalues_{}_z{}'.format(behavior_to_corr, z))
+        np.save(save_file, np.asarray(r_values))
 
-        r, p = scipy.stats.pearsonr(X, Y)
-        r_values.append(r)
-        p_values.append(p)
-
-        # CONFIRMED IDENTICAL ON 20210101
-        # Calculate p-value a 2nd way for comparison
-        # n = len(Y)
-        # t = (r*np.sqrt(n-2))/(np.sqrt(1-r**2))
-        # p_manual = scipy.stats.t.sf(abs(t), df=n-2)*2
-        # p_values_t_test.append(p_manual)
-
-        # if cluster%100 == 0:
-        #     printlog(str(cluster))
-
-    #####################
-    ### Save Map Data ###
-    #####################
-    save_file = os.path.join(save_directory, 'rvalues_{}_z{}'.format(behavior_to_corr, z))
-    np.save(save_file, np.asarray(r_values))
-
-    save_file = os.path.join(save_directory, 'pvalues_{}_z{}'.format(behavior_to_corr, z))
-    np.save(save_file, np.asarray(p_values))
+        save_file = os.path.join(save_dir, 'pvalues_{}_z{}'.format(behavior_to_corr, z))
+        np.save(save_file, np.asarray(p_values))
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))
