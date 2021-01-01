@@ -178,7 +178,6 @@ def main(args):
     
     r_values = []
     p_values = []
-    p_values_t_test = []
     for cluster in range(n_clusters):
         pooled_activity = []
         for fly in flies:
@@ -192,11 +191,12 @@ def main(args):
         r_values.append(r)
         p_values.append(p)
 
+        # CONFIRMED IDENTICAL ON 20210101
         # Calculate p-value a 2nd way for comparison
-        n = len(Y)
-        t = (r*np.sqrt(n-2))/(np.sqrt(1-r**2))
-        p_manual = scipy.stats.t.sf(abs(t), df=n-2)*2
-        p_values_t_test.append(p_manual)
+        # n = len(Y)
+        # t = (r*np.sqrt(n-2))/(np.sqrt(1-r**2))
+        # p_manual = scipy.stats.t.sf(abs(t), df=n-2)*2
+        # p_values_t_test.append(p_manual)
 
         if cluster%100 == 0:
             printlog(str(cluster))
@@ -209,9 +209,6 @@ def main(args):
 
     save_file = os.path.join(save_directory, 'pvalues_{}_z{}'.format(behavior_to_corr, z))
     np.save(save_file, np.asarray(p_values))
-
-    save_file = os.path.join(save_directory, 'pvaluesmanual_{}_z{}'.format(behavior_to_corr, z))
-    np.save(save_file, np.asarray(p_values_t_test))
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))

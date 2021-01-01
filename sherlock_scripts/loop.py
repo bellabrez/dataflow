@@ -83,21 +83,22 @@ printlog("")
 
 printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
 
-behavior_to_corr = 'Y_pos'
+behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
 job_ids = []
-for z in [20]:
-    save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210101_correlation/"
-    args = {'logfile': logfile,
-            'save_directory': save_directory,
-            'behavior_to_corr': behavior_to_corr,
-            'z': z}
-    script = 'final_9_correlation.py'
-    job_id = flow.sbatch(jobname='corr',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+for behavior_to_corr in behaviors:
+    for z in range(49):
+        save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210101_correlation/"
+        args = {'logfile': logfile,
+                'save_directory': save_directory,
+                'behavior_to_corr': behavior_to_corr,
+                'z': z}
+        script = 'final_9_correlation.py'
+        job_id = flow.sbatch(jobname='corr',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
+        job_ids.append(job_id)
 
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
