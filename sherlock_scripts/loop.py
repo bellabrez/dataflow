@@ -77,31 +77,48 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-###################
-### CORRELATION ###
-###################
+############
+### UMAP ###
+############
 
-printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
-
-behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
+printlog(f"\n{'   UMAP   ':=^{width}}")
 job_ids = []
-for behavior_to_corr in behaviors:
-    for z in range(49):
-        save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210101_correlation/"
-        args = {'logfile': logfile,
-                'save_directory': save_directory,
-                'behavior_to_corr': behavior_to_corr,
-                'z': z}
-        script = 'final_9_idv_correlation.py'
-        job_id = flow.sbatch(jobname='corr',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
-
+args = {'logfile': logfile}
+script = 'umap.py'
+job_id = flow.sbatch(jobname='umap',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=12, mem=23, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
+
+# ###################
+# ### CORRELATION ###
+# ###################
+
+# printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
+
+# behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
+# job_ids = []
+# for behavior_to_corr in behaviors:
+#     for z in range(49):
+#         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210101_correlation/"
+#         args = {'logfile': logfile,
+#                 'save_directory': save_directory,
+#                 'behavior_to_corr': behavior_to_corr,
+#                 'z': z}
+#         script = 'final_9_idv_correlation.py'
+#         job_id = flow.sbatch(jobname='corr',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # #################
 # ### Bootstrap ###
