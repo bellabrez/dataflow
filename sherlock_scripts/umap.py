@@ -13,7 +13,7 @@ import scipy
 import nibabel as nib
 import bigbadbrain as bbb
 import dataflow as flow
-import umap
+import umap.umap_ as umap
 
 def main(args):
 
