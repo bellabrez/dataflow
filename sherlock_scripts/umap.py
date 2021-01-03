@@ -53,7 +53,7 @@ def main(args):
 	# np.save(save_file, to_umap)
 	# printlog('SAVED!')
 	load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210103_super_brain/20210103_super_brain.npy'
-	to_umap = np.save(load_file)
+	to_umap = np.load(load_file)
 
 	t0 = time.time()
 	reducer = umap.UMAP(n_neighbors=60, min_dist=0)
