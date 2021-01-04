@@ -9,8 +9,8 @@ import textwrap
 import dataflow as flow
 
 #modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
-#modules = 'py-numpy/1.14.3_py36 viz py-pandas/0.23.0_py36' #using until 20210103
-modules = 'py-numpy/1.14.3_py36 viz py-matplotlib/2.2.2_py36 py-scipy/1.1.0_py36 py-scipystack/1.0_py36 py-pandas/0.23.0_py36'
+modules = 'py-numpy/1.14.3_py36 viz py-pandas/0.23.0_py36' #using until 20210103
+#modules = 'py-numpy/1.14.3_py36 viz py-matplotlib/2.2.2_py36 py-scipy/1.1.0_py36 py-scipystack/1.0_py36 py-pandas/0.23.0_py36'
 
 #########################
 ### Setup preferences ###
@@ -85,7 +85,7 @@ printlog("")
 printlog(f"\n{'   UMAP   ':=^{width}}")
 job_ids = []
 args = {'logfile': logfile}
-script = 'umap.py'
+script = 'umap_.py'
 job_id = flow.sbatch(jobname='umap',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
