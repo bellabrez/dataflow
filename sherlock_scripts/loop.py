@@ -84,15 +84,16 @@ printlog("")
 
 printlog(f"\n{'   Bout Triggered   ':=^{width}}")
 job_ids = []
-args = {'logfile': logfile,
-        'z': 20}
-script = 'bout_triggered.py'
-job_id = flow.sbatch(jobname='bouts',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
-job_ids.append(job_id)
+for z in range(49):
+    args = {'logfile': logfile,
+            'z': z}
+    script = 'bout_triggered.py'
+    job_id = flow.sbatch(jobname='bouts',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
