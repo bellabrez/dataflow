@@ -78,24 +78,41 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-######################
-### BOUT TRIGGERED ###
-######################
+###########
+### PCA ###
+###########
 
-printlog(f"\n{'   Bout Triggered   ':=^{width}}")
+printlog(f"\n{'   PCA   ':=^{width}}")
 job_ids = []
-for z in range(49):
-    args = {'logfile': logfile,
-            'z': z}
-    script = 'bout_triggered.py'
-    job_id = flow.sbatch(jobname='bouts',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+args = {'logfile': logfile}
+script = 'pca_of_final_9.py'
+job_id = flow.sbatch(jobname='pca',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=96, mem=23, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
+
+# ######################
+# ### BOUT TRIGGERED ###
+# ######################
+
+# printlog(f"\n{'   Bout Triggered   ':=^{width}}")
+# job_ids = []
+# for z in range(49):
+#     args = {'logfile': logfile,
+#             'z': z}
+#     script = 'bout_triggered.py'
+#     job_id = flow.sbatch(jobname='bouts',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=2, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # ############
 # ### UMAP ###
