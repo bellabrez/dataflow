@@ -78,36 +78,51 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-##########################
-### BUILD POOLED BRAIN ###
-##########################
+###########
+### PCA ###
+###########
 
-printlog(f"\n{'   BUILD POOLED BRAIN   ':=^{width}}")
+printlog(f"\n{'   PCA   ':=^{width}}")
+X_type = 'single_slice'
 job_ids = []
-args = {'logfile': logfile}
-script = 'build_final_9_pooled_brain.py'
-job_id = flow.sbatch(jobname='bdlbrn',
+args = {'logfile': logfile, 'X_type': X_type}
+script = 'pca_of_final_9.py'
+job_id = flow.sbatch(jobname='pca',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=2, mem=23, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=12, mem=23, nice=nice, nodes=nodes) # 2 to 1
 job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
-# ###########
-# ### PCA ###
-# ###########
+printlog(f"\n{'   PCA   ':=^{width}}")
+X_type = 'all_slices'
+job_ids = []
+args = {'logfile': logfile, 'X_type': X_type}
+script = 'pca_of_final_9.py'
+job_id = flow.sbatch(jobname='pca',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=96, mem=23, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
-# printlog(f"\n{'   PCA   ':=^{width}}")
+# ##########################
+# ### BUILD POOLED BRAIN ###
+# ##########################
+
+# printlog(f"\n{'   BUILD POOLED BRAIN   ':=^{width}}")
 # job_ids = []
 # args = {'logfile': logfile}
-# script = 'pca_of_final_9.py'
-# job_id = flow.sbatch(jobname='pca',
+# script = 'build_final_9_pooled_brain.py'
+# job_id = flow.sbatch(jobname='bdlbrn',
 #                      script=os.path.join(scripts_path, script),
 #                      modules=modules,
 #                      args=args,
-#                      logfile=logfile, time=96, mem=23, nice=nice, nodes=nodes) # 2 to 1
+#                      logfile=logfile, time=2, mem=23, nice=nice, nodes=nodes) # 2 to 1
 # job_ids.append(job_id)
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
