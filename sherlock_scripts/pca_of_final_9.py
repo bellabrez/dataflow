@@ -41,11 +41,14 @@ def main(args):
     elif X_type == 'two_fly':
         X = np.reshape(brain[:,:,:,0:2], (2000*49,3384*2))
         X = X.T
-    else:
+    elif X_type == 'all_slice'
         X = np.reshape(brain, (2000*49,3384*9))
         # 98000, 30456
         X = X.T
         # 30456, 98000
+    else:
+        printlog('INVALID X_TYPE')
+        return
 
     printlog('X is time by voxels {}'.format(X.shape))
     
@@ -57,9 +60,15 @@ def main(args):
     printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
     save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210119_pca_scores_{X_type}.npy'
     np.save(save_file, pca_scores)
+    printlog('scores saved')
 
     pca_loadings = pca.transform(X)
     printlog('Loadings is time by PC {}'.format(pca_loadings.shape))
+
+    printlog('deleting X for memory')
+    X = None
+    time.sleep(10)
+
     save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210119_pca_loadings_{X_type}.npy'
     np.save(save_file, pca_loadings)
     printlog('SAVING COMPLETE')
