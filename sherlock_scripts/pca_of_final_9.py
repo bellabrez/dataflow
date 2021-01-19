@@ -41,7 +41,7 @@ def main(args):
     elif X_type == 'two_fly':
         X = np.reshape(brain[:,:,:,0:2], (2000*49,3384*2))
         X = X.T
-    elif X_type == 'all_slice'
+    elif X_type == 'all_slice':
         X = np.reshape(brain, (2000*49,3384*9))
         # 98000, 30456
         X = X.T
