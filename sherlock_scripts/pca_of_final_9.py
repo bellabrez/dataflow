@@ -38,6 +38,9 @@ def main(args):
     elif X_type == 'one_fly':
         X = np.reshape(brain[:,:,:,0], (2000*49,3384))
         X = X.T
+    elif X_type == 'two_fly':
+        X = np.reshape(brain[:,:,:,0:2], (2000*49,3384*2))
+        X = X.T
     else:
         X = np.reshape(brain, (2000*49,3384*9))
         # 98000, 30456

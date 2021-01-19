@@ -83,7 +83,7 @@ printlog("")
 ###########
 
 printlog(f"\n{'   PCA   ':=^{width}}")
-for X_type in ['two_slice_near', 'two_slice_far', 'one_fly']:
+for X_type in ['two_fly']:
     job_ids = []
     args = {'logfile': logfile, 'X_type': X_type}
     script = 'pca_of_final_9.py'
