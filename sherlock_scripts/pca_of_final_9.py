@@ -46,6 +46,12 @@ def main(args):
         # 98000, 30456
         X = X.T
         # 30456, 98000
+    elif X_type == 'trimmed_zs':
+        X = np.reshape(brain[:,7:42,:,:], (-1,3384*9))
+        X = X.T
+    elif X_type == 'five_fly':
+        X = np.reshape(brain[:,:,:,0:5], (2000*49,-1))
+        X = X.T
     else:
         printlog('INVALID X_TYPE')
         return

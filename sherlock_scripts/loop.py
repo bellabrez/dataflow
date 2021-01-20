@@ -83,8 +83,8 @@ printlog("")
 ###########
 
 printlog(f"\n{'   PCA   ':=^{width}}")
-for X_type in ['all_slice']:
-    job_ids = []
+job_ids = []
+for X_type in ['trimmed_zs']:
     args = {'logfile': logfile, 'X_type': X_type}
     script = 'pca_of_final_9.py'
     job_id = flow.sbatch(jobname='pca',
@@ -96,19 +96,19 @@ for X_type in ['all_slice']:
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
 
-# printlog(f"\n{'   PCA   ':=^{width}}")
-# X_type = 'all_slices'
-# job_ids = []
-# args = {'logfile': logfile, 'X_type': X_type}
-# script = 'pca_of_final_9.py'
-# job_id = flow.sbatch(jobname='pca',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=96, mem=23, nice=nice, nodes=nodes) # 2 to 1
-# job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+printlog(f"\n{'   PCA   ':=^{width}}")
+X_type = 'five_fly'
+job_ids = []
+args = {'logfile': logfile, 'X_type': X_type}
+script = 'pca_of_final_9.py'
+job_id = flow.sbatch(jobname='pca',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=24, mem=23, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # ##########################
 # ### BUILD POOLED BRAIN ###
