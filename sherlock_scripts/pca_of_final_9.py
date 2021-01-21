@@ -11,6 +11,7 @@ import bigbadbrain as bbb
 import dataflow as flow
 
 from sklearn.decomposition import PCA
+from sklearn.decomposition import IncrementalPCA
 
 def main(args):
 
@@ -59,12 +60,12 @@ def main(args):
     printlog('X is time by voxels {}'.format(X.shape))
     
     printlog('PCA START...')
-    pca = PCA().fit(X)
+    pca = IncrementalPCA().fit(X)
     printlog('PCA COMPLETE')
 
     pca_scores = pca.components_
     printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210119_pca_scores_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210121_pca_scores_{X_type}.npy'
     np.save(save_file, pca_scores)
     printlog('scores saved')
 
@@ -75,7 +76,7 @@ def main(args):
     X = None
     time.sleep(10)
 
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210119_pca_loadings_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210121_pca_loadings_{X_type}.npy'
     np.save(save_file, pca_loadings)
     printlog('SAVING COMPLETE')
 
