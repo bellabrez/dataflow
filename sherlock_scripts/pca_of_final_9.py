@@ -1,23 +1,19 @@
-import os
 import sys
 import numpy as np
-import argparse
-import subprocess
 import json
 import time
-from scipy.ndimage import gaussian_filter1d
-import nibabel as nib
-import bigbadbrain as bbb
 import dataflow as flow
 
 from sklearn.decomposition import PCA
-from sklearn.decomposition import IncrementalPCA
+#from sklearn.decomposition import IncrementalPCA
 
 def main(args):
 
     logfile = args['logfile']
     X_type = args['X_type']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
+
+    printlog('numpy: ' + str(np.__version__))
 
     load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210115_super_brain.npy'
     brain = np.load(load_file)
