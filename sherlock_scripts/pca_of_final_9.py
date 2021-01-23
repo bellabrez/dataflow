@@ -61,7 +61,7 @@ def main(args):
 
     pca_scores = pca.components_
     printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210121_pca_scores_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210123_pca_scores_{X_type}.npy'
     np.save(save_file, pca_scores)
     printlog('scores saved')
 
@@ -72,7 +72,7 @@ def main(args):
     X = None
     time.sleep(10)
 
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210121_pca_loadings_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210123_pca_loadings_{X_type}.npy'
     np.save(save_file, pca_loadings)
     printlog('SAVING COMPLETE')
 
