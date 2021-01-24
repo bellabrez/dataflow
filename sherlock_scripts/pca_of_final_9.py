@@ -56,7 +56,7 @@ def main(args):
     printlog('X is time by voxels {}'.format(X.shape))
     
     printlog('PCA START...')
-    pca = IncrementalPCA().fit(X)
+    pca = PCA().fit(X)
     printlog('PCA COMPLETE')
 
     pca_scores = pca.components_
