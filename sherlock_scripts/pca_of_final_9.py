@@ -49,6 +49,9 @@ def main(args):
     elif X_type == 'seven_fly_trimmed_zs':
         X = np.reshape(brain[:,7:42,:,:7], (-1,3384*7))
         X = X.T
+    elif X_type == 'all_fly_trimmed_zs':
+        X = np.reshape(brain[:,7:42,:,:], (-1,3384*9))
+        X = X.T
     elif X_type == 'five_fly':
         X = np.reshape(brain[:,:,:,0:5], (2000*49,-1))
         X = X.T
