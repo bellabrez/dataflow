@@ -102,7 +102,9 @@ def clean_anat(in_file, save_dir):
 	### Perform quantile normalization ###
 	print('quantile_norm')
 	brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
+	print('1')
 	brain_out = brain_out.reshape(brain.shape)
+	print('2')
 	np.nan_to_num(brain_out, copy=False)
 
 	### Save brain ###
