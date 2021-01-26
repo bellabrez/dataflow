@@ -40,9 +40,9 @@ def main():
 
 	save_dir = os.path.join(main_dir, 'clean_anats')
 	if not os.path.exists(save_dir):
-    	os.mkdir(save_dir)
+		os.mkdir(save_dir)
 
-    print('start cleaning')
+	print('start cleaning')
 	clean_anat(os.path.join(raw_dir, anats[0]), save_dir)
 	print('finished cleaning')
 
@@ -62,80 +62,80 @@ def main():
 	# Align all fly brains (and their mirrors) to affine_1_mean.nii
 
 def avg_brains(input_directory, save_directory, save_name):
-    ### Load Brains ###
-    files = os.listdir(input_directory)
-    bigbrain = np.zeros((len(files), 1024, 512, 256), dtype='float32',order='F')
-    for i, file in enumerate(files):
-        printlog(F"loading {file}")
-        bigbrain[i,...] = np.asarray(nib.load(os.path.join(input_directory, file)).get_data(), dtype='float32')
+	### Load Brains ###
+	files = os.listdir(input_directory)
+	bigbrain = np.zeros((len(files), 1024, 512, 256), dtype='float32',order='F')
+	for i, file in enumerate(files):
+		printlog(F"loading {file}")
+		bigbrain[i,...] = np.asarray(nib.load(os.path.join(input_directory, file)).get_data(), dtype='float32')
 
-    ### Avg ###
-    meanbrain = np.mean(bigbrain, axis=0)
+	### Avg ###
+	meanbrain = np.mean(bigbrain, axis=0)
 
-    ### Save ###
-    save_file = os.path.join(save_directory, save_name + '.nii')
-    nib.Nifti1Image(meanbrain, np.eye(4)).to_filename(save_file)
-    printlog(F"Saved {save_file}")
+	### Save ###
+	save_file = os.path.join(save_directory, save_name + '.nii')
+	nib.Nifti1Image(meanbrain, np.eye(4)).to_filename(save_file)
+	printlog(F"Saved {save_file}")
 
 def align_anat():
 	pass
 
 def clean_anat(in_file, save_dir):
-    ### Load brain ###
-    #file = os.path.join(directory, 'stitched_brain_red_mean.nii') 
-    brain = np.asarray(nib.load(in_file).get_data(), dtype='float32')
+	### Load brain ###
+	#file = os.path.join(directory, 'stitched_brain_red_mean.nii') 
+	brain = np.asarray(nib.load(in_file).get_data(), dtype='float32')
 
-    ### Blur brain and mask small values ###
-    brain_copy = brain.copy().astype('float32')
-    brain_copy = scipy.ndimage.filters.gaussian_filter(brain_copy, sigma=10)
-    threshold = triangle(brain_copy)
-    brain_copy[np.where(brain_copy < threshold/2)] = 0
+	### Blur brain and mask small values ###
+	brain_copy = brain.copy().astype('float32')
+	brain_copy = scipy.ndimage.filters.gaussian_filter(brain_copy, sigma=10)
+	threshold = triangle(brain_copy)
+	brain_copy[np.where(brain_copy < threshold/2)] = 0
 
-    ### Remove blobs outside contiguous brain ###
-    labels, label_nb = scipy.ndimage.label(brain_copy)
-    brain_label = np.bincount(labels.flatten())[1:].argmax()+1
-    brain_copy = brain.copy().astype('float32')
-    brain_copy[np.where(labels != brain_label)] = np.nan
+	### Remove blobs outside contiguous brain ###
+	labels, label_nb = scipy.ndimage.label(brain_copy)
+	brain_label = np.bincount(labels.flatten())[1:].argmax()+1
+	brain_copy = brain.copy().astype('float32')
+	brain_copy[np.where(labels != brain_label)] = np.nan
 
-    ### Perform quantile normalization ###
-    brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
-    brain_out = brain_out.reshape(brain.shape)
-    np.nan_to_num(brain_out, copy=False)
+	### Perform quantile normalization ###
+	brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
+	brain_out = brain_out.reshape(brain.shape)
+	np.nan_to_num(brain_out, copy=False)
 
-    ### Save brain ###
-    fname = in_file.split('/')[-1].split('.')[0]
-    save_file = os.path.join(save_dir, f'{fname}_clean.nii')
-    aff = np.eye(4)
-    img = nib.Nifti1Image(brain_out, aff)
-    img.to_filename(save_file)
+	### Save brain ###
+	fname = in_file.split('/')[-1].split('.')[0]
+	save_file = os.path.join(save_dir, f'{fname}_clean.nii')
+	aff = np.eye(4)
+	img = nib.Nifti1Image(brain_out, aff)
+	img.to_filename(save_file)
 
 def sharpen_anat(directory, file):
-    ### Load brain ###
-    #file = os.path.join(directory, 'anat_red_clean.nii') 
-    brain = np.asarray(nib.load(file).get_data(), dtype='float32')
+	### Load brain ###
+	#file = os.path.join(directory, 'anat_red_clean.nii') 
+	brain = np.asarray(nib.load(file).get_data(), dtype='float32')
 
-    # renormalize to .3-.7
-    a = .3
-    b = .7
-    brain_input = a + (brain)*(b-a)
+	# renormalize to .3-.7
+	a = .3
+	b = .7
+	brain_input = a + (brain)*(b-a)
 
-    # sharpen
-    brain_sharp = unsharp_mask(brain_input, radius=3, amount=7)
+	# sharpen
+	brain_sharp = unsharp_mask(brain_input, radius=3, amount=7)
 
-    # make background nan
-    brain_copy = brain_sharp.copy()
-    brain_copy[np.where(brain_input < .31)] = np.nan
+	# make background nan
+	brain_copy = brain_sharp.copy()
+	brain_copy[np.where(brain_input < .31)] = np.nan
 
-    # renormalize via quantile
-    brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
-    brain_out = brain_out.reshape(brain.shape);
-    np.nan_to_num(brain_out, copy=False);
+	# renormalize via quantile
+	brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
+	brain_out = brain_out.reshape(brain.shape);
+	np.nan_to_num(brain_out, copy=False);
 
-    ### Save brain ###
-    save_file = os.path.join(directory, 'anat_red_clean_sharp.nii')
-    aff = np.eye(4)
-    img = nib.Nifti1Image(brain_out, aff)
-    img.to_filename(save_file)
+	### Save brain ###
+	save_file = os.path.join(directory, 'anat_red_clean_sharp.nii')
+	aff = np.eye(4)
+	img = nib.Nifti1Image(brain_out, aff)
+	img.to_filename(save_file)
 
 if __name__ == '__main__':
-    main()
+	main()
