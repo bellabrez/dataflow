@@ -61,15 +61,15 @@ def main(args):
 
     printlog('X is time by voxels {}'.format(X.shape))
     
-    covariance_matrix = np.cov(X.T)
+    covariance_matrix = np.cov(X) #removed .T
     eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
     printlog('eigen_values is {}'.format(eigen_values.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210125_eigen_values_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210126_eigen_values_{X_type}.npy'
     np.save(save_file, eigen_values)
 
     printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210125_eigen_vectors_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210126_eigen_vectors_{X_type}.npy'
     np.save(save_file, eigen_vectors)
 
     # printlog('PCA START...')
