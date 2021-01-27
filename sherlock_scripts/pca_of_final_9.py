@@ -52,6 +52,9 @@ def main(args):
     elif X_type == 'all_fly_trimmed_zs':
         X = np.reshape(brain[:,7:42,:,:], (-1,3384*9))
         X = X.T
+    elif X_type == 'all_fly_trimmed_zs_more':
+        X = np.reshape(brain[:,15:35,:,:], (-1,3384*9))
+        X = X.T
     elif X_type == 'five_fly':
         X = np.reshape(brain[:,:,:,0:5], (2000*49,-1))
         X = X.T
@@ -61,7 +64,7 @@ def main(args):
 
     printlog('X is time by voxels {}'.format(X.shape))
     
-    covariance_matrix = np.cov(X.T) #removed .T
+    covariance_matrix = np.cov(X.T)
     eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
     printlog('eigen_values is {}'.format(eigen_values.shape))
