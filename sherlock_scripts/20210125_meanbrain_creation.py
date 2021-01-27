@@ -38,13 +38,32 @@ def main():
 	anats = os.listdir(raw_dir)
 	print('found raw anats: {}'.format(anats))
 
-	save_dir = os.path.join(main_dir, 'clean_anats')
-	if not os.path.exists(save_dir):
-		os.mkdir(save_dir)
+	clean_dir = os.path.join(main_dir, 'clean_anats')
+	if not os.path.exists(clean_dir):
+		os.mkdir(clean_dir)
 
-	print('start cleaning')
-	clean_anat(os.path.join(raw_dir, anats[0]), save_dir)
-	print('finished cleaning')
+	print('*** Start Cleaning ***')
+	for anat in anats:
+		print('cleaning {}'.format(anat))
+		clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	print('*** Finished Cleaning ***')
+
+	############################
+	### 2) Sharpen Anatomies ###
+	############################
+	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	clean_anats = os.listdir(clean_dir)
+	print('found clean anats: {}'.format(clean_anats))
+
+	sharp_dir = os.path.join(main_dir, 'sharp_anats')
+	if not os.path.exists(sharp_dir):
+		os.mkdir(sharp_dir)
+
+	print('*** Start Sharpening ***')
+	for anat in clean_anats:
+		print('sharpening {}'.format(anat))
+		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	print('*** Finished Sharpening ***')
 
 	################
 	### Affine_0 ###
@@ -86,39 +105,33 @@ def clean_anat(in_file, save_dir):
 	brain = np.asarray(nib.load(in_file).get_data(), dtype='float32')
 
 	### Blur brain and mask small values ###
-	print('masking')
 	brain_copy = brain.copy().astype('float32')
 	brain_copy = scipy.ndimage.filters.gaussian_filter(brain_copy, sigma=10)
 	threshold = triangle(brain_copy)
 	brain_copy[np.where(brain_copy < threshold/2)] = 0
 
 	### Remove blobs outside contiguous brain ###
-	print('removing blobs')
 	labels, label_nb = scipy.ndimage.label(brain_copy)
 	brain_label = np.bincount(labels.flatten())[1:].argmax()+1
 	brain_copy = brain.copy().astype('float32')
 	brain_copy[np.where(labels != brain_label)] = np.nan
 
 	### Perform quantile normalization ###
-	print('quantile_norm')
 	brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
-	print('1')
 	brain_out = brain_out.reshape(brain.shape)
-	print('2')
 	np.nan_to_num(brain_out, copy=False)
 
 	### Save brain ###
-	print('saving')
 	fname = in_file.split('/')[-1].split('.')[0]
 	save_file = os.path.join(save_dir, f'{fname}_clean.nii')
 	aff = np.eye(4)
 	img = nib.Nifti1Image(brain_out, aff)
 	img.to_filename(save_file)
 
-def sharpen_anat(directory, file):
+def sharpen_anat(in_file, save_dir):
 	### Load brain ###
 	#file = os.path.join(directory, 'anat_red_clean.nii') 
-	brain = np.asarray(nib.load(file).get_data(), dtype='float32')
+	brain = np.asarray(nib.load(in_file).get_data(), dtype='float32')
 
 	# renormalize to .3-.7
 	a = .3
@@ -138,7 +151,8 @@ def sharpen_anat(directory, file):
 	np.nan_to_num(brain_out, copy=False);
 
 	### Save brain ###
-	save_file = os.path.join(directory, 'anat_red_clean_sharp.nii')
+	fname = in_file.split('/')[-1].split('.')[0]
+	save_file = os.path.join(save_dir, f'{fname}_sharp.nii')
 	aff = np.eye(4)
 	img = nib.Nifti1Image(brain_out, aff)
 	img.to_filename(save_file)
