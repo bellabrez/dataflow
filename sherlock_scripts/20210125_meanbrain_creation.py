@@ -1,14 +1,19 @@
 import os
 import sys
 import json
+import time
 from time import sleep
 import datetime
 import numpy as np
 import nibabel as nib
 import scipy
+import warnings
 from skimage.filters import threshold_triangle as triangle
 from sklearn.preprocessing import quantile_transform
 from skimage.filters import unsharp_mask
+
+sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
+import ants
 
 def main():
 	'''
@@ -28,47 +33,61 @@ def main():
 
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
 	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210126_alignment_package"
-	seed_brain = ""
-
-	##########################
-	### 1) Clean Anatomies ###
-	##########################
-	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
-	raw_dir = os.path.join(main_dir, 'raw_anats')
-	anats = os.listdir(raw_dir)
-	print('found raw anats: {}'.format(anats))
-
 	clean_dir = os.path.join(main_dir, 'clean_anats')
-	if not os.path.exists(clean_dir):
-		os.mkdir(clean_dir)
-
-	print('*** Start Cleaning ***')
-	for anat in anats:
-		print('cleaning {}'.format(anat))
-		clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	print('*** Finished Cleaning ***')
-
-	############################
-	### 2) Sharpen Anatomies ###
-	############################
-	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	clean_anats = os.listdir(clean_dir)
-	print('found clean anats: {}'.format(clean_anats))
-
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
-	if not os.path.exists(sharp_dir):
-		os.mkdir(sharp_dir)
 
-	print('*** Start Sharpening ***')
-	for anat in clean_anats:
-		print('sharpening {}'.format(anat))
-		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	print('*** Finished Sharpening ***')
+	# ##########################
+	# ### 1) Clean Anatomies ###
+	# ##########################
+	# # Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
+	# raw_dir = os.path.join(main_dir, 'raw_anats')
+	# anats = os.listdir(raw_dir)
+	# print('found raw anats: {}'.format(anats))
+
+	# if not os.path.exists(clean_dir):
+	# 	os.mkdir(clean_dir)
+
+	# print('*** Start Cleaning ***')
+	# for anat in anats:
+	# 	print('cleaning {}'.format(anat))
+	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	# print('*** Finished Cleaning ***')
+
+	# ############################
+	# ### 2) Sharpen Anatomies ###
+	# ############################
+	# # Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	# clean_anats = os.listdir(clean_dir)
+	# print('found clean anats: {}'.format(clean_anats))
+
+	# if not os.path.exists(sharp_dir):
+	# 	os.mkdir(sharp_dir)
+
+	# print('*** Start Sharpening ***')
+	# for anat in clean_anats:
+	# 	print('sharpening {}'.format(anat))
+	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	# print('*** Finished Sharpening ***')
 
 	###################
 	### 3) Affine_0 ###
 	###################
 	# Align all fly brains (and their mirrors) to a chosen seed brain
+	save_dir = os.path.join(main_dir, 'affine_0')
+	if not os.path.exists(save_dir):
+		os.mkdir(save_dir)
+
+	fixed_path = os.path.join(main_dir, 'seed', 'seed_fly91_clean_20200803.nii')
+	resolution = (0.65, 0.65, 1)
+	type_of_transform = 'Affine'
+
+	anats = os.listdir(clean_dir)
+	for anat in anats:
+		moving_path = os.path.join(clean_dir, anat)
+		for mirror in [True, False]:
+			t0 = time.time()
+			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
+			print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
 
 	################
 	### Affine_1 ###
@@ -96,8 +115,32 @@ def avg_brains(input_directory, save_directory, save_name):
 	nib.Nifti1Image(meanbrain, np.eye(4)).to_filename(save_file)
 	printlog(F"Saved {save_file}")
 
-def align_anat():
-	pass
+def align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror):
+	### Load fixed brain
+    fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
+    fixed = ants.from_numpy(fixed)
+    fixed.set_spacing(resolution)
+
+	### Load moving brain
+    moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
+    if mirror:
+        moving = moving[::-1,:,:]
+    moving = ants.from_numpy(moving)
+    moving.set_spacing(resolution)
+
+    ### Align
+	with stderr_redirected(): # to prevent dumb itk gaussian error bullshit infinite printing
+    	moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
+
+    ### Save
+    fixed_fly = fixed_path.split('/')[-1].split('.')[0]
+    moving_fly = moving_path.split('/')[-1].split('.')[0]
+    if mirror:
+        save_file = os.path.join(save_dir, moving_fly + '_m' + '-to-' + fixed_fly)
+    else:
+        save_file = os.path.join(save_dir, moving_fly + '-to-' + fixed_fly)
+    save_file += '.nii'
+    nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
 
 def clean_anat(in_file, save_dir):
 	### Load brain ###
@@ -156,6 +199,26 @@ def sharpen_anat(in_file, save_dir):
 	aff = np.eye(4)
 	img = nib.Nifti1Image(brain_out, aff)
 	img.to_filename(save_file)
+
+@contextmanager
+def stderr_redirected(to=os.devnull):
+
+    fd = sys.stderr.fileno()
+
+    def _redirect_stderr(to):
+        sys.stderr.close() # + implicit flush()
+        os.dup2(to.fileno(), fd) # fd writes to 'to' file
+        sys.stderr = os.fdopen(fd, 'w') # Python writes to fd
+
+    with os.fdopen(os.dup(fd), 'w') as old_stderr:
+        with open(to, 'w') as file:
+            _redirect_stderr(to=file)
+        try:
+            yield # allow code to be run with the redirected stdout
+        finally:
+            _redirect_stderr(to=old_stderr) # restore stdout.
+                                            # buffering and flags such as
+                                            # CLOEXEC may be different
 
 if __name__ == '__main__':
 	main()
