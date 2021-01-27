@@ -86,7 +86,7 @@ printlog("")
 
 printlog(f"\n{'   PCA   ':=^{width}}")
 job_ids = []
-for X_type in ['single_slice']:
+for X_type in ['two_slice_near']:
     args = {'logfile': logfile, 'X_type': X_type}
     script = 'pca_of_final_9.py'
     job_id = flow.sbatch(jobname='pca',

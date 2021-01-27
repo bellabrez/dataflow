@@ -65,9 +65,9 @@ def main():
 		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
 	print('*** Finished Sharpening ***')
 
-	################
-	### Affine_0 ###
-	################
+	###################
+	### 3) Affine_0 ###
+	###################
 	# Align all fly brains (and their mirrors) to a chosen seed brain
 
 	################
