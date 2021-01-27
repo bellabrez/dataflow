@@ -81,6 +81,7 @@ def main():
 	resolution = (0.65, 0.65, 1)
 	type_of_transform = 'Affine'
 
+	print('*** Start Affine_0 ***')
 	anats = os.listdir(clean_dir)
 	for anat in anats:
 		moving_path = os.path.join(clean_dir, anat)
@@ -88,6 +89,7 @@ def main():
 			t0 = time.time()
 			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
 			print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
+	print('*** Finished Affine_0 ***')
 
 	################
 	### Affine_1 ###
@@ -117,30 +119,30 @@ def avg_brains(input_directory, save_directory, save_name):
 
 def align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror):
 	### Load fixed brain
-    fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
-    fixed = ants.from_numpy(fixed)
-    fixed.set_spacing(resolution)
+	fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
+	fixed = ants.from_numpy(fixed)
+	fixed.set_spacing(resolution)
 
 	### Load moving brain
-    moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
-    if mirror:
-        moving = moving[::-1,:,:]
-    moving = ants.from_numpy(moving)
-    moving.set_spacing(resolution)
+	moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
+	if mirror:
+		moving = moving[::-1,:,:]
+	moving = ants.from_numpy(moving)
+	moving.set_spacing(resolution)
 
-    ### Align
+	### Align
 	with stderr_redirected(): # to prevent dumb itk gaussian error bullshit infinite printing
-    	moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
+		moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
 
-    ### Save
-    fixed_fly = fixed_path.split('/')[-1].split('.')[0]
-    moving_fly = moving_path.split('/')[-1].split('.')[0]
-    if mirror:
-        save_file = os.path.join(save_dir, moving_fly + '_m' + '-to-' + fixed_fly)
-    else:
-        save_file = os.path.join(save_dir, moving_fly + '-to-' + fixed_fly)
-    save_file += '.nii'
-    nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
+	### Save
+	fixed_fly = fixed_path.split('/')[-1].split('.')[0]
+	moving_fly = moving_path.split('/')[-1].split('.')[0]
+	if mirror:
+		save_file = os.path.join(save_dir, moving_fly + '_m' + '-to-' + fixed_fly)
+	else:
+		save_file = os.path.join(save_dir, moving_fly + '-to-' + fixed_fly)
+	save_file += '.nii'
+	nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
 
 def clean_anat(in_file, save_dir):
 	### Load brain ###
@@ -203,22 +205,22 @@ def sharpen_anat(in_file, save_dir):
 @contextmanager
 def stderr_redirected(to=os.devnull):
 
-    fd = sys.stderr.fileno()
+	fd = sys.stderr.fileno()
 
-    def _redirect_stderr(to):
-        sys.stderr.close() # + implicit flush()
-        os.dup2(to.fileno(), fd) # fd writes to 'to' file
-        sys.stderr = os.fdopen(fd, 'w') # Python writes to fd
+	def _redirect_stderr(to):
+		sys.stderr.close() # + implicit flush()
+		os.dup2(to.fileno(), fd) # fd writes to 'to' file
+		sys.stderr = os.fdopen(fd, 'w') # Python writes to fd
 
-    with os.fdopen(os.dup(fd), 'w') as old_stderr:
-        with open(to, 'w') as file:
-            _redirect_stderr(to=file)
-        try:
-            yield # allow code to be run with the redirected stdout
-        finally:
-            _redirect_stderr(to=old_stderr) # restore stdout.
-                                            # buffering and flags such as
-                                            # CLOEXEC may be different
+	with os.fdopen(os.dup(fd), 'w') as old_stderr:
+		with open(to, 'w') as file:
+			_redirect_stderr(to=file)
+		try:
+			yield # allow code to be run with the redirected stdout
+		finally:
+			_redirect_stderr(to=old_stderr) # restore stdout.
+											# buffering and flags such as
+											# CLOEXEC may be different
 
 if __name__ == '__main__':
 	main()
