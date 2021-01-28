@@ -70,27 +70,30 @@ def main():
 	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
 	# print('*** Finished Sharpening ***')
 
-	###################
-	### 3) Affine_0 ###
-	###################
-	# Align all fly brains (and their mirrors) to a chosen seed brain
+	# ###################
+	# ### 3) Affine_0 ###
+	# ###################
+	# # Align all fly brains (and their mirrors) to a chosen seed brain
+	# save_dir = os.path.join(main_dir, 'affine_0')
+	# if not os.path.exists(save_dir):
+	# 	os.mkdir(save_dir)
+
+	# fixed_path = os.path.join(main_dir, 'seed', 'seed_fly91_clean_20200803.nii')
+	# resolution = (0.65, 0.65, 1)
+	# type_of_transform = 'Affine'
+
+	# print('*** Start Affine_0 ***')
+	# anats = os.listdir(clean_dir)
+	# for anat in anats:
+	# 	moving_path = os.path.join(clean_dir, anat)
+	# 	for mirror in [True, False]:
+	# 		t0 = time.time()
+	# 		align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
+	# 		print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
+	# print('*** Finished Affine_0 ***')
+
 	save_dir = os.path.join(main_dir, 'affine_0')
-	if not os.path.exists(save_dir):
-		os.mkdir(save_dir)
-
-	fixed_path = os.path.join(main_dir, 'seed', 'seed_fly91_clean_20200803.nii')
-	resolution = (0.65, 0.65, 1)
-	type_of_transform = 'Affine'
-
-	print('*** Start Affine_0 ***')
-	anats = os.listdir(clean_dir)
-	for anat in anats:
-		moving_path = os.path.join(clean_dir, anat)
-		for mirror in [True, False]:
-			t0 = time.time()
-			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
-			print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
-	print('*** Finished Affine_0 ***')
+	avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='affine_0')
 
 	################
 	### Affine_1 ###
