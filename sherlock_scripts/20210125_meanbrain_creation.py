@@ -110,7 +110,7 @@ def avg_brains(input_directory, save_directory, save_name):
 	files = os.listdir(input_directory)
 	bigbrain = np.zeros((len(files), 1024, 512, 256), dtype='float32',order='F')
 	for i, file in enumerate(files):
-		printlog(F"loading {file}")
+		print(F"loading {file}")
 		bigbrain[i,...] = np.asarray(nib.load(os.path.join(input_directory, file)).get_data(), dtype='float32')
 
 	### Avg ###
