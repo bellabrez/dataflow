@@ -14,6 +14,7 @@ import nibabel as nib
 import bigbadbrain as bbb
 import dataflow as flow
 import umap
+import psutil
 
 def main(args):
 
