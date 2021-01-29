@@ -34,22 +34,23 @@ def main(args):
 	#####################
 	### Load Each fly ###
 	#####################
+	reduce_factor = 4
 	dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
 	fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
-	super_brain = np.zeros((256,128,49,int(3384/2),9),dtype='float32')
+	super_brain = np.zeros((256,128,49,int(3384/reduce_factor),9),dtype='float32')
 	memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
 	printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
-	
+
 	for i,fly in enumerate(fly_names):
 		printlog(fly)
 		brain_file = os.path.join(dataset_path, fly, 'func_0', 'brain_zscored_green_high_pass_masked_warped.nii')
-		super_brain[:,:,:,:,i] = np.array(nib.load(brain_file).get_data(), copy=True)[:,:,:,::2]
+		super_brain[:,:,:,:,i] = np.array(nib.load(brain_file).get_data(), copy=True)[:,:,:,::reduce_factor]
 
 		memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
 		printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
 
 	printlog('reshaping brain...')
-	super_brain = np.reshape(super_brain, (256*128*49,int(3384/2)*9))
+	super_brain = np.reshape(super_brain, (256*128*49,int(3384/reduce_factorx)*9))
 	printlog('done')
 
 	t0 = time.time()
