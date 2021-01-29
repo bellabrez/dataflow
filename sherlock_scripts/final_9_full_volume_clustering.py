@@ -46,7 +46,7 @@ def main(args):
 		printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
 
 	printlog('reshaping brain...')
-	super_brain = np.reshape(super_brain, (256*128*49,3384*9))
+	super_brain = np.reshape(super_brain, (256*128*49,int(3384/2)*9))
 	printlog('done')
 
 	t0 = time.time()
