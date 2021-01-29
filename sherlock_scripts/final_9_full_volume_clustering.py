@@ -20,8 +20,8 @@ def main(args):
 	logfile = args['logfile']
 	printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
-    memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
-    printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
+	memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+	printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
 
 	#####################
 	### Load Clusters ###
@@ -42,24 +42,24 @@ def main(args):
 		super_brain[:,:,:,:,i] = np.array(nib.load(brain_file).get_data(), copy=True)
 
 		memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
-    	printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
+		printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
 
-    printlog('reshaping brain...')
+	printlog('reshaping brain...')
 	super_brain = np.reshape(super_brain, (256*128*49,3384*9))
 	printlog('done')
 
 	t0 = time.time()
-    clustering_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210128_superv_simul_full_vol"
-    connectivity = grid_to_graph(256,128,49)
-    n_clusters = 30000
-    cluster_model = AgglomerativeClustering(n_clusters=n_clusters,
-                                    memory=clustering_dir,
-                                    linkage='ward',
-                                    connectivity=connectivity)
-    cluster_model.fit(super_brain)
-    printlog('DONE. Duration: {}'.format(time.time()-t0))
+	clustering_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210128_superv_simul_full_vol"
+	connectivity = grid_to_graph(256,128,49)
+	n_clusters = 30000
+	cluster_model = AgglomerativeClustering(n_clusters=n_clusters,
+									memory=clustering_dir,
+									linkage='ward',
+									connectivity=connectivity)
+	cluster_model.fit(super_brain)
+	printlog('DONE. Duration: {}'.format(time.time()-t0))
 
-    save_file = os.path.join(clustering_dir, 'cluster_labels')
+	save_file = os.path.join(clustering_dir, 'cluster_labels')
 	np.save(save_file, cluster_model.labels_)
 	printlog('SAVED.')
 
