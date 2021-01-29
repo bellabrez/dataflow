@@ -185,7 +185,7 @@ def align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution,
 	moving.set_spacing(resolution)
 
 	### Align
-	with stderr_redirected(): # to prevent dumb itk gaussian error bullshit infinite printing
+	with stderr_redirected(): # to prevent itk gaussian error infinite printing
 		moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
 
 	### Save
