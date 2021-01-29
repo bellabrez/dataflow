@@ -27,73 +27,74 @@ def main():
 			- Quantile normalization of intensity histogram
 		2) Sharpen Individual Anatomies
 		3) Affine align clean anatomies to seed brain and average. This creates affine_0.
-		4) Affine align sharpened anatomies to affine_0 and average. This creates affine_1.
+		4) Affine align clean anatomies to affine_0 and average. This creates affine_1.
 		5) Non-linear align sharpened anatomies to affine_1 and average. This creates syn_0.
 		6) Repeat step 5 for 2 additional iterations, aligning to the newly created syn_x.
 	'''
 
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
 	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210126_alignment_package"
+	raw_dir = os.path.join(main_dir, 'raw_anats')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
 
-	# ##########################
-	# ### 1) Clean Anatomies ###
-	# ##########################
-	# # Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
-	# raw_dir = os.path.join(main_dir, 'raw_anats')
-	# anats = os.listdir(raw_dir)
-	# print('found raw anats: {}'.format(anats))
+	##########################
+	### 1) Clean Anatomies ###
+	##########################
+	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
-	# if not os.path.exists(clean_dir):
-	# 	os.mkdir(clean_dir)
+	anats = os.listdir(raw_dir)
+	print('found raw anats: {}'.format(anats))
 
-	# print('*** Start Cleaning ***')
-	# for anat in anats:
-	# 	print('cleaning {}'.format(anat))
-	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	# print('*** Finished Cleaning ***')
+	if not os.path.exists(clean_dir):
+		os.mkdir(clean_dir)
 
-	# ############################
-	# ### 2) Sharpen Anatomies ###
-	# ############################
-	# # Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	# clean_anats = os.listdir(clean_dir)
-	# print('found clean anats: {}'.format(clean_anats))
+	print('*** Start Cleaning ***')
+	for anat in anats:
+		print('cleaning {}'.format(anat))
+		clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	print('*** Finished Cleaning ***')
 
-	# if not os.path.exists(sharp_dir):
-	# 	os.mkdir(sharp_dir)
+	############################
+	### 2) Sharpen Anatomies ###
+	############################
+	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	clean_anats = os.listdir(clean_dir)
+	print('found clean anats: {}'.format(clean_anats))
 
-	# print('*** Start Sharpening ***')
-	# for anat in clean_anats:
-	# 	print('sharpening {}'.format(anat))
-	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	# print('*** Finished Sharpening ***')
+	if not os.path.exists(sharp_dir):
+		os.mkdir(sharp_dir)
 
-	# ###################
-	# ### 3) Affine_0 ###
-	# ###################
-	# # Align all fly brains (and their mirrors) to a chosen seed brain
-	# save_dir = os.path.join(main_dir, 'affine_0')
-	# if not os.path.exists(save_dir):
-	# 	os.mkdir(save_dir)
+	print('*** Start Sharpening ***')
+	for anat in clean_anats:
+		print('sharpening {}'.format(anat))
+		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	print('*** Finished Sharpening ***')
 
-	# fixed_path = os.path.join(main_dir, 'seed', 'seed_fly91_clean_20200803.nii')
-	# resolution = (0.65, 0.65, 1)
-	# type_of_transform = 'Affine'
+	###################
+	### 3) Affine_0 ###
+	###################
+	# Align all fly brains (and their mirrors) to a chosen seed brain
+	save_dir = os.path.join(main_dir, 'affine_0')
+	if not os.path.exists(save_dir):
+		os.mkdir(save_dir)
 
-	# print('*** Start Affine_0 ***')
-	# anats = os.listdir(clean_dir)
-	# for anat in anats:
-	# 	moving_path = os.path.join(clean_dir, anat)
-	# 	for mirror in [True, False]:
-	# 		t0 = time.time()
-	# 		align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
-	# 		print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
-	# print('*** Finished Affine_0 ***')
+	fixed_path = os.path.join(main_dir, 'seed', 'seed_fly91_clean_20200803.nii')
+	resolution = (0.65, 0.65, 1)
+	type_of_transform = 'Affine'
 
-	# save_dir = os.path.join(main_dir, 'affine_0')
-	# avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='affine_0')
+	print('*** Start Affine_0 ***')
+	anats = os.listdir(clean_dir)
+	for anat in anats:
+		moving_path = os.path.join(clean_dir, anat)
+		for mirror in [True, False]:
+			t0 = time.time()
+			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
+			print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
+	print('*** Finished Affine_0 ***')
+
+	save_dir = os.path.join(main_dir, 'affine_0')
+	avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='affine_0')
 
 	###################
 	### 4) Affine_1 ###
