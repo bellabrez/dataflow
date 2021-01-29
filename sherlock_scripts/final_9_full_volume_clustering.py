@@ -36,11 +36,11 @@ def main(args):
 	#####################
 	dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
 	fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
-	super_brain = np.zeros((256,128,49,3384,9))
+	super_brain = np.zeros((256,128,49,int(3384/2),9))
 	for i,fly in enumerate(fly_names):
 		printlog(fly)
 		brain_file = os.path.join(dataset_path, fly, 'func_0', 'brain_zscored_green_high_pass_masked_warped.nii')
-		super_brain[:,:,:,:,i] = np.array(nib.load(brain_file).get_data(), copy=True)
+		super_brain[:,:,:,:,i] = np.array(nib.load(brain_file).get_data(), copy=True)[:,:,:,::2]
 
 		memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
 		printlog('Current memory usage: {:.2f}GB'.format(memory_usage))
