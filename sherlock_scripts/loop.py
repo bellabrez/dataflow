@@ -83,7 +83,7 @@ printlog("")
 printlog(f"\n{'   CLUSTERING   ':=^{width}}")
 job_ids = []
 args = {'logfile': logfile}
-script = 'final_9_full_volume_clustering.py'
+script = 'final_9_depth_correct_clustering.py'
 job_id = flow.sbatch(jobname='cluster',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
