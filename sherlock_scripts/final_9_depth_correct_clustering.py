@@ -22,17 +22,16 @@ def main(args):
 	logfile = args['logfile']
 	printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
-	save_dir = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction'
-	depth_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/depth_correction"
+	cluster_dir = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction'
+	depth_file = os.path.join(cluster_dir, 'depth_correction.npy')
 	depth_correction = np.load(depth_file)
 
-	def create_clusters(brain, n_clusters):
+	def create_clusters(brain, n_clusters, cluster_dir):
 		t0 = time.time()
-		clustering_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices"
 		super_to_cluster = brain.reshape(-1, 3384*9)
 		connectivity = grid_to_graph(256,128)
 		cluster_model = AgglomerativeClustering(n_clusters=n_clusters,
-										memory=clustering_dir,
+										memory=cluster_dir,
 										linkage='ward',
 										connectivity=connectivity)
 		cluster_model.fit(super_to_cluster)
@@ -48,10 +47,10 @@ def main(args):
 
 		n_clusters = int(1000 * depth_correction[z])
 		printlog(f'n_clusters: {n_clusters}')
-		cluster_model = create_clusters(brain, n_clusters)
+		cluster_model = create_clusters(brain, n_clusters, cluster_dir)
 		labels[z] = cluster_model.labels_
 	   
-	save_file = os.path.join(save_dir, 'labels.pickle')
+	save_file = os.path.join(cluster_dir, 'labels.pickle')
 	with open(save_file, 'wb') as handle:
 		pickle.dump(labels, handle, protocol=pickle.HIGHEST_PROTOCOL)
 	printlog('SAVED')
