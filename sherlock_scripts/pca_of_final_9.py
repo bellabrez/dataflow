@@ -15,11 +15,20 @@ def main(args):
 
     printlog('numpy: ' + str(np.__version__))
 
-    load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210115_super_brain.npy'
-    brain = np.load(load_file)
-    printlog('brain is shape {}'.format(brain.shape))
-    printlog(F'X_type is {X_type}')
+    # load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210115_super_brain.npy'
+    # brain = np.load(load_file)
+    # printlog('brain is shape {}'.format(brain.shape))
+    # printlog(F'X_type is {X_type}')
     # 2000,49,3384,9
+
+    load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/super_brain.pickle'
+    with open(load_file, 'rb') as handle:
+        temp_brain = pickle.load(handle)
+    #brain is a dict of z, each containing a variable number of supervoxels
+    #one dict element looks like: (n_clusters, 3384, 9)
+    brain = []
+    for z in range(49):
+        temp_brain[z]
 
     if X_type == 'single_slice':
         X = np.reshape(brain[:,20,:,:], (2000,3384*9))
@@ -64,37 +73,37 @@ def main(args):
 
     printlog('X is time by voxels {}'.format(X.shape))
     
-    covariance_matrix = np.cov(X.T)
-    eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
+    # covariance_matrix = np.cov(X.T)
+    # eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
-    printlog('eigen_values is {}'.format(eigen_values.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210127_eigen_values_{X_type}.npy'
-    np.save(save_file, eigen_values)
+    # printlog('eigen_values is {}'.format(eigen_values.shape))
+    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210127_eigen_values_{X_type}.npy'
+    # np.save(save_file, eigen_values)
 
-    printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210127_eigen_vectors_{X_type}.npy'
-    np.save(save_file, eigen_vectors)
+    # printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
+    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210127_eigen_vectors_{X_type}.npy'
+    # np.save(save_file, eigen_vectors)
 
-    # printlog('PCA START...')
-    # pca = PCA().fit(X)
-    # printlog('PCA COMPLETE')
+    printlog('PCA START...')
+    pca = PCA().fit(X)
+    printlog('PCA COMPLETE')
 
-    # pca_scores = pca.components_
-    # printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
-    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210124_pca_scores_{X_type}.npy'
-    # np.save(save_file, pca_scores)
-    # printlog('scores saved')
+    pca_scores = pca.components_
+    printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210124_pca_scores_{X_type}.npy'
+    np.save(save_file, pca_scores)
+    printlog('scores saved')
 
-    # pca_loadings = pca.transform(X)
-    # printlog('Loadings is time by PC {}'.format(pca_loadings.shape))
+    pca_loadings = pca.transform(X)
+    printlog('Loadings is time by PC {}'.format(pca_loadings.shape))
 
-    # printlog('deleting X for memory')
-    # X = None
-    # time.sleep(10)
+    printlog('deleting X for memory')
+    X = None
+    time.sleep(10)
 
-    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210124_pca_loadings_{X_type}.npy'
-    # np.save(save_file, pca_loadings)
-    # printlog('SAVING COMPLETE')
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210124_pca_loadings_{X_type}.npy'
+    np.save(save_file, pca_loadings)
+    printlog('SAVING COMPLETE')
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))
