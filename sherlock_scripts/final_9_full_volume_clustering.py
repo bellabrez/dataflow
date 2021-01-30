@@ -34,7 +34,7 @@ def main(args):
 	#####################
 	### Load Each fly ###
 	#####################
-	reduce_factor = 8
+	reduce_factor = 12
 	dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
 	fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
 	super_brain = np.zeros((256,128,49,int(3384/reduce_factor),9),dtype='float32')
