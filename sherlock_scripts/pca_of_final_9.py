@@ -3,6 +3,7 @@ import numpy as np
 import json
 import time
 import dataflow as flow
+import pickle
 
 from sklearn.decomposition import PCA
 #from sklearn.decomposition import IncrementalPCA
