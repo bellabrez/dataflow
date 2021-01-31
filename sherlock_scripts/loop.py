@@ -89,7 +89,7 @@ job_id = flow.sbatch(jobname='cluster',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=24, mem=23, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=24, mem=22, nice=nice, nodes=nodes) # 2 to 1
 job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
