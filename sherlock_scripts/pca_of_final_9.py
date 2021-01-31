@@ -80,39 +80,39 @@ def main(args):
 
     printlog('X is time by voxels {}'.format(X.shape))
     
-    # printlog('Using np.linalg.ein')
-    # covariance_matrix = np.cov(X.T)
-    # eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
+    printlog('Using np.linalg.ein')
+    covariance_matrix = np.cov(X.T)
+    eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
-    # printlog('eigen_values is {}'.format(eigen_values.shape))
-    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_values_{X_type}.npy'
-    # np.save(save_file, eigen_values)
+    printlog('eigen_values is {}'.format(eigen_values.shape))
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_values_{X_type}.npy'
+    np.save(save_file, eigen_values)
 
-    # printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
-    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_vectors_{X_type}.npy'
-    # np.save(save_file, eigen_vectors)
+    printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_vectors_{X_type}.npy'
+    np.save(save_file, eigen_vectors)
 
-    printlog('INC PCA START...')
-    pca = IncrementalPCA().fit(X)
-    #pca = PCA().fit(X)
-    printlog('PCA COMPLETE')
+    # printlog('INC PCA START...')
+    # pca = IncrementalPCA().fit(X)
+    # #pca = PCA().fit(X)
+    # printlog('PCA COMPLETE')
 
-    pca_scores = pca.components_
-    printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pcainc_scores_{X_type}.npy'
-    np.save(save_file, pca_scores)
-    printlog('scores saved')
+    # pca_scores = pca.components_
+    # printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
+    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pcainc_scores_{X_type}.npy'
+    # np.save(save_file, pca_scores)
+    # printlog('scores saved')
 
-    pca_loadings = pca.transform(X)
-    printlog('Loadings is time by PC {}'.format(pca_loadings.shape))
+    # pca_loadings = pca.transform(X)
+    # printlog('Loadings is time by PC {}'.format(pca_loadings.shape))
 
-    printlog('deleting X for memory')
-    X = None
-    time.sleep(10)
+    # printlog('deleting X for memory')
+    # X = None
+    # time.sleep(10)
 
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pcainc_loadings_{X_type}.npy'
-    np.save(save_file, pca_loadings)
-    printlog('SAVING COMPLETE')
+    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pcainc_loadings_{X_type}.npy'
+    # np.save(save_file, pca_loadings)
+    # printlog('SAVING COMPLETE')
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))
