@@ -15,6 +15,7 @@ import bigbadbrain as bbb
 import dataflow as flow
 import umap
 import pickle
+import psutil
 
 def main(args):
 
