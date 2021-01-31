@@ -26,9 +26,11 @@ def main(args):
         temp_brain = pickle.load(handle)
     #brain is a dict of z, each containing a variable number of supervoxels
     #one dict element looks like: (n_clusters, 3384, 9)
-    brain = []
+    brain = np.zeros((0,3384,9))
     for z in range(49):
-        temp_brain[z]
+        brain = np.concatenate((brain,temp_brain[z]),axis=0)
+
+    printlog(str(brain.shape))
 
     if X_type == 'single_slice':
         X = np.reshape(brain[:,20,:,:], (2000,3384*9))
@@ -67,6 +69,9 @@ def main(args):
     elif X_type == 'five_fly':
         X = np.reshape(brain[:,:,:,0:5], (2000*49,-1))
         X = X.T
+    elif X_type == 'new_clusters':
+        X = np.reshape(brain, (-1,3384*9))
+        X = X.T
     else:
         printlog('INVALID X_TYPE')
         return
@@ -90,7 +95,7 @@ def main(args):
 
     pca_scores = pca.components_
     printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210124_pca_scores_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pca_scores_{X_type}.npy'
     np.save(save_file, pca_scores)
     printlog('scores saved')
 
@@ -101,7 +106,7 @@ def main(args):
     X = None
     time.sleep(10)
 
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210124_pca_loadings_{X_type}.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pca_loadings_{X_type}.npy'
     np.save(save_file, pca_loadings)
     printlog('SAVING COMPLETE')
 

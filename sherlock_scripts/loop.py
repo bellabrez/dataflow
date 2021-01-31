@@ -80,37 +80,37 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-printlog(f"\n{'   CLUSTERING   ':=^{width}}")
-job_ids = []
-args = {'logfile': logfile}
-script = 'build_final_9_pooled_brain_for_pca.py'
-#script = 'final_9_depth_correct_clustering.py'
-job_id = flow.sbatch(jobname='cluster',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=24, mem=22, nice=nice, nodes=nodes) # 2 to 1
-job_ids.append(job_id)
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# printlog(f"\n{'   CLUSTERING   ':=^{width}}")
+# job_ids = []
+# args = {'logfile': logfile}
+# script = 'build_final_9_pooled_brain_for_pca.py'
+# #script = 'final_9_depth_correct_clustering.py'
+# job_id = flow.sbatch(jobname='cluster',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=24, mem=22, nice=nice, nodes=nodes) # 2 to 1
+# job_ids.append(job_id)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 ###########
 ### PCA ###
 ###########
 
-# printlog(f"\n{'   PCA   ':=^{width}}")
-# job_ids = []
-# for X_type in ['all_fly_trimmed_zs_more']:
-#     args = {'logfile': logfile, 'X_type': X_type}
-#     script = 'pca_of_final_9.py'
-#     job_id = flow.sbatch(jobname='pca',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=24, mem=23, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+printlog(f"\n{'   PCA   ':=^{width}}")
+job_ids = []
+for X_type in ['new_clusters']:
+    args = {'logfile': logfile, 'X_type': X_type}
+    script = 'pca_of_final_9.py'
+    job_id = flow.sbatch(jobname='pca',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=24, mem=22, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   PCA   ':=^{width}}")
 # X_type = 'five_fly'
