@@ -52,6 +52,7 @@ def main(args):
 			mean_signal = np.mean(brain[cluster_indicies,:,:], axis=0)
 			signals.append(mean_signal)
 		signals=np.asarray(signals)
+		printlog(signals.shape)
 		#(n_clusters, 3384, 9)
 		pooled[z] = signals
 		#pooled[:,z,:,:] = signals
