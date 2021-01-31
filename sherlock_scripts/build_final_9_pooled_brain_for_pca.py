@@ -47,7 +47,7 @@ def main(args):
 		brain = np.reshape(brain,(-1,3384,9))
 		# (32768, 3384, 9)
 		signals = []
-		for cluster_num in range(len(cluster_model_labels[z])):
+		for cluster_num in range(len(np.unique(cluster_model_labels[z]))):
 			cluster_indicies = np.where(cluster_model_labels[z]==cluster_num)[0]
 			mean_signal = np.mean(brain[cluster_indicies,:,:], axis=0)
 			signals.append(mean_signal)
