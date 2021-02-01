@@ -241,7 +241,7 @@ def main(args):
 					  'scores_walking_shift': scores_walking_shift,
 					  'scores_ypos_shift': scores_ypos_shift,
 					  'scores_zpos_shift': scores_zpos_shift,
-					  'scores_zneg_shift':, scores_zneg_shift}
+					  'scores_zneg_shift': scores_zneg_shift}
 
 			with open(save_file, 'wb') as handle:
 				pickle.dump(scores, handle, protocol=pickle.HIGHEST_PROTOCOL)
