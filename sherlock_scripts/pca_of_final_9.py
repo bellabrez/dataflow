@@ -22,17 +22,23 @@ def main(args):
     # printlog(F'X_type is {X_type}')
     # 2000,49,3384,9
 
-    load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/super_brain.pickle'
-    with open(load_file, 'rb') as handle:
-        temp_brain = pickle.load(handle)
-    #brain is a dict of z, each containing a variable number of supervoxels
-    #one dict element looks like: (n_clusters, 3384, 9)
-    brain = np.zeros((0,3384,9))
-    for z in range(49):
-        brain = np.concatenate((brain,temp_brain[z]),axis=0)
 
-    printlog(str(brain.shape))
-    printlog(F'X_type is {X_type}')
+
+
+    # load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/super_brain.pickle'
+    # with open(load_file, 'rb') as handle:
+    #     temp_brain = pickle.load(handle)
+    # #brain is a dict of z, each containing a variable number of supervoxels
+    # #one dict element looks like: (n_clusters, 3384, 9)
+    # brain = np.zeros((0,3384,9))
+    # for z in range(49):
+    #     brain = np.concatenate((brain,temp_brain[z]),axis=0)
+
+    # printlog(str(brain.shape))
+    # printlog(F'X_type is {X_type}')
+
+
+
 
     if X_type == 'single_slice':
         X = np.reshape(brain[:,20,:,:], (2000,3384*9))
@@ -74,45 +80,48 @@ def main(args):
     elif X_type == 'new_clusters':
         X = np.reshape(brain, (-1,3384*9))
         X = X.T
+    elif X_type == 'ones':
+        printlog('MATRIX OF ONES')
+        X = np.ones((30456,30858))
     else:
         printlog('INVALID X_TYPE')
         return
 
     printlog('X is time by voxels {}'.format(X.shape))
     
-    printlog('Using np.linalg.ein')
-    covariance_matrix = np.cov(X.T)
-    eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
+    # printlog('Using np.linalg.ein')
+    # covariance_matrix = np.cov(X.T)
+    # eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
-    printlog('eigen_values is {}'.format(eigen_values.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_values_{X_type}.npy'
-    np.save(save_file, eigen_values)
+    # printlog('eigen_values is {}'.format(eigen_values.shape))
+    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_values_{X_type}.npy'
+    # np.save(save_file, eigen_values)
 
-    printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_vectors_{X_type}.npy'
-    np.save(save_file, eigen_vectors)
+    # printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
+    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_eigen_vectors_{X_type}.npy'
+    # np.save(save_file, eigen_vectors)
 
-    # printlog('INC PCA START...')
-    # pca = IncrementalPCA().fit(X)
-    # #pca = PCA().fit(X)
-    # printlog('PCA COMPLETE')
+    printlog('PCA START...')
+    pca = PCA().fit(X)
+    #pca = PCA().fit(X)
+    printlog('PCA COMPLETE')
 
-    # pca_scores = pca.components_
-    # printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
-    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pcainc_scores_{X_type}.npy'
-    # np.save(save_file, pca_scores)
-    # printlog('scores saved')
+    pca_scores = pca.components_
+    printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210131_pca_scores_{X_type}.npy'
+    np.save(save_file, pca_scores)
+    printlog('scores saved')
 
-    # pca_loadings = pca.transform(X)
-    # printlog('Loadings is time by PC {}'.format(pca_loadings.shape))
+    pca_loadings = pca.transform(X)
+    printlog('Loadings is time by PC {}'.format(pca_loadings.shape))
 
-    # printlog('deleting X for memory')
-    # X = None
-    # time.sleep(10)
+    printlog('deleting X for memory')
+    X = None
+    time.sleep(10)
 
-    # save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210130_pcainc_loadings_{X_type}.npy'
-    # np.save(save_file, pca_loadings)
-    # printlog('SAVING COMPLETE')
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210131_pca_loadings_{X_type}.npy'
+    np.save(save_file, pca_loadings)
+    printlog('SAVING COMPLETE')
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))
