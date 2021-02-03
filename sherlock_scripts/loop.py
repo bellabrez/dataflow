@@ -80,18 +80,18 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-printlog(f"\n{'   TEMPORAL GLM   ':=^{width}}")
-job_ids = []
-args = {'logfile': logfile}
-script = 'shaul_temporal_glm_singles.py'
-job_id = flow.sbatch(jobname='tempglm',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=96, mem=12, nice=nice, nodes=nodes) # 2 to 1
-job_ids.append(job_id)
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# printlog(f"\n{'   TEMPORAL GLM   ':=^{width}}")
+# job_ids = []
+# args = {'logfile': logfile}
+# script = 'shaul_temporal_glm_singles.py'
+# job_id = flow.sbatch(jobname='tempglm',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=96, mem=12, nice=nice, nodes=nodes) # 2 to 1
+# job_ids.append(job_id)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   CLUSTERING   ':=^{width}}")
 # job_ids = []
@@ -707,7 +707,53 @@ for job_id in job_ids:
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
+##########################
+### Template alignment ###
+##########################
 
+res_JFRC = (0.62, 0.62, 0.62)
+res_IBNWB = (0.64, 0.64, 1.41)
+res_LUKE = (0.65, 0.65, 1)
+res_DIEGO = (0.75, 0.75, 1.0)
+res_KEVIN = (0.62,0.62,0.6)
+
+printlog(f"\n{'   Template Alignment   ':=^{width}}")
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JFRCtemplate2010.nii"
+moving_fly = "jfrc"
+moving_resolution = res_JFRC
+
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/IBNWB.nii"
+fixed_fly = 'ibnwb'
+fixed_resolution = res_IBNWB
+
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
+if not os.path.exists(save_directory):
+    os.mkdir(save_directory)
+
+type_of_transform = 'SyN'
+flip_X = False
+flip_Z = False
+
+args = {'logfile': logfile,
+        'save_directory': save_directory,
+        'fixed_path': fixed_path,
+        'moving_path': moving_path,
+        'fixed_fly': fixed_fly,
+        'moving_fly': moving_fly,
+        'type_of_transform': type_of_transform,
+        'flip_X': flip_X,
+        'flip_Z': flip_Z,
+        'moving_resolution': moving_resolution,
+        'fixed_resolution': fixed_resolution}
+
+script = 'align_anat.py'
+job_id = flow.sbatch(jobname='align',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+
+flow.wait_for_job(job_id, logfile, com_path)
 
 
 ###################################################################################################################
