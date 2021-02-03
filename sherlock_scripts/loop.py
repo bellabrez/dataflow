@@ -733,6 +733,8 @@ if not os.path.exists(save_directory):
 type_of_transform = 'SyN'
 flip_X = False
 flip_Z = False
+save_warp_params = False
+low_res = False
 
 args = {'logfile': logfile,
         'save_directory': save_directory,
@@ -744,7 +746,9 @@ args = {'logfile': logfile,
         'flip_X': flip_X,
         'flip_Z': flip_Z,
         'moving_resolution': moving_resolution,
-        'fixed_resolution': fixed_resolution}
+        'fixed_resolution': fixed_resolution,
+        'save_warp_params': save_warp_params,
+        'low_res': low_res}
 
 script = 'align_anat.py'
 job_id = flow.sbatch(jobname='align',
