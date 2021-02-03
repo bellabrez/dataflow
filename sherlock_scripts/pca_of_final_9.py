@@ -16,13 +16,11 @@ def main(args):
 
     printlog('numpy: ' + str(np.__version__))
 
-    # load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210115_super_brain.npy'
-    # brain = np.load(load_file)
-    # printlog('brain is shape {}'.format(brain.shape))
-    # printlog(F'X_type is {X_type}')
+    load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210115_super_brain/20210115_super_brain.npy'
+    brain = np.load(load_file)
+    printlog('brain is shape {}'.format(brain.shape))
+    printlog(F'X_type is {X_type}')
     # 2000,49,3384,9
-
-
 
 
     # load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/super_brain.pickle'
@@ -83,6 +81,10 @@ def main(args):
     elif X_type == 'ones':
         printlog('MATRIX OF ONES')
         X = np.ones((30456,30858))
+    # elif X_type == 'fly_087':
+    #     X = np.reshape(brain[:,:,:,0], (2000*49,3384))
+    #     X = X.T
+        
     else:
         printlog('INVALID X_TYPE')
         return
