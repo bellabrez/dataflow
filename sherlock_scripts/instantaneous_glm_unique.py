@@ -121,7 +121,6 @@ def main(args):
 
 	flies = {}
 	for i, fly in enumerate(fly_names):
-		printlog(F'*** fly: {fly} ***')
 		flies[fly] = Fly(fly_name=fly, fly_idx=i)
 		flies[fly].load_timestamps()
 		flies[fly].load_fictrac()
@@ -138,9 +137,9 @@ def main(args):
 		brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z) #<---------- !!!
 		brain = np.array(nib.load(brain_file).get_data(), copy=True)
 
-		#for i, fly in enumerate(fly_names):
-		flies[fly].load_brain_slice()
-		flies[fly].get_cluster_averages(cluster_model_labels, n_clusters)
+		for i, fly in enumerate(fly_names):
+			flies[fly].load_brain_slice()
+			flies[fly].get_cluster_averages(cluster_model_labels, n_clusters)
 
 		#for i, fly in enumerate(fly_names):
 
