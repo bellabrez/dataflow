@@ -712,19 +712,20 @@ printlog("")
 ##########################
 
 res_JFRC = (0.62, 0.62, 0.62)
+res_JRC2018 = (0.38, 0.38, 0.38)
 res_IBNWB = (0.64, 0.64, 1.41)
 res_LUKE = (0.65, 0.65, 1)
 res_DIEGO = (0.75, 0.75, 1.0)
 res_KEVIN = (0.62,0.62,0.6)
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JFRCtemplate2010.nii"
-moving_fly = "jfrc"
-moving_resolution = res_JFRC
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
+moving_fly = "jrc2018"
+moving_resolution = res_JRC2018
 
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/IBNWB.nii"
-fixed_fly = 'ibnwb'
-fixed_resolution = res_IBNWB
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+fixed_fly = 'luke'
+fixed_resolution = res_LUKE
 
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
 if not os.path.exists(save_directory):
@@ -732,7 +733,7 @@ if not os.path.exists(save_directory):
 
 type_of_transform = 'SyN'
 flip_X = False
-flip_Z = False
+flip_Z = True
 save_warp_params = False
 low_res = False
 
