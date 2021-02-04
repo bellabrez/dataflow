@@ -756,7 +756,7 @@ job_id = flow.sbatch(jobname='align',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
 
 flow.wait_for_job(job_id, logfile, com_path)
 
