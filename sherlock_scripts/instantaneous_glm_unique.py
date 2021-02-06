@@ -25,7 +25,7 @@ def main(args):
 	printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
 	dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
-	fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_095', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
+	fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
 	expt_len = 1000*30*60
 	resolution = 10
 	high_res_timepoints = np.arange(0,expt_len,resolution) #0 to last time at subsample res
@@ -156,7 +156,7 @@ def main(args):
 		scores_zneg_unique = []
 
 		for cluster_num in range(n_clusters):
-			if cluster_num == 100:
+			if cluster_num%100 == 0:
 				printlog(str(cluster_num))
 			###############################################################
 			### Build Y vector for a single supervoxel (with all flies) ###
