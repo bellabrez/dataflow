@@ -180,10 +180,9 @@ def main(args):
 				cluster_indicies = flies[fly].cluster_indicies[cluster_num]
 				z_map = flies[fly].z_correction[:,:,z].ravel()
 				original_z = int(np.median(z_map[cluster_indicies]))
-				flies[fly].fictrac.interp_fictrac(original_z)
-				ypos.extend(flies[fly].fictrac.fictrac['Y_pos'])
-				zpos.extend(flies[fly].fictrac.fictrac['Z_pos'])
-				zneg.extend(flies[fly].fictrac.fictrac['Z_neg'])
+				ypos.extend(flies[fly].fictrac.fictrac['Y_pos'][original_z])
+				zpos.extend(flies[fly].fictrac.fictrac['Z_pos'][original_z])
+				zneg.extend(flies[fly].fictrac.fictrac['Z_neg'][original_z])
 				
 				walking_01 = np.zeros(3384)
 				thresh_beh = flies[fly].fictrac.fictrac['YZ']
