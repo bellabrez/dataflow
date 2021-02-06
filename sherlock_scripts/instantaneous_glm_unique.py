@@ -183,11 +183,7 @@ def main(args):
 				ypos.extend(flies[fly].fictrac.fictrac['Y_pos'][original_z])
 				zpos.extend(flies[fly].fictrac.fictrac['Z_pos'][original_z])
 				zneg.extend(flies[fly].fictrac.fictrac['Z_neg'][original_z])
-				
-				walking_01 = np.zeros(3384)
-				thresh_beh = flies[fly].fictrac.fictrac['YZ']
-				walking_01[np.where(thresh_beh>.2)] = 1
-				walking.extend(walking_01)
+				walking.extend(flies[fly].fictrac.fictrac['walking'][original_z])
 										   
 			### ALL ###
 			X = np.stack((ypos, zpos, zneg, walking)).T
