@@ -162,10 +162,10 @@ def main(args):
 			### Build Y vector for a single supervoxel (with all flies) ###
 			###############################################################
 			all_fly_neural = []
-			#for fly in fly_names:
-			signal = flies[fly].cluster_signals[cluster_num,:]
-			all_fly_neural.extend(signal)
-			Y = np.asarray(all_fly_neural)
+			for fly in fly_names:
+				signal = flies[fly].cluster_signals[cluster_num,:]
+				all_fly_neural.extend(signal)
+				Y = np.asarray(all_fly_neural)
 
 			###########################################
 			### Build the X matrix for this cluster ###
