@@ -83,8 +83,8 @@ printlog("")
 printlog(f"\n{'   GLM   ':=^{width}}")
 job_ids = []
 args = {'logfile': logfile}
-script = 'instantaneous_glm_unique_single.py'
-job_id = flow.sbatch(jobname='glm_s',
+script = 'instantaneous_glm_unique.py'
+job_id = flow.sbatch(jobname='glm',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
