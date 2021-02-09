@@ -136,6 +136,8 @@ def main(args):
 
 		brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z) #<---------- !!!
 		brain = np.array(nib.load(brain_file).get_data(), copy=True)
+		fly_idx_delete = 3 #(fly_095)
+		brain = np.delete(brain, fly_idx_delete, axis=-1) #### DELETING FLY_095 ####
 
 		for i, fly in enumerate(fly_names):
 			flies[fly].load_brain_slice()
@@ -225,7 +227,7 @@ def main(args):
 			scores_zneg_unique.append(np.sqrt(model.score(X,Y)))
 
 		### Save ###
-		save_dir = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210204_inst_uniq_glm'
+		save_dir = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210208_inst_uniq_glm'
 		# save_dir_fly = os.path.join(save_dir, fly)
 		# if not os.path.exists(save_dir_fly):
 		# 	os.mkdir(save_dir_fly)
