@@ -162,35 +162,35 @@ def main(args):
 	for i, fly in enumerate(fly_names):
 		cluster_responses = []
 		for cluster_num in range(n_clusters):
-		    if cluster_num%100 == 0:
-		        printlog(str(cluster_num))
-		    ###############################################################
-		    ### Build Y vector for a single supervoxel (with all flies) ###
-		    ###############################################################
-		    Y = np.asarray(flies[fly].cluster_signals[cluster_num,:])
+			if cluster_num%100 == 0:
+				printlog(str(cluster_num))
+			###############################################################
+			### Build Y vector for a single supervoxel (with all flies) ###
+			###############################################################
+			Y = np.asarray(flies[fly].cluster_signals[cluster_num,:])
 
-		    ###########################################
-		    ### Build the X matrix for this cluster ###
-		    ###########################################
-		    # For each fly, this cluster could have originally come from a different z-depth
-		    # Get correct original z-depth
-	        cluster_indicies = flies[fly].cluster_indicies[cluster_num]
-	        z_map = flies[fly].z_correction[:,:,z].ravel()
-	        original_z = int(np.median(z_map[cluster_indicies]))
-	        X_cluster = X[original_z,i,:,:]
-	        # before, would be [z,fly,timewindow,timepoint]
-	        # after loop [fly,timewindow,timepoint]
-	        # after reshape [timewindow,fly,timepoint], finally [alltimewindows,timepoints]
+			###########################################
+			### Build the X matrix for this cluster ###
+			###########################################
+			# For each fly, this cluster could have originally come from a different z-depth
+			# Get correct original z-depth
+			cluster_indicies = flies[fly].cluster_indicies[cluster_num]
+			z_map = flies[fly].z_correction[:,:,z].ravel()
+			original_z = int(np.median(z_map[cluster_indicies]))
+			X_cluster = X[original_z,i,:,:]
+			# before, would be [z,fly,timewindow,timepoint]
+			# after loop [fly,timewindow,timepoint]
+			# after reshape [timewindow,fly,timepoint], finally [alltimewindows,timepoints]
 
-	        #for a single fly i have [timewindows,timepoints]
-		    #Xs_new = np.asarray(Xs_new)
-		    #X_cluster = np.reshape(np.moveaxis(Xs_new,0,1),(-1,33840))
+			#for a single fly i have [timewindows,timepoints]
+			#Xs_new = np.asarray(Xs_new)
+			#X_cluster = np.reshape(np.moveaxis(Xs_new,0,1),(-1,33840))
 
-		    ###################
-		    ### Dot Product ###
-		    ###################
-		    cluster_response = np.dot(X_cluster,Y)
-		    cluster_responses.append(cluster_response)
+			###################
+			### Dot Product ###
+			###################
+			cluster_response = np.dot(X_cluster,Y)
+			cluster_responses.append(cluster_response)
 		cluster_responses = np.asarray(cluster_responses)
 
 		######################
@@ -205,4 +205,4 @@ def main(args):
 		np.save(save_file, cluster_responses)
 
 if __name__ == '__main__':
-    main(json.loads(sys.argv[1]))	 
+	main(json.loads(sys.argv[1]))	 
