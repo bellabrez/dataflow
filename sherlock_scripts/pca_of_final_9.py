@@ -35,8 +35,11 @@ def main(args):
     printlog(str(X.shape))
     #printlog(F'X_type is {X_type}')
     X = np.swapaxes(X,1,2) # THIS LINE WAS MISSING
-    X = np.reshape(X,(30456, -1))
+    X = np.reshape(X,(30858, -1))
     X = X.T
+
+    # there are 30456 timepoints
+    
 
     # if X_type == 'single_slice':
     #     X = np.reshape(brain[:,20,:,:], (2000,3384*9))
