@@ -107,13 +107,13 @@ def main(args):
     # np.save(save_file, eigen_vectors)
 
     printlog('PCA START...')
-    pca = PCA().fit(X)
+    pca = IncrementalPCA().fit(X)
     #pca = PCA().fit(X)
     printlog('PCA COMPLETE')
 
     pca_scores = pca.components_
     printlog('Scores is PC by voxel {}'.format(pca_scores.shape))
-    save_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210213_pca_scores.npy'
+    save_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210213_pca_scores_inc.npy'
     np.save(save_file, pca_scores)
     printlog('scores saved')
 
@@ -124,7 +124,7 @@ def main(args):
     X = None
     time.sleep(10)
 
-    save_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210213_pca_loadings.npy'
+    save_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210213_pca_loadings_inc.npy'
     np.save(save_file, pca_loadings)
     # printlog('SAVING COMPLETE')
 

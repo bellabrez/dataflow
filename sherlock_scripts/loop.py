@@ -10,8 +10,8 @@ import dataflow as flow
 
 #modules = 'gcc/6.3.0 python/3.6.1 py-numpy/1.14.3_py36 py-pandas/0.23.0_py36 viz py-scikit-learn/0.19.1_py36'
 #modules = 'py-numpy/1.14.3_py36 viz py-pandas/0.23.0_py36' #using until 20210103
-modules = 'py-numpy/1.18.1_py36 viz py-pandas/0.23.0_py36' #newer numpy 20210123 due to pca error
-#modules = 'python/3.6.1'
+#modules = 'py-numpy/1.18.1_py36 viz py-pandas/0.23.0_py36' #newer numpy 20210123 due to pca error
+modules = 'python/3.6.1'
 #modules = 'py-numpy/1.14.3_py36 viz py-matplotlib/2.2.2_py36 py-scipy/1.1.0_py36 py-scipystack/1.0_py36 py-pandas/0.23.0_py36'
 
 #########################
@@ -111,12 +111,12 @@ printlog("")
 ### PCA ###
 ###########
 
-printlog(f"\n{'   PCA - more modules   ':=^{width}}")
+printlog(f"\n{'   PCA - inc   ':=^{width}}")
 job_ids = []
 for X_type in ['']:
     args = {'logfile': logfile, 'X_type': X_type}
     script = 'pca_of_final_9.py'
-    job_id = flow.sbatch(jobname='pcaoldml',
+    job_id = flow.sbatch(jobname='pcainc',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
