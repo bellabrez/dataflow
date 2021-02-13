@@ -111,19 +111,19 @@ printlog("")
 ### PCA ###
 ###########
 
-# printlog(f"\n{'   PCA   ':=^{width}}")
-# job_ids = []
-# for X_type in ['ones']:
-#     args = {'logfile': logfile, 'X_type': X_type}
-#     script = 'pca_of_final_9.py'
-#     job_id = flow.sbatch(jobname='pca',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=24, mem=22, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+printlog(f"\n{'   PCA   ':=^{width}}")
+job_ids = []
+for X_type in ['']:
+    args = {'logfile': logfile, 'X_type': X_type}
+    script = 'pca_of_final_9.py'
+    job_id = flow.sbatch(jobname='pca',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=24, mem=22, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   PCA   ':=^{width}}")
 # X_type = 'five_fly'
@@ -278,19 +278,19 @@ printlog("")
 # ################################
 # ### NEURAL WEIGHTED BEHAVIOR ###
 # ################################
-job_ids = []
-for z in range(49):
-    args = {'logfile': logfile, 'z': z}
-    script = 'neu_weighted_beh_single.py'
-    job_id = flow.sbatch(jobname='neuwebeh',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# job_ids = []
+# for z in range(49):
+#     args = {'logfile': logfile, 'z': z}
+#     script = 'neu_weighted_beh_single.py'
+#     job_id = flow.sbatch(jobname='neuwebeh',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=2, mem=6, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # ##########################
 # ### CLUSTERING FILTERS ###
