@@ -111,12 +111,12 @@ printlog("")
 ### PCA ###
 ###########
 
-printlog(f"\n{'   PCA - inc   ':=^{width}}")
+printlog(f"\n{'   PCA   ':=^{width}}")
 job_ids = []
 for X_type in ['']:
     args = {'logfile': logfile, 'X_type': X_type}
     script = 'pca_of_final_9.py'
-    job_id = flow.sbatch(jobname='pcainc',
+    job_id = flow.sbatch(jobname='pca',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
