@@ -206,6 +206,7 @@ def main(args):
 				# Y = np.asarray(all_fly_neural)
 
 				# grab single fly from superfly
+				i=2 #temp hardcode - REMOVE <--------------------------------------------------------------- !!!
 				num_tp = 3384
 				start = i*num_tp
 				stop = (i+1)*num_tp
