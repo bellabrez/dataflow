@@ -22,7 +22,10 @@ import psutil
 def main(args):
 
 	logfile = args['logfile']
+	num_pcs = args['num_pcs']
 	printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
+
+	printlog(F'num pcs: {num_pcs}')
 
 	dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
 	fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
@@ -143,7 +146,7 @@ def main(args):
 	    cluster_model_labels = pickle.load(handle)
 
 	# reconstructed data
-	file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210216_reconstructed_100.npy'
+	file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210216_reconstructed_{num_pcs}.npy'
 	brain = np.load(file) # (30456, 26840) time by voxel
 	running_sum = 0
 	brain_z = []
@@ -194,8 +197,8 @@ def main(args):
 			scores_zneg_unique = []
 
 			for cluster_num in range(len(np.unique(cluster_model_labels[z]))):
-				if cluster_num == 100:
-					printlog(str(cluster_num))
+				# if cluster_num == 100:
+				# 	printlog(str(cluster_num))
 				###############################################################
 				### Build Y vector for a single supervoxel (with all flies) ###
 				###############################################################
@@ -279,7 +282,12 @@ def main(args):
 			if not os.path.exists(save_dir_fly):
 				os.mkdir(save_dir_fly)
 
-			save_file = os.path.join(save_dir_fly, F'Z{z}.pickle')
+			save_dir_fly_pc = os.path.join(save_dir_fly, str(num_pcs))
+			if not os.path.exists(save_dir_fly_pc):
+				os.mkdir(save_dir_fly_pc)
+
+
+			save_file = os.path.join(save_dir_fly_pc, F'Z{z}.pickle')
 			scores = {'scores_all':scores_all,
 					 'scores_walking':scores_walking,
 					 'scores_ypos':scores_ypos,
