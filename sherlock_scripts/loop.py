@@ -83,7 +83,7 @@ printlog("")
 printlog(f"\n{'   GLM - singles reconstructed   ':=^{width}}")
 job_ids = []
 for num_pcs in [1, 10, 30, 50, 100, 500, 1000, 10000, 26840]:
-    args = {'logfile': logfile.
+    args = {'logfile': logfile,
             'num_pcs': num_pcs}
     script = 'instantaneous_glm_unique_single_reconstructed.py'
     job_id = flow.sbatch(jobname='glm',
