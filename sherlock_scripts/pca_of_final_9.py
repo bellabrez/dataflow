@@ -11,7 +11,7 @@ from sklearn.decomposition import IncrementalPCA
 def main(args):
 
     logfile = args['logfile']
-    X_type = args['X_type']
+    fly_idx = args['fly_idx']
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     printlog('numpy: ' + str(np.__version__))
@@ -95,17 +95,24 @@ def main(args):
     #     return
 
     printlog('X is time by voxels {}'.format(X.shape))
+    num_tp = 3384
+    start = fly_idx*num_tp
+    stop = (fly_idx+1)*num_tp
+    X = X[start:stop,:]
+    printlog(F'fly_idx: {fly_idx}, start: {start}, stop: {stop}')
+    printlog('After fly_idx, X is time by voxels {}'.format(X.shape))
+
     
     printlog('Using np.linalg.ein')
     covariance_matrix = np.cov(X.T)
     eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
     printlog('eigen_values is {}'.format(eigen_values.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210214_eigen_values_ztrim.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210214_eigen_values_ztrim_fly{fly_idx}.npy'
     np.save(save_file, eigen_values)
 
     printlog('eigen_vectors is {}'.format(eigen_vectors.shape))
-    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210214_eigen_vectors_ztrim.npy'
+    save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210214_eigen_vectors_ztrim_fly{fly_idx}.npy'
     np.save(save_file, eigen_vectors)
 
     # printlog('PCA START...')
