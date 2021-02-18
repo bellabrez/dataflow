@@ -96,117 +96,95 @@ def main():
 	# save_dir = os.path.join(main_dir, 'affine_0')
 	# avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='affine_0')
 
-	###################
-	### 2) Affine_1 ###
-	###################
+	resolution = (0.65, 0.65, 1)
 
+	type_of_transform = 'Affine'
+	###   Affine_1    ###
 	moving_dir = clean_dir
 	name_out = 'affine_1'
 	name_fixed = 'affine_0'
-	type_of_transform = 'Affine'
-	resolution = (0.65, 0.65, 1)
 	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	# Align all fly brains (and their mirrors) to affine_0_mean.nii
-	save_dir = os.path.join(main_dir, 'affine_1')
-	if not os.path.exists(save_dir):
-		os.mkdir(save_dir)
-
-	fixed_path = os.path.join(main_dir, 'affine_0.nii')
-	resolution = (0.65, 0.65, 1)
-	type_of_transform = 'Affine'
-
-	print('*** Start Affine_1 ***')
-	anats = os.listdir(clean_dir)
-	for anat in anats:
-		moving_path = os.path.join(clean_dir, anat)
-		for mirror in [True, False]:
-			t0 = time.time()
-			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
-			print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
-	print('*** Finished Affine_1 ***')
-
-	save_dir = os.path.join(main_dir, 'affine_1')
-	avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='affine_1')
-
-	### sharpen affine_1
-	in_file = os.path.join(main_dir, 'affine_1.nii')
-	save_dir = main_dir
-	sharpen_anat(in_file, save_dir)
-
-	################
-	### SyN_Iter ###
-	################
-	# Align all fly brains (and their mirrors) to affine_1_sharp.nii
-	save_dir = os.path.join(main_dir, 'syn_0')
-	if not os.path.exists(save_dir):
-		os.mkdir(save_dir)
-
-	fixed_path = os.path.join(main_dir, 'affine_1_sharp.nii')
-	resolution = (0.65, 0.65, 1)
 	type_of_transform = 'SyN'
+	###    SyN_0    ###
+	moving_dir = clean_dir
+	name_out = 'syn_0'
+	name_fixed = 'affine_1'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	print('*** Start SyN_0 ***')
-	anats = os.listdir(sharp_dir)
-	for anat in anats:
-		moving_path = os.path.join(sharp_dir, anat)
-		for mirror in [True, False]:
-			t0 = time.time()
-			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
-			print('SyN {} done. Duration {}s'.format(anat, time.time()-t0))
-	print('*** Finished SyN_0 ***')
+	###    SyN_1    ###
+	moving_dir = clean_dir
+	name_out = 'syn_1'
+	name_fixed = 'syn_0'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	save_dir = os.path.join(main_dir, 'syn_0')
-	avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='syn_0')
+	###    SyN_2    ###
+	moving_dir = clean_dir
+	name_out = 'syn_2'
+	name_fixed = 'syn_1'
+	sharpen_output = True
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	### sharpen
-	in_file = os.path.join(main_dir, 'syn_0.nii')
-	save_dir = main_dir
-	sharpen_anat(in_file, save_dir)
+	###    SyN_3    ###
+	moving_dir = clean_dir
+	name_out = 'syn_3'
+	name_fixed = 'syn_2'
+	sharpen_output = True
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	###    SyN_4    ###
+	moving_dir = clean_dir
+	name_out = 'syn_4'
+	name_fixed = 'syn_3'
+	sharpen_output = True
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	###    SyN_5    ###
+	moving_dir = sharp_dir
+	name_out = 'syn_5'
+	name_fixed = 'syn_4'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	###    SyN_6    ###
+	moving_dir = sharp_dir
+	name_out = 'syn_6'
+	name_fixed = 'syn_5'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	# ################
+	# ### SyN_Iter ###
+	# ################
+	# # Align all fly brains (and their mirrors) to affine_1_sharp.nii
+	# save_dir = os.path.join(main_dir, 'syn_0')
+	# if not os.path.exists(save_dir):
+	# 	os.mkdir(save_dir)
+
+	# fixed_path = os.path.join(main_dir, 'affine_1_sharp.nii')
+	# resolution = (0.65, 0.65, 1)
+	# type_of_transform = 'SyN'
+
+	# print('*** Start SyN_0 ***')
+	# anats = os.listdir(sharp_dir)
+	# for anat in anats:
+	# 	moving_path = os.path.join(sharp_dir, anat)
+	# 	for mirror in [True, False]:
+	# 		t0 = time.time()
+	# 		align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
+	# 		print('SyN {} done. Duration {}s'.format(anat, time.time()-t0))
+	# print('*** Finished SyN_0 ***')
+
+	# save_dir = os.path.join(main_dir, 'syn_0')
+	# avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='syn_0')
+
+	# ### sharpen
+	# in_file = os.path.join(main_dir, 'syn_0.nii')
+	# save_dir = main_dir
+	# sharpen_anat(in_file, save_dir)
 
 def avg_brains(input_directory, save_directory, save_name):
 	### Load Brains ###
