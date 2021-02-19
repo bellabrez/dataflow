@@ -302,7 +302,7 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 		for mirror in [True, False]:
 			t0 = time.time()
 			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
-			print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
+			print('{} {} done. Duration {}s'.format(type_of_transform, anat, time.time()-t0))
 	print(f'*** Finished {name_out} ***')
 
 	save_dir = os.path.join(main_dir, name_out)

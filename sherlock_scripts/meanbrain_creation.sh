@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=bldmnbrn
 #SBATCH --partition=trc
-#SBATCH --time=1-00:00:00
+#SBATCH --time=7-00:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --open-mode=append
