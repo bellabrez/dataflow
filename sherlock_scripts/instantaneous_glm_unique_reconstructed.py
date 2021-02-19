@@ -157,7 +157,6 @@ def main(args):
 	# brain_z[z] is now time by voxels for a given z-slice
 
 	flies = {}
-	fly_names = ['fly_094']
 	for i, fly in enumerate(fly_names):
 		printlog(F'*** fly: {fly} ***')
 		flies[fly] = Fly(fly_name=fly, fly_idx=i)
@@ -166,140 +165,140 @@ def main(args):
 		flies[fly].fictrac.interp_fictrac()
 		flies[fly].load_z_depth_correction()
 
-		for z in range(9,49-9):
-			printlog(F'Z: {z}')
-			# #labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/final_9_cluster_labels_2000.npy'
-			# labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/cluster_labels.npy'
-			# cluster_model_labels = np.load(labels_file) #z,t
-			# cluster_model_labels = cluster_model_labels[z,:]
+	for z in range(9,49-9):
+		printlog(F'Z: {z}')
+		# #labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/final_9_cluster_labels_2000.npy'
+		# labels_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/cluster_labels.npy'
+		# cluster_model_labels = np.load(labels_file) #z,t
+		# cluster_model_labels = cluster_model_labels[z,:]
 
-			# brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z) #<---------- !!!
-			# brain = np.array(nib.load(brain_file).get_data(), copy=True)
-			# fly_idx_delete = 3 #(fly_095)
-			# brain = np.delete(brain, fly_idx_delete, axis=-1) #### DELETING FLY_095 ####
+		# brain_file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20201129_super_slices/superslice_{}.nii".format(z) #<---------- !!!
+		# brain = np.array(nib.load(brain_file).get_data(), copy=True)
+		# fly_idx_delete = 3 #(fly_095)
+		# brain = np.delete(brain, fly_idx_delete, axis=-1) #### DELETING FLY_095 ####
 
-			#for i, fly in enumerate(fly_names):
-			#flies[fly].load_brain_slice()
-			#flies[fly].get_cluster_averages(cluster_model_labels, n_clusters)
+		#for i, fly in enumerate(fly_names):
+		#flies[fly].load_brain_slice()
+		#flies[fly].get_cluster_averages(cluster_model_labels, n_clusters)
 
-			#for i, fly in enumerate(fly_names):
+		#for i, fly in enumerate(fly_names):
 
-			scores_all = []
+		scores_all = []
 
-			scores_walking = []
-			scores_ypos = []
-			scores_zpos = []
-			scores_zneg = []
+		scores_walking = []
+		scores_ypos = []
+		scores_zpos = []
+		scores_zneg = []
 
-			scores_walking_unique = []
-			scores_ypos_unique = []
-			scores_zpos_unique = []
-			scores_zneg_unique = []
+		scores_walking_unique = []
+		scores_ypos_unique = []
+		scores_zpos_unique = []
+		scores_zneg_unique = []
 
-			for cluster_num in range(len(np.unique(cluster_model_labels[z]))):
-				# if cluster_num == 100:
-				# 	printlog(str(cluster_num))
-				###############################################################
-				### Build Y vector for a single supervoxel (with all flies) ###
-				###############################################################
-				# all_fly_neural = []
-				#for fly in fly_names:
-				# signal = flies[fly].cluster_signals[cluster_num,:]
-				# all_fly_neural.extend(signal)
-				# Y = np.asarray(all_fly_neural)
+		for cluster_num in range(len(np.unique(cluster_model_labels[z]))):
+			# if cluster_num == 100:
+			# 	printlog(str(cluster_num))
+			###############################################################
+			### Build Y vector for a single supervoxel (with all flies) ###
+			###############################################################
+			# all_fly_neural = []
+			#for fly in fly_names:
+			# signal = flies[fly].cluster_signals[cluster_num,:]
+			# all_fly_neural.extend(signal)
+			# Y = np.asarray(all_fly_neural)
 
-				# # grab single fly from superfly
-				# i=2 #temp hardcode - REMOVE <--------------------------------------------------------------- !!!
-				# num_tp = 3384
-				# start = i*num_tp
-				# stop = (i+1)*num_tp
-				# Y = brain_z[z-9][start:stop,:] # -9 to correct for shift
-				# now Y is (3384, voxel)
-				Y = brain_z[z-9][:,cluster_num]
+			# # grab single fly from superfly
+			# i=2 #temp hardcode - REMOVE <--------------------------------------------------------------- !!!
+			# num_tp = 3384
+			# start = i*num_tp
+			# stop = (i+1)*num_tp
+			# Y = brain_z[z-9][start:stop,:] # -9 to correct for shift
+			# now Y is (3384, voxel)
+			Y = brain_z[z-9][:,cluster_num]
 
-				###########################################
-				### Build the X matrix for this cluster ###
-				###########################################
-				# For each fly, this cluster could have originally come from a different z-depth
-				# Get correct original z-depth
-				ypos = []
-				zpos = []
-				zneg = []
-				walking = []
-				for i, fly in enumerate(fly_names):
-					cluster_indicies = np.where(cluster_model_labels[z]==cluster_num)[0]
-					#cluster_indicies = flies[fly].cluster_indicies[cluster_num]
-					z_map = flies[fly].z_correction[:,:,z].ravel()
-					original_z = int(np.median(z_map[cluster_indicies]))
-					ypos.extend(flies[fly].fictrac.fictrac['Y_pos'][original_z])
-					zpos.extend(flies[fly].fictrac.fictrac['Z_pos'][original_z])
-					zneg.extend(flies[fly].fictrac.fictrac['Z_neg'][original_z])
-					walking.extend(flies[fly].fictrac.fictrac['walking'][original_z])
-											   
-				### ALL ###
-				X = np.stack((ypos, zpos, zneg, walking)).T
-				model = RidgeCV().fit(X,Y)
-				scores_all.append(np.sqrt(model.score(X,Y)))
-				   
-				### Singles ###
-				X = np.reshape(walking, (-1, 1))
-				model = RidgeCV().fit(X,Y)
-				scores_walking.append(np.sqrt(model.score(X,Y)))
+			###########################################
+			### Build the X matrix for this cluster ###
+			###########################################
+			# For each fly, this cluster could have originally come from a different z-depth
+			# Get correct original z-depth
+			ypos = []
+			zpos = []
+			zneg = []
+			walking = []
+			for i, fly in enumerate(fly_names):
+				cluster_indicies = np.where(cluster_model_labels[z]==cluster_num)[0]
+				#cluster_indicies = flies[fly].cluster_indicies[cluster_num]
+				z_map = flies[fly].z_correction[:,:,z].ravel()
+				original_z = int(np.median(z_map[cluster_indicies]))
+				ypos.extend(flies[fly].fictrac.fictrac['Y_pos'][original_z])
+				zpos.extend(flies[fly].fictrac.fictrac['Z_pos'][original_z])
+				zneg.extend(flies[fly].fictrac.fictrac['Z_neg'][original_z])
+				walking.extend(flies[fly].fictrac.fictrac['walking'][original_z])
+										   
+			### ALL ###
+			X = np.stack((ypos, zpos, zneg, walking)).T
+			model = RidgeCV().fit(X,Y)
+			scores_all.append(np.sqrt(model.score(X,Y)))
+			   
+			### Singles ###
+			X = np.reshape(walking, (-1, 1))
+			model = RidgeCV().fit(X,Y)
+			scores_walking.append(np.sqrt(model.score(X,Y)))
+			
+			X = np.reshape(ypos, (-1, 1))
+			model = RidgeCV().fit(X,Y)
+			scores_ypos.append(np.sqrt(model.score(X,Y)))
+			
+			X = np.reshape(zpos, (-1, 1))
+			model = RidgeCV().fit(X,Y)
+			scores_zpos.append(np.sqrt(model.score(X,Y)))
+			
+			X = np.reshape(zneg, (-1, 1))
+			model = RidgeCV().fit(X,Y)
+			scores_zneg.append(np.sqrt(model.score(X,Y)))
 				
-				X = np.reshape(ypos, (-1, 1))
-				model = RidgeCV().fit(X,Y)
-				scores_ypos.append(np.sqrt(model.score(X,Y)))
-				
-				X = np.reshape(zpos, (-1, 1))
-				model = RidgeCV().fit(X,Y)
-				scores_zpos.append(np.sqrt(model.score(X,Y)))
-				
-				X = np.reshape(zneg, (-1, 1))
-				model = RidgeCV().fit(X,Y)
-				scores_zneg.append(np.sqrt(model.score(X,Y)))
-					
-				### LOO ###
-				X = np.stack((ypos, zpos, zneg)).T
-				model = RidgeCV().fit(X,Y)
-				scores_walking_unique.append(np.sqrt(model.score(X,Y)))
-				
-				X = np.stack((zpos, zneg, walking)).T
-				model = RidgeCV().fit(X,Y)
-				scores_ypos_unique.append(np.sqrt(model.score(X,Y)))
-				
-				X = np.stack((ypos, zneg, walking)).T
-				model = RidgeCV().fit(X,Y)
-				scores_zpos_unique.append(np.sqrt(model.score(X,Y)))
-				
-				X = np.stack((ypos, zpos, walking)).T
-				model = RidgeCV().fit(X,Y)
-				scores_zneg_unique.append(np.sqrt(model.score(X,Y)))
+			### LOO ###
+			X = np.stack((ypos, zpos, zneg)).T
+			model = RidgeCV().fit(X,Y)
+			scores_walking_unique.append(np.sqrt(model.score(X,Y)))
+			
+			X = np.stack((zpos, zneg, walking)).T
+			model = RidgeCV().fit(X,Y)
+			scores_ypos_unique.append(np.sqrt(model.score(X,Y)))
+			
+			X = np.stack((ypos, zneg, walking)).T
+			model = RidgeCV().fit(X,Y)
+			scores_zpos_unique.append(np.sqrt(model.score(X,Y)))
+			
+			X = np.stack((ypos, zpos, walking)).T
+			model = RidgeCV().fit(X,Y)
+			scores_zneg_unique.append(np.sqrt(model.score(X,Y)))
 
-			### Save ###
-			save_dir = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210216_inst_uniq_glm_recon'
-			# save_dir_fly = os.path.join(save_dir, fly)
-			# if not os.path.exists(save_dir_fly):
-			# 	os.mkdir(save_dir_fly)
+		### Save ###
+		save_dir = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210216_inst_uniq_glm_recon'
+		# save_dir_fly = os.path.join(save_dir, fly)
+		# if not os.path.exists(save_dir_fly):
+		# 	os.mkdir(save_dir_fly)
 
-			save_dir_pc = os.path.join(save_dir, str(num_pcs))
-			if not os.path.exists(save_dir_pc):
-				os.mkdir(save_dir_pc)
+		save_dir_pc = os.path.join(save_dir, str(num_pcs))
+		if not os.path.exists(save_dir_pc):
+			os.mkdir(save_dir_pc)
 
 
-			save_file = os.path.join(save_dir_pc, F'Z{z}.pickle')
-			scores = {'scores_all':scores_all,
-					 'scores_walking':scores_walking,
-					 'scores_ypos':scores_ypos,
-					 'scores_zpos':scores_zpos,
-					 'scores_zneg':scores_zneg,
-					 'scores_walking_unique':scores_walking_unique,
-					 'scores_ypos_unique':scores_ypos_unique,
-					 'scores_zpos_unique':scores_zpos_unique,
-					 'scores_zneg_unique':scores_zneg_unique}
+		save_file = os.path.join(save_dir_pc, F'Z{z}.pickle')
+		scores = {'scores_all':scores_all,
+				 'scores_walking':scores_walking,
+				 'scores_ypos':scores_ypos,
+				 'scores_zpos':scores_zpos,
+				 'scores_zneg':scores_zneg,
+				 'scores_walking_unique':scores_walking_unique,
+				 'scores_ypos_unique':scores_ypos_unique,
+				 'scores_zpos_unique':scores_zpos_unique,
+				 'scores_zneg_unique':scores_zneg_unique}
 
-			with open(save_file, 'wb') as handle:
-				pickle.dump(scores, handle, protocol=pickle.HIGHEST_PROTOCOL)
-			printlog('SAVED')
+		with open(save_file, 'wb') as handle:
+			pickle.dump(scores, handle, protocol=pickle.HIGHEST_PROTOCOL)
+		printlog('SAVED')
 
 if __name__ == '__main__':
 	main(json.loads(sys.argv[1]))
