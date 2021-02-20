@@ -145,26 +145,70 @@ def main(args):
 	with open(labels_file, 'rb') as handle:
 	    cluster_model_labels = pickle.load(handle)
 
-	# reconstructed data
-	file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210216_reconstructed_{num_pcs}.npy'
-	brain = np.load(file) # (30456, 26840) time by voxel
-	running_sum = 0
-	brain_z = []
-	for z in range(9,49-9):
-	    num_clusters = len(np.unique(cluster_model_labels[z]))
-	    brain_z.append(brain[:,running_sum:num_clusters+running_sum])
-	    running_sum += num_clusters
-	# brain_z[z] is now time by voxels for a given z-slice
+	# #### FOR SUPERFLY-BASED PCA RECONSTRUCTION ####
+	# # reconstructed data
+	# file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210216_reconstructed_{num_pcs}.npy'
+	# brain = np.load(file) # (30456, 26840) time by voxel
+	# ### reshape brain
+	# running_sum = 0
+	# brain_z = []
+	# for z in range(9,49-9):
+	#     num_clusters = len(np.unique(cluster_model_labels[z]))
+	#     brain_z.append(brain[:,running_sum:num_clusters+running_sum])
+	#     running_sum += num_clusters
+	# # brain_z[z] is now time by voxels for a given z-slice
 
 	flies = {}
 	fly_names = ['fly_094']
 	for i, fly in enumerate(fly_names):
+		i = 2 #temp hardcode - REMOVE <--------------------------------------------------------------- !!!
 		printlog(F'*** fly: {fly} ***')
 		flies[fly] = Fly(fly_name=fly, fly_idx=i)
 		flies[fly].load_timestamps()
 		flies[fly].load_fictrac()
 		flies[fly].fictrac.interp_fictrac()
 		flies[fly].load_z_depth_correction()
+
+		### FOR SINGLE-FLY PCA RECONSTRUCTION #######################
+		# here i have not yet run the reconstruction in jupyter, so i'll do it here:
+		file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210214_eigen_vectors_ztrim_fly{i}.npy'
+		vectors = np.load(file).real
+		#print(vectors.shape)# vectors is voxel by PC probably (3384, 3384)
+		printlog(f'vectors are {vectors.shape} voxel by PC')
+
+		load_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/super_brain.pickle'
+		with open(load_file, 'rb') as handle:
+		    temp_brain = pickle.load(handle)
+		#brain is a dict of z, each containing a variable number of supervoxels
+		#one dict element looks like: (n_clusters, 3384, 9)
+		X = np.zeros((0,3384,9))
+		for z in range(9,49-9):
+		    X = np.concatenate((X,temp_brain[z]),axis=0)
+		X = np.swapaxes(X,1,2) # THIS LINE WAS MISSING
+		X = np.reshape(X,(26840, -1))
+		X = X.T
+		#X.shape # x is time by voxels (30456, 26840)
+		num_tp = 3384
+		start = i*num_tp
+		stop = (i+1)*num_tp
+		X = X[start:stop,:] # now (3384,26840)
+		printlog(f'X is {X.shape} time by voxel - expecting (3384,26840)')
+
+		temporal = X.dot(vectors)
+		brain = np.matmul(temporal[:,:num_pcs], vectors[:,:num_pcs].T)
+		# brain should be (3384, 26840) time by voxel
+		printlog(f'brain is {brain.shape} time by voxel - expecting (3384,26840)')
+
+		### reshape brain
+		running_sum = 0
+		brain_z = []
+		for z in range(9,49-9):
+		    num_clusters = len(np.unique(cluster_model_labels[z]))
+		    brain_z.append(brain[:,running_sum:num_clusters+running_sum])
+		    running_sum += num_clusters
+		# brain_z[z] is now time by voxels for a given z-slice
+
+		############################################################
 
 		for z in range(9,49-9):
 			printlog(F'Z: {z}')
@@ -209,11 +253,10 @@ def main(args):
 				# Y = np.asarray(all_fly_neural)
 
 				# grab single fly from superfly
-				i=2 #temp hardcode - REMOVE <--------------------------------------------------------------- !!!
-				num_tp = 3384
-				start = i*num_tp
-				stop = (i+1)*num_tp
-				Y = brain_z[z-9][start:stop,:] # -9 to correct for shift
+				# num_tp = 3384
+				# start = i*num_tp
+				# stop = (i+1)*num_tp
+				Y = brain_z[z-9]#[start:stop,:] # -9 to correct for shift
 				# now Y is (3384, voxel)
 				Y = Y[:,cluster_num]
 
@@ -282,10 +325,9 @@ def main(args):
 			if not os.path.exists(save_dir_fly):
 				os.mkdir(save_dir_fly)
 
-			save_dir_fly_pc = os.path.join(save_dir_fly, str(num_pcs))
+			save_dir_fly_pc = os.path.join(save_dir_fly, str(num_pcs) + '_singlePCA')
 			if not os.path.exists(save_dir_fly_pc):
 				os.mkdir(save_dir_fly_pc)
-
 
 			save_file = os.path.join(save_dir_fly_pc, F'Z{z}.pickle')
 			scores = {'scores_all':scores_all,

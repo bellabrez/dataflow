@@ -80,17 +80,32 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-printlog(f"\n{'   GLM - superfly reconstructed   ':=^{width}}")
+# printlog(f"\n{'   GLM - superfly reconstructed   ':=^{width}}")
+# job_ids = []
+# for num_pcs in [1, 10, 30, 50, 100, 500, 1000, 10000, 26840]:
+#     args = {'logfile': logfile,
+#             'num_pcs': num_pcs}
+#     script = 'instantaneous_glm_unique_reconstructed.py'
+#     job_id = flow.sbatch(jobname='glmsuper',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=6, mem=12, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+printlog(f"\n{'   GLM - single fly single reconstructed   ':=^{width}}")
 job_ids = []
-for num_pcs in [1, 10, 30, 50, 100, 500, 1000, 10000, 26840]:
+for num_pcs in [1000]:#[1, 10, 30, 50, 100, 500, 1000, 10000, 26840]:
     args = {'logfile': logfile,
             'num_pcs': num_pcs}
-    script = 'instantaneous_glm_unique_reconstructed.py'
-    job_id = flow.sbatch(jobname='glmsuper',
+    script = 'instantaneous_glm_unique_singlereconstructed.py'
+    job_id = flow.sbatch(jobname='glmsingle',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=6, mem=12, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=6, mem=8, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
