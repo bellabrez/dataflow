@@ -97,7 +97,7 @@ printlog("")
 
 printlog(f"\n{'   GLM - single fly single reconstructed   ':=^{width}}")
 job_ids = []
-for num_pcs in [1000]:#[1, 10, 30, 50, 100, 500, 1000, 10000, 26840]:
+for num_pcs in [1, 10, 30, 50, 100, 500, 1000, 10000, 26840]:
     args = {'logfile': logfile,
             'num_pcs': num_pcs}
     script = 'instantaneous_glm_unique_single_reconstructed.py'
