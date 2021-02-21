@@ -98,21 +98,21 @@ def main():
 
 	resolution = (0.65, 0.65, 1)
 
-	type_of_transform = 'Affine'
-	###   Affine_1    ###
-	moving_dir = clean_dir
-	name_out = 'affine_1'
-	name_fixed = 'affine_0'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# type_of_transform = 'Affine'
+	# ###   Affine_1    ###
+	# moving_dir = clean_dir
+	# name_out = 'affine_1'
+	# name_fixed = 'affine_0'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	type_of_transform = 'SyN'
-	###    SyN_0    ###
-	moving_dir = clean_dir
-	name_out = 'syn_0'
-	name_fixed = 'affine_1'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# ###    SyN_0    ###
+	# moving_dir = clean_dir
+	# name_out = 'syn_0'
+	# name_fixed = 'affine_1'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_1    ###
 	moving_dir = clean_dir
