@@ -159,9 +159,9 @@ def main(args):
 	# # brain_z[z] is now time by voxels for a given z-slice
 
 	flies = {}
-	fly_names = ['fly_094']
+	#fly_names = ['fly_094']
 	for i, fly in enumerate(fly_names):
-		i = 2 #temp hardcode - REMOVE <--------------------------------------------------------------- !!!
+		#i = 2 #temp hardcode - REMOVE <--------------------------------------------------------------- !!!
 		printlog(F'*** fly: {fly} ***')
 		flies[fly] = Fly(fly_name=fly, fly_idx=i)
 		flies[fly].load_timestamps()

@@ -95,17 +95,18 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-printlog(f"\n{'   GLM - single fly single reconstructed   ':=^{width}}")
+printlog(f"\n{'   GLM   ':=^{width}}")
 job_ids = []
-for num_pcs in [1, 10, 30, 50, 100, 500, 1000, 10000, 26840]:
+#[1, 10, 30, 50, 100, 500, 1000, 10000, 26840]
+for num_pcs in [100]:
     args = {'logfile': logfile,
             'num_pcs': num_pcs}
-    script = 'instantaneous_glm_unique_single_reconstructed.py'
-    job_id = flow.sbatch(jobname='glmsingle',
+    script = 'instantaneous_glm_unique_reconstructed.py'
+    job_id = flow.sbatch(jobname='glm',
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=6, mem=8, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=24, mem=8, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)

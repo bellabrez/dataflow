@@ -146,7 +146,9 @@ def main(args):
 	    cluster_model_labels = pickle.load(handle)
 
 	# reconstructed data
-	file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210216_reconstructed_{num_pcs}.npy'
+	## this file is reconstructed from indiv fly PCs
+	file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210221_reconstructed_100_fromindivpcs.npy'
+	#file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20210216_reconstructed_{num_pcs}.npy'
 	brain = np.load(file) # (30456, 26840) time by voxel
 	running_sum = 0
 	brain_z = []
@@ -280,7 +282,7 @@ def main(args):
 		# if not os.path.exists(save_dir_fly):
 		# 	os.mkdir(save_dir_fly)
 
-		save_dir_pc = os.path.join(save_dir, str(num_pcs))
+		save_dir_pc = os.path.join(save_dir, str(num_pcs) + 'fromindivpcs')
 		if not os.path.exists(save_dir_pc):
 			os.mkdir(save_dir_pc)
 
