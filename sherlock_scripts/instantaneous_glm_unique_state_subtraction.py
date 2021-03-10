@@ -187,12 +187,12 @@ def main(args):
 				zneg.extend(flies[fly].fictrac.fictrac['Z_neg'][original_z])
 				walking.extend(flies[fly].fictrac.fictrac['walking'][original_z])
 										 
-		    ### Subtract 0/1 prediction ###
-		    X = np.reshape(walking, (-1, 1))
-		    model = RidgeCV().fit(X,Y)
-		    scores_walking.append(np.sqrt(model.score(X,Y)))
-		    prediction = model.predict(X)
-		    Y = Y - prediction
+			### Subtract 0/1 prediction ###
+			X = np.reshape(walking, (-1, 1))
+			model = RidgeCV().fit(X,Y)
+			scores_walking.append(np.sqrt(model.score(X,Y)))
+			prediction = model.predict(X)
+			Y = Y - prediction
 
 			### ALL ###
 			X = np.stack((ypos, zpos, zneg)).T
