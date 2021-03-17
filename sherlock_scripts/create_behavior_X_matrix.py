@@ -102,41 +102,41 @@ def main(args):
 			self.fictrac['Wi'] = interp1d(x_original, self.fictrac['W'], bounds_error = False, kind = 'nearest')
 
 	def build_timeshifted_behavior_matrix(time_shifts, fly, z, behavior):
-	    # Get correct behavior interp obj
-	    if 'Z' in behavior: behavior_i = 'Zi'
-	    if 'Y' in behavior: behavior_i = 'Yi'
-	    if 'W' in behavior: behavior_i = 'Wi'
+		# Get correct behavior interp obj
+		if 'Z' in behavior: behavior_i = 'Zi'
+		if 'Y' in behavior: behavior_i = 'Yi'
+		if 'W' in behavior: behavior_i = 'Wi'
 
-	    interp_obj = flies[fly].fictrac.fictrac[behavior_i]
+		interp_obj = flies[fly].fictrac.fictrac[behavior_i]
 
-	    behavior_shifts = []
-	    for shift in time_shifts:
-	        fictrac_interp = interp_obj(flies[fly].timestamps[:,z]+shift)
-	        fictrac_interp = np.nan_to_num(fictrac_interp)
-	        if 'pos' in behavior:
-	            fictrac_interp = np.clip(fictrac_interp, a_min=0, a_max=None)
-	        if 'neg' in behavior:
-	            fictrac_interp = np.clip(fictrac_interp, a_min=None, a_max=0)*-1
-	        #fictrac_interp[np.where(fictrac_interp == 0)] = np.nan
-	        behavior_shifts.append(fictrac_interp)
+		behavior_shifts = []
+		for shift in time_shifts:
+			fictrac_interp = interp_obj(flies[fly].timestamps[:,z]+shift)
+			fictrac_interp = np.nan_to_num(fictrac_interp)
+			if 'pos' in behavior:
+				fictrac_interp = np.clip(fictrac_interp, a_min=0, a_max=None)
+			if 'neg' in behavior:
+				fictrac_interp = np.clip(fictrac_interp, a_min=None, a_max=0)*-1
+			#fictrac_interp[np.where(fictrac_interp == 0)] = np.nan
+			behavior_shifts.append(fictrac_interp)
 
-	    return time_shifts, behavior_shifts
+		return time_shifts, behavior_shifts
 
 	def build_X (time_shifts, behaviors, z):
-    all_fly_shifts = []
-    for fly in fly_names:
-        all_behavior_shifts = []
-        for behavior in behaviors:
-            time_shifts, behavior_shifts = build_timeshifted_behavior_matrix(time_shifts=time_shifts,
-                                                                             fly=fly,
-                                                                             z=z,
-                                                                             behavior=behavior)
-            all_behavior_shifts.append(np.asarray(behavior_shifts))
-        all_behavior_shifts = np.asarray(all_behavior_shifts)
-        all_behavior_shifts = np.reshape(all_behavior_shifts, (-1,3384))
-        all_fly_shifts.append(all_behavior_shifts)
-    X = np.asarray(all_fly_shifts)
-    return X
+		all_fly_shifts = []
+		for fly in fly_names:
+			all_behavior_shifts = []
+			for behavior in behaviors:
+				time_shifts, behavior_shifts = build_timeshifted_behavior_matrix(time_shifts=time_shifts,
+																				 fly=fly,
+																				 z=z,
+																				 behavior=behavior)
+				all_behavior_shifts.append(np.asarray(behavior_shifts))
+			all_behavior_shifts = np.asarray(all_behavior_shifts)
+			all_behavior_shifts = np.reshape(all_behavior_shifts, (-1,3384))
+			all_fly_shifts.append(all_behavior_shifts)
+		X = np.asarray(all_fly_shifts)
+	return X
 
 	###################
 	### Build Flies ###
@@ -157,9 +157,9 @@ def main(args):
 	############################################
 	Xs = []
 	for z in range(49):
-	    printlog(z)
-	    X = build_X(time_shifts, behaviors, z)
-	    Xs.append(X)
+		printlog(z)
+		X = build_X(time_shifts, behaviors, z)
+		Xs.append(X)
 
 	######################
 	### Save Responses ###
