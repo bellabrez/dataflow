@@ -157,7 +157,7 @@ def main(args):
 	############################################
 	Xs = []
 	for z in range(49):
-		printlog(z)
+		printlog(str(z))
 		X = build_X(time_shifts, behaviors, z)
 		Xs.append(X)
 
