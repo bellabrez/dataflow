@@ -136,7 +136,7 @@ def main(args):
 			all_behavior_shifts = np.reshape(all_behavior_shifts, (-1,3384))
 			all_fly_shifts.append(all_behavior_shifts)
 		X = np.asarray(all_fly_shifts)
-	return X
+		return X
 
 	###################
 	### Build Flies ###
