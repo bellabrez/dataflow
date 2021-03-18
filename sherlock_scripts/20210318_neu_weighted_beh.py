@@ -186,7 +186,7 @@ def main(args):
 	        original_z = int(np.median(z_map[cluster_indicies]))
 	        Xs_new.append(X[original_z,i,:,:])
 	    Xs_new = np.asarray(Xs_new)
-	    X_cluster = np.reshape(np.moveaxis(Xs_new,0,1),(-1,33840))
+	    X_cluster = np.reshape(np.moveaxis(Xs_new,0,1),(-1,30456))
 
 	    ###################
 	    ### Dot Product ###
