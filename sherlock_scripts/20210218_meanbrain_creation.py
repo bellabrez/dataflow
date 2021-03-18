@@ -148,9 +148,9 @@ def main():
 
 def load_numpy_brain(in_file):
 	if in_file.endswith('.nii'):
-		brain = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
+		brain = np.asarray(nib.load(in_file).get_data().squeeze(), dtype='float32')
 	elif in_file.endswith('.nrrd'):
-		brain = np.asarray(nrrd.read(file)[0].squeeze(), dtype='float32')
+		brain = np.asarray(nrrd.read(in_file)[0].squeeze(), dtype='float32')
 	else:
 		print(f'Could not load {in_file}')
 	return brain
