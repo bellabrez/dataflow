@@ -6,6 +6,7 @@ from time import sleep
 import datetime
 import numpy as np
 import nibabel as nib
+import nrrd
 import scipy
 import warnings
 from contextlib import contextmanager
@@ -33,14 +34,15 @@ def main():
 	'''
 
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
-	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210126_alignment_package"
+	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
 	raw_dir = os.path.join(main_dir, 'raw_anats')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
+	resolution = (0.58, 0.58, 1)
 
-	# ##########################
-	# ### prep) Clean Anatomies ###
-	# ##########################
+	# #######################
+	# ### Clean Anatomies ###
+	# #######################
 	# # Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
 	# anats = os.listdir(raw_dir)
@@ -55,64 +57,52 @@ def main():
 	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
 	# print('*** Finished Cleaning ***')
 
-	# ############################
-	# ### prep) Sharpen Anatomies ###
-	# ############################
-	# # Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	# clean_anats = os.listdir(clean_dir)
-	# print('found clean anats: {}'.format(clean_anats))
+	#########################
+	### Sharpen Anatomies ###
+	#########################
+	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	clean_anats = os.listdir(clean_dir)
+	print('found clean anats: {}'.format(clean_anats))
 
-	# if not os.path.exists(sharp_dir):
-	# 	os.mkdir(sharp_dir)
+	if not os.path.exists(sharp_dir):
+		os.mkdir(sharp_dir)
 
-	# print('*** Start Sharpening ***')
-	# for anat in clean_anats:
-	# 	print('sharpening {}'.format(anat))
-	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	# print('*** Finished Sharpening ***')
+	print('*** Start Sharpening ***')
+	for anat in clean_anats:
+		print('sharpening {}'.format(anat))
+		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	print('*** Finished Sharpening ***')
 
-	# ###################
-	# ### 1) Affine_0 ###
-	# ###################
-	# # Align all fly brains (and their mirrors) to a chosen seed brain
-	# save_dir = os.path.join(main_dir, 'affine_0')
-	# if not os.path.exists(save_dir):
-	# 	os.mkdir(save_dir)
+	##############
+	### AFFINE ###
+	##############
+	type_of_transform = 'Affine'
 
-	# fixed_path = os.path.join(main_dir, 'seed', 'seed_fly91_clean_20200803.nii')
-	# resolution = (0.65, 0.65, 1)
-	# type_of_transform = 'Affine'
+	###   Affine_0    ###
+	moving_dir = clean_dir
+	name_out = 'affine_0'
+	name_fixed = 'seed_20201124_1_w_01_clean.nrrd'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# print('*** Start Affine_0 ***')
-	# anats = os.listdir(clean_dir)
-	# for anat in anats:
-	# 	moving_path = os.path.join(clean_dir, anat)
-	# 	for mirror in [True, False]:
-	# 		t0 = time.time()
-	# 		align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
-	# 		print('Affine {} done. Duration {}s'.format(anat, time.time()-t0))
-	# print('*** Finished Affine_0 ***')
+	###   Affine_1    ###
+	moving_dir = clean_dir
+	name_out = 'affine_1'
+	name_fixed = 'affine_0'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# save_dir = os.path.join(main_dir, 'affine_0')
-	# avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='affine_0')
-
-	resolution = (0.65, 0.65, 1)
-
-	# type_of_transform = 'Affine'
-	# ###   Affine_1    ###
-	# moving_dir = clean_dir
-	# name_out = 'affine_1'
-	# name_fixed = 'affine_0'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
-
+	##################
+	### NON-LINEAR ###
+	##################
 	type_of_transform = 'SyN'
-	# ###    SyN_0    ###
-	# moving_dir = clean_dir
-	# name_out = 'syn_0'
-	# name_fixed = 'affine_1'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	###    SyN_0    ###
+	moving_dir = clean_dir
+	name_out = 'syn_0'
+	name_fixed = 'affine_1'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_1    ###
 	moving_dir = clean_dir
@@ -156,43 +146,24 @@ def main():
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ################
-	# ### SyN_Iter ###
-	# ################
-	# # Align all fly brains (and their mirrors) to affine_1_sharp.nii
-	# save_dir = os.path.join(main_dir, 'syn_0')
-	# if not os.path.exists(save_dir):
-	# 	os.mkdir(save_dir)
-
-	# fixed_path = os.path.join(main_dir, 'affine_1_sharp.nii')
-	# resolution = (0.65, 0.65, 1)
-	# type_of_transform = 'SyN'
-
-	# print('*** Start SyN_0 ***')
-	# anats = os.listdir(sharp_dir)
-	# for anat in anats:
-	# 	moving_path = os.path.join(sharp_dir, anat)
-	# 	for mirror in [True, False]:
-	# 		t0 = time.time()
-	# 		align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
-	# 		print('SyN {} done. Duration {}s'.format(anat, time.time()-t0))
-	# print('*** Finished SyN_0 ***')
-
-	# save_dir = os.path.join(main_dir, 'syn_0')
-	# avg_brains(input_directory=save_dir, save_directory=main_dir, save_name='syn_0')
-
-	# ### sharpen
-	# in_file = os.path.join(main_dir, 'syn_0.nii')
-	# save_dir = main_dir
-	# sharpen_anat(in_file, save_dir)
+def load_numpy_brain(in_file):
+	if in_file.endswith('.nii'):
+		brain = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
+	elif in_file.endswith('.nrrd'):
+		brain = np.asarray(nrrd.read(file)[0].squeeze(), dtype='float32')
+	else:
+		print(f'Could not load {in_file}')
+	return brain
 
 def avg_brains(input_directory, save_directory, save_name):
 	### Load Brains ###
 	files = os.listdir(input_directory)
-	bigbrain = np.zeros((len(files), 1024, 512, 256), dtype='float32',order='F')
+	#bigbrain = np.zeros((len(files), 1024, 512, 256), dtype='float32',order='F') #my brain size
+	bigbrain = np.zeros((len(files), 1496, 772, 272), dtype='float32',order='F') # should add code to get dims
 	for i, file in enumerate(files):
 		print(F"loading {file}")
-		bigbrain[i,...] = np.asarray(nib.load(os.path.join(input_directory, file)).get_data(), dtype='float32')
+		bigbrain[i,...] = load_numpy_brain(os.path.join(input_directory, file))
+		#bigbrain[i,...] = np.asarray(nib.load(os.path.join(input_directory, file)).get_data(), dtype='float32')
 
 	### Avg ###
 	meanbrain = np.mean(bigbrain, axis=0)
@@ -204,12 +175,12 @@ def avg_brains(input_directory, save_directory, save_name):
 
 def align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror):
 	### Load fixed brain
-	fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
+	fixed = load_numpy_brain(fixed_path)
 	fixed = ants.from_numpy(fixed)
 	fixed.set_spacing(resolution)
 
 	### Load moving brain
-	moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
+	moving = load_numpy_brain(moving_path)
 	if mirror:
 		moving = moving[::-1,:,:]
 	moving = ants.from_numpy(moving)
@@ -231,8 +202,7 @@ def align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution,
 
 def clean_anat(in_file, save_dir):
 	### Load brain ###
-	#file = os.path.join(directory, 'stitched_brain_red_mean.nii') 
-	brain = np.asarray(nib.load(in_file).get_data(), dtype='float32')
+	brain = load_numpy_brain(in_file)
 
 	### Blur brain and mask small values ###
 	brain_copy = brain.copy().astype('float32')
@@ -261,7 +231,7 @@ def clean_anat(in_file, save_dir):
 def sharpen_anat(in_file, save_dir):
 	### Load brain ###
 	#file = os.path.join(directory, 'anat_red_clean.nii') 
-	brain = np.asarray(nib.load(in_file).get_data(), dtype='float32')
+	brain = load_numpy_brain(in_file)
 
 	# renormalize to .3-.7
 	a = .3
@@ -293,7 +263,10 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 	if not os.path.exists(save_dir):
 		os.mkdir(save_dir)
 
-	fixed_path = os.path.join(main_dir, f'{name_fixed}.nii')
+	if name_fixed.endswith('.nrrd'):
+		fixed_path = os.path.join(main_dir, name_fixed)
+	else:
+		fixed_path = os.path.join(main_dir, f'{name_fixed}.nii')
 
 	print(f'*** Start {name_out} ***')
 	anats = os.listdir(moving_dir)
