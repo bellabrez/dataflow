@@ -141,6 +141,8 @@ def main(args):
 		######################
 		save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/responses_{z}"
 		np.save(save_file, cluster_responses)
+		brain = None
+		Y = None
 
 if __name__ == '__main__':
     main(json.loads(sys.argv[1]))	 
