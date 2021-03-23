@@ -29,11 +29,11 @@ def main(args):
 	main_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior"
 
 	response_files = [os.path.join(main_path, file) for file in os.listdir(main_path) if 'responses' in file]
-	sort_nicely(response_files)
+	bbb.sort_nicely(response_files)
 
 	responses = []
 	for file in response_files:
-	    responses.append(np.load(file))
+		responses.append(np.load(file))
 	responses = np.asarray(responses)
 	responses.shape
 
@@ -72,9 +72,9 @@ def main(args):
 	t0 = time.time()
 	printlog('clustering.........')
 	model = AgglomerativeClustering(distance_threshold=0,
-	                                n_clusters=None,
-	                                memory=main_path,
-	                                linkage='ward')
+									n_clusters=None,
+									memory=main_path,
+									linkage='ward')
 	model = model.fit(to_fit)
 	printlog('complete!')
 	printlog(str(time.time()-t0))
@@ -83,28 +83,28 @@ def main(args):
 	counts = np.zeros(model.children_.shape[0])
 	n_samples = len(model.labels_)
 	for i, merge in enumerate(model.children_):
-	    current_count = 0
-	    for child_idx in merge:
-	        if child_idx < n_samples:
-	            current_count += 1  # leaf node
-	        else:
-	            current_count += counts[child_idx - n_samples]
-	    counts[i] = current_count
+		current_count = 0
+		for child_idx in merge:
+			if child_idx < n_samples:
+				current_count += 1  # leaf node
+			else:
+				current_count += counts[child_idx - n_samples]
+		counts[i] = current_count
 
 	linkage_matrix = np.column_stack([model.children_, model.distances_,
-	                                  counts]).astype(float)
+									  counts]).astype(float)
 
 	test = dendrogram(linkage_matrix,
-           truncate_mode=None,
-           p=10,
-           color_threshold=None,
-           #link_color_func=lambda x: colors[x],
-           no_labels=True,
-           distance_sort=True,
-           no_plot=True);
+		   truncate_mode=None,
+		   p=10,
+		   color_threshold=None,
+		   #link_color_func=lambda x: colors[x],
+		   no_labels=True,
+		   distance_sort=True,
+		   no_plot=True);
 
 	printlog('did not fail!')
 
 
 if __name__ == '__main__':
-    main(json.loads(sys.argv[1]))	 
+	main(json.loads(sys.argv[1]))	 
