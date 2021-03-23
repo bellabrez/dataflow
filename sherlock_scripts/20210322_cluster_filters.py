@@ -94,6 +94,7 @@ def main(args):
 	linkage_matrix = np.column_stack([model.children_, model.distances_,
 									  counts]).astype(float)
 
+	sys.setrecursionlimit(70000)
 	test = dendrogram(linkage_matrix,
 		   truncate_mode=None,
 		   p=10,
