@@ -16,7 +16,7 @@ import dataflow as flow
 
 def main(args):
 	logfile = args['logfile']
-	z = args['z']
+	#z = args['z']
 	printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
 	fly_names = ['fly_087', 'fly_089', 'fly_094', 'fly_097', 'fly_098', 'fly_099', 'fly_100', 'fly_101', 'fly_105']
