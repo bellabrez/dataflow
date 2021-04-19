@@ -85,7 +85,7 @@ printlog("")
 #########################################
 job_ids = []
 args = {'logfile': logfile}
-script = '20210318_neu_weighted_beh.py'
+script = '20210419_neu_weighted_beh_exclude_fly_087.py'
 job_id = flow.sbatch(jobname='neuwebeh',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
