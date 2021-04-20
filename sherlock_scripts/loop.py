@@ -80,20 +80,20 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-#########################################
-### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
-#########################################
-job_ids = []
-args = {'logfile': logfile}
-script = '20210419_neu_weighted_beh_exclude_fly_087.py'
-job_id = flow.sbatch(jobname='neuwebeh',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=12, mem=12, nice=nice, nodes=nodes) # 2 to 1
-job_ids.append(job_id)
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# #########################################
+# ### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
+# #########################################
+# job_ids = []
+# args = {'logfile': logfile}
+# script = '20210419_neu_weighted_beh_exclude_fly_087.py'
+# job_id = flow.sbatch(jobname='neuwebeh',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=12, mem=12, nice=nice, nodes=nodes) # 2 to 1
+# job_ids.append(job_id)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   GLM - superfly reconstructed   ':=^{width}}")
 # job_ids = []
@@ -739,58 +739,58 @@ for job_id in job_ids:
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-# ##########################
-# ### Template alignment ###
-# ##########################
+##########################
+### Template alignment ################################################################################################
+##########################
 
-# res_JFRC = (0.62, 0.62, 0.62)
-# res_JRC2018 = (0.38, 0.38, 0.38)
-# res_IBNWB = (0.64, 0.64, 1.41)
-# res_LUKE = (0.65, 0.65, 1)
-# res_DIEGO = (0.75, 0.75, 1.0)
-# res_KEVIN = (0.62,0.62,0.6)
+res_JFRC = (0.62, 0.62, 0.62)
+res_JRC2018 = (0.38, 0.38, 0.38)
+res_IBNWB = (0.64, 0.64, 1.41)
+res_LUKE = (0.65, 0.65, 1)
+res_DIEGO = (0.75, 0.75, 1.0)
+res_KEVIN = (0.62,0.62,0.6)
 
-# printlog(f"\n{'   Template Alignment   ':=^{width}}")
-# moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
-# moving_fly = "jrc2018"
-# moving_resolution = res_JRC2018
+printlog(f"\n{'   Template Alignment   ':=^{width}}")
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
+moving_fly = "jrc2018"
+moving_resolution = res_JRC2018
 
-# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210310_luke_exp_thresh.nii"
-# fixed_fly = 'luke_expthrsh'
-# fixed_resolution = res_LUKE
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210310_luke_depth_correction_2.nii"
+fixed_fly = 'lukedepthcor2'
+fixed_resolution = res_LUKE
 
-# save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
-# if not os.path.exists(save_directory):
-#     os.mkdir(save_directory)
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
+if not os.path.exists(save_directory):
+    os.mkdir(save_directory)
 
-# type_of_transform = 'SyN'
-# flip_X = False
-# flip_Z = True
-# save_warp_params = False
-# low_res = False
+type_of_transform = 'SyN'
+flip_X = False
+flip_Z = True
+save_warp_params = False
+low_res = False
 
-# args = {'logfile': logfile,
-#         'save_directory': save_directory,
-#         'fixed_path': fixed_path,
-#         'moving_path': moving_path,
-#         'fixed_fly': fixed_fly,
-#         'moving_fly': moving_fly,
-#         'type_of_transform': type_of_transform,
-#         'flip_X': flip_X,
-#         'flip_Z': flip_Z,
-#         'moving_resolution': moving_resolution,
-#         'fixed_resolution': fixed_resolution,
-#         'save_warp_params': save_warp_params,
-#         'low_res': low_res}
+args = {'logfile': logfile,
+        'save_directory': save_directory,
+        'fixed_path': fixed_path,
+        'moving_path': moving_path,
+        'fixed_fly': fixed_fly,
+        'moving_fly': moving_fly,
+        'type_of_transform': type_of_transform,
+        'flip_X': flip_X,
+        'flip_Z': flip_Z,
+        'moving_resolution': moving_resolution,
+        'fixed_resolution': fixed_resolution,
+        'save_warp_params': save_warp_params,
+        'low_res': low_res}
 
-# script = 'align_anat.py'
-# job_id = flow.sbatch(jobname='align',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+script = 'align_anat.py'
+job_id = flow.sbatch(jobname='align',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
 
-# flow.wait_for_job(job_id, logfile, com_path)
+flow.wait_for_job(job_id, logfile, com_path)
 
 
 ###################################################################################################################
