@@ -67,6 +67,8 @@ def main(args):
 	file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/master_X.npy"
 	printlog(f'loading {file}')
 	X = np.load(file)
+	fly_idx_delete = 0 #(fly_087)
+	X = np.delete(X, fly_idx_delete, axis=1) #### DELETING FLY_087 ####
 
 	#####################
 	### Make Clusters ###
@@ -94,6 +96,8 @@ def main(args):
 		brain = np.array(nib.load(brain_file).get_data(), copy=True)
 		fly_idx_delete = 3 #(fly_095)
 		brain = np.delete(brain, fly_idx_delete, axis=-1) #### DELETING FLY_095 ####
+		fly_idx_delete = 0 #(fly_095)
+		brain = np.delete(brain, fly_idx_delete, axis=-1) #### DELETING FLY_087 ####
 
 		# Get cluster responses for this slice
 		for fly in fly_names:
