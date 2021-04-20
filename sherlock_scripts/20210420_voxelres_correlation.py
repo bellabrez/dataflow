@@ -185,7 +185,7 @@ def main(args):
                 pooled_activity.append(flies[fly].brain[x,y,:])
             pooled_activity = np.asarray(pooled_activity).flatten()
 
-            Y = pooled_activityx
+            Y = pooled_activity
             X = pooled_behavior[behavior_to_corr]
 
             r, p = scipy.stats.pearsonr(X, Y)
