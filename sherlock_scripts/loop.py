@@ -19,7 +19,7 @@ modules = 'python/3.6.1'
 #########################
 
 width = 120 # width of print log
-nodes = 2 # 1 or 2
+nodes = 1 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
 flies = ['fly_084', 'fly_088', 'fly_091', 'fly_108']
@@ -230,10 +230,10 @@ printlog("")
 
 printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
 
-behaviors = ['Y_pos']#, 'Z_pos', 'Z_neg']
+behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
 job_ids = []
 for behavior_to_corr in behaviors:
-    for z in [20]: #range(49):
+    for z in range(49):
         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210420_correlation/"
         args = {'logfile': logfile,
                 'save_directory': save_directory,
@@ -244,7 +244,7 @@ for behavior_to_corr in behaviors:
                              script=os.path.join(scripts_path, script),
                              modules=modules,
                              args=args,
-                             logfile=logfile, time=8, mem=3, nice=nice, nodes=nodes) # 2 to 1
+                             logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
         job_ids.append(job_id)
 
 for job_id in job_ids:
