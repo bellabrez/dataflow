@@ -751,7 +751,7 @@ res_DIEGO = (0.75, 0.75, 1.0)
 res_KEVIN = (0.62,0.62,0.6)
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/nsybIVAf_c.nii"
 moving_fly = "luke"
 moving_resolution = res_LUKE
 
@@ -763,11 +763,11 @@ save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templat
 if not os.path.exists(save_directory):
     os.mkdir(save_directory)
 
-type_of_transform = 'Affine' #SyN
+type_of_transform = 'SyN' #'Affine' #SyN
 flip_X = False
-flip_Z = True
-save_warp_params = True
-low_res = True
+flip_Z = False
+save_warp_params = False
+low_res = False
 
 args = {'logfile': logfile,
         'save_directory': save_directory,
