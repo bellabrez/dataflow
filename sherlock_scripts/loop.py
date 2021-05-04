@@ -752,7 +752,7 @@ res_KEVIN = (0.62,0.62,0.6)
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
 moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/nsybIVAf_c.nii"
-moving_fly = "luke"
+moving_fly = "lukediego"
 moving_resolution = res_LUKE
 
 fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
@@ -788,7 +788,7 @@ job_id = flow.sbatch(jobname='align',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=8, mem=16, nice=nice, nodes=nodes) # 2 to 1
 
 flow.wait_for_job(job_id, logfile, com_path)
 
