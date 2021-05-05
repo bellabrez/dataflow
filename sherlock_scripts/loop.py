@@ -751,8 +751,8 @@ res_DIEGO = (0.75, 0.75, 1.0)
 res_KEVIN = (0.62,0.62,0.6)
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
-moving_fly = "lukedpthcor2"
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
+moving_fly = "luke"
 moving_resolution = res_LUKE
 
 fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
