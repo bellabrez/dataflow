@@ -765,7 +765,7 @@ if not os.path.exists(save_directory):
 
 type_of_transform = 'SyN' #'Affine' #SyN
 flip_X = False
-flip_Z = False
+flip_Z = True
 save_warp_params = False
 low_res = False
 
