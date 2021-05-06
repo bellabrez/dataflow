@@ -36,6 +36,12 @@ def main(args):
     moving_resolution = args['moving_resolution']
 
     low_res = args['low_res']
+    very_low_res = args['very_low_res']
+
+    grad_step = args['grad_step']
+    flow_sigma = args['flow_sigma']
+    total_sigma = args['total_sigma']
+    syn_sampling = args['syn_sampling']
 
     try:
         mimic_path = args['mimic_path']
@@ -59,6 +65,8 @@ def main(args):
     fixed.set_spacing(fixed_resolution)
     if low_res:
         fixed = ants.resample_image(fixed,(256,128,49),1,0)
+    elif very_low_res:
+        fixed = ants.resample_image(fixed,(128,64,49),1,0)
 
     ### Moving
     moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
@@ -70,6 +78,8 @@ def main(args):
     moving.set_spacing(moving_resolution)
     if low_res:
         moving = ants.resample_image(moving,(256,128,49),1,0)
+    elif very_low_res:
+        moving = ants.resample_image(moving,(128,64,49),1,0)
 
     ### Mimic
     if mimic_path is not None:
@@ -90,7 +100,14 @@ def main(args):
 
     t0=time()
     with stderr_redirected(): # to prevent dumb itk gaussian error bullshit infinite printing
-        moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
+        moco = ants.registration(fixed,
+                                 moving,
+                                 type_of_transform=type_of_transform,
+                                 grad_step=grad_step, 
+                                 flow_sigma=flow_sigma,
+                                 total_sigma=total_sigma,
+                                 syn_sampling=syn_sampling)
+        
     printlog('Fixed: {}, {} | Moving: {}, {} | {} | {}'.format(fixed_fly, fixed_path.split('/')[-1], moving_fly, moving_path.split('/')[-1], type_of_transform, sec_to_hms(time()-t0)))
 
     ################################

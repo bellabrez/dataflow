@@ -756,7 +756,7 @@ moving_fly = "luke"
 moving_resolution = res_LUKE
 
 fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
-fixed_fly = 'jrc2018'
+fixed_fly = 'jrc2018_sweep_prep'
 fixed_resolution = res_JRC2018
 
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
@@ -768,6 +768,12 @@ flip_X = False
 flip_Z = True
 save_warp_params = False
 low_res = False
+very_low_res = True
+
+grad_step = 0.2
+flow_sigma = 3
+total_sigma = 0
+syn_sampling = 32
 
 args = {'logfile': logfile,
         'save_directory': save_directory,
@@ -781,14 +787,18 @@ args = {'logfile': logfile,
         'moving_resolution': moving_resolution,
         'fixed_resolution': fixed_resolution,
         'save_warp_params': save_warp_params,
-        'low_res': low_res}
+        'low_res': low_res,
+        'grad_step': grad_step,
+        'flow_sigma': flow_sigma,
+        'total_sigma': total_sigma,
+        'syn_sampling': syn_sampling}
 
 script = 'align_anat.py'
 job_id = flow.sbatch(jobname='align',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=8, mem=16, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
 
 flow.wait_for_job(job_id, logfile, com_path)
 
