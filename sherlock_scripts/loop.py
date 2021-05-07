@@ -756,7 +756,7 @@ moving_fly = "luke"
 moving_resolution = res_LUKE
 
 fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
-fixed_fly = 'jrc2018_sweep_prep'
+fixed_fly = 'jrc2018_sweep_prep_9'
 fixed_resolution = res_JRC2018
 
 save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
@@ -771,7 +771,7 @@ low_res = False
 very_low_res = True
 
 grad_step = 0.2
-flow_sigma = 3
+flow_sigma = 9#3
 total_sigma = 0
 syn_sampling = 32
 
