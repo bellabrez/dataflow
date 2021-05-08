@@ -751,27 +751,27 @@ res_DIEGO = (0.75, 0.75, 1.0)
 res_KEVIN = (0.62,0.62,0.6)
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210507_luke_diego_corr2.nii"#luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
 moving_fly = "luke"
 moving_resolution = res_LUKE
 
 fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
-fixed_fly = 'jrc2018_sweep_prep_9'
+fixed_fly = 'jrc2018_sweep_prep'
 fixed_resolution = res_JRC2018
 
-save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210507_sweep"
 if not os.path.exists(save_directory):
     os.mkdir(save_directory)
 
 type_of_transform = 'SyN' #'Affine' #SyN
 flip_X = False
-flip_Z = True
+flip_Z = False
 save_warp_params = False
-low_res = False
-very_low_res = True
+low_res = True
+very_low_res = False
 
 grad_step = 0.2
-flow_sigma = 9#3
+flow_sigma = 3
 total_sigma = 0
 syn_sampling = 32
 
