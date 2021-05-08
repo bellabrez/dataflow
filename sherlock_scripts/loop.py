@@ -776,9 +776,9 @@ total_sigma = 0
 syn_sampling = 32
 
 job_ids = []
-#for flow_sigma in [30,50,70,90]:
-for grad_step in [0.02,.2,2,.1,.4,.0002,20]:
-    fixed_fly = F"jrc2018_gs{grad_step}"
+for flow_sigma in [30,50,70,90]:
+#for grad_step in [0.02,.2,2,.1,.4,.0002,20]:
+    fixed_fly = F"jrc2018_fs{flow_sigma}"
 
     args = {'logfile': logfile,
             'save_directory': save_directory,
@@ -804,7 +804,7 @@ for grad_step in [0.02,.2,2,.1,.4,.0002,20]:
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 
 for job_id in job_ids:
