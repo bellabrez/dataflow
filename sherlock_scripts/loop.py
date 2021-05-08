@@ -752,7 +752,7 @@ res_KEVIN = (0.62,0.62,0.6)
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
 moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210507_luke_diego_corr2.nii"#luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
-moving_fly = "luke"
+moving_fly = "lukediegocorr"
 moving_resolution = res_LUKE
 
 fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
@@ -775,34 +775,39 @@ flow_sigma = 3
 total_sigma = 0
 syn_sampling = 32
 
-args = {'logfile': logfile,
-        'save_directory': save_directory,
-        'fixed_path': fixed_path,
-        'moving_path': moving_path,
-        'fixed_fly': fixed_fly,
-        'moving_fly': moving_fly,
-        'type_of_transform': type_of_transform,
-        'flip_X': flip_X,
-        'flip_Z': flip_Z,
-        'moving_resolution': moving_resolution,
-        'fixed_resolution': fixed_resolution,
-        'save_warp_params': save_warp_params,
-        'low_res': low_res,
-        'very_low_res': very_low_res,
-        'grad_step': grad_step,
-        'flow_sigma': flow_sigma,
-        'total_sigma': total_sigma,
-        'syn_sampling': syn_sampling}
+job_ids = []
+for flow_sigma in [1,3,9,20]:
+    fixed_fly = F"jrc2018_fs{flow_sigma}"
 
-script = 'align_anat.py'
-job_id = flow.sbatch(jobname='align',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+    args = {'logfile': logfile,
+            'save_directory': save_directory,
+            'fixed_path': fixed_path,
+            'moving_path': moving_path,
+            'fixed_fly': fixed_fly,
+            'moving_fly': moving_fly,
+            'type_of_transform': type_of_transform,
+            'flip_X': flip_X,
+            'flip_Z': flip_Z,
+            'moving_resolution': moving_resolution,
+            'fixed_resolution': fixed_resolution,
+            'save_warp_params': save_warp_params,
+            'low_res': low_res,
+            'very_low_res': very_low_res,
+            'grad_step': grad_step,
+            'flow_sigma': flow_sigma,
+            'total_sigma': total_sigma,
+            'syn_sampling': syn_sampling}
 
-flow.wait_for_job(job_id, logfile, com_path)
+    script = 'align_anat.py'
+    job_id = flow.sbatch(jobname='align',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 ###################################################################################################################
 
