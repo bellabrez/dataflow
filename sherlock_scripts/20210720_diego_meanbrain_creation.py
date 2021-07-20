@@ -272,7 +272,7 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 	anats = os.listdir(moving_dir)
 	for anat in anats:
 		moving_path = os.path.join(moving_dir, anat)
-		for mirror in [True, False]:
+		for mirror in [False]: # <--------------------------------------------------------------- TRUE/FALSE
 			t0 = time.time()
 			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
 			print('{} {} done. Duration {}s'.format(type_of_transform, anat, time.time()-t0))
