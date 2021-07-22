@@ -73,24 +73,24 @@ def main():
 	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
 	# print('*** Finished Sharpening ***')
 
-	##############
-	### AFFINE ###
-	##############
-	type_of_transform = 'Affine'
+	# ##############
+	# ### AFFINE ###
+	# ##############
+	# type_of_transform = 'Affine'
 
-	###   Affine_0    ###
-	moving_dir = clean_dir
-	name_out = 'affine_0'
-	name_fixed = '20201209_1_w_01_intcor_clean.nrrd'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# ###   Affine_0    ###
+	# moving_dir = clean_dir
+	# name_out = 'affine_0'
+	# name_fixed = '20201209_1_w_01_intcor_clean.nrrd'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	###   Affine_1    ###
-	moving_dir = clean_dir
-	name_out = 'affine_1'
-	name_fixed = 'affine_0'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# ###   Affine_1    ###
+	# moving_dir = clean_dir
+	# name_out = 'affine_1'
+	# name_fixed = 'affine_0'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	##################
 	### NON-LINEAR ###
