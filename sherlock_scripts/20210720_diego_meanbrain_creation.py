@@ -97,40 +97,56 @@ def main():
 	##################
 	type_of_transform = 'SyN'
 
-	###    SyN_0    ###
-	moving_dir = clean_dir
-	name_out = 'syn_0'
-	name_fixed = 'affine_1'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# produce syn_2_clean.nii
+	in_file = os.path.join(main_dir, 'syn_2.nii')
+	save_dir = main_dir
+	clean_anat(in_file, save_dir)
 
-	###    SyN_1    ###
-	moving_dir = clean_dir
-	name_out = 'syn_1'
-	name_fixed = 'syn_0'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# produce syn_2_clean_sharp.nii
+	in_file = os.path.join(main_dir, 'syn_2_clean.nii')
+	sharpen_anat(in_file, save_dir)
 
-	###    SyN_2    ###
-	moving_dir = clean_dir
-	name_out = 'syn_2'
-	name_fixed = 'syn_1'
-	sharpen_output = True
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
-
-	###    SyN_3    ###
+	# align brains to this
 	moving_dir = clean_dir
 	name_out = 'syn_3'
-	name_fixed = 'syn_2'
-	sharpen_output = True
+	name_fixed = 'syn_2_clean_sharp'
+	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	###    SyN_4    ###
-	moving_dir = clean_dir
-	name_out = 'syn_4'
-	name_fixed = 'syn_3'
-	sharpen_output = True
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# ###    SyN_0    ###
+	# moving_dir = clean_dir
+	# name_out = 'syn_0'
+	# name_fixed = 'affine_1'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	# ###    SyN_1    ###
+	# moving_dir = clean_dir
+	# name_out = 'syn_1'
+	# name_fixed = 'syn_0'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	# ###    SyN_2    ###
+	# moving_dir = clean_dir
+	# name_out = 'syn_2'
+	# name_fixed = 'syn_1'
+	# sharpen_output = True
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	# ###    SyN_3    ###
+	# moving_dir = clean_dir
+	# name_out = 'syn_3'
+	# name_fixed = 'syn_2'
+	# sharpen_output = True
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+
+	# ###    SyN_4    ###
+	# moving_dir = clean_dir
+	# name_out = 'syn_4'
+	# name_fixed = 'syn_3'
+	# sharpen_output = True
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	# ###    SyN_5    ###
 	# moving_dir = sharp_dir
