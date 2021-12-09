@@ -233,7 +233,7 @@ printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
 behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
 job_ids = []
 for behavior_to_corr in behaviors:
-    for z in [20]:#range(49):
+    for z in range(49):
         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20211209_red_correlation/"
         args = {'logfile': logfile,
                 'save_directory': save_directory,
