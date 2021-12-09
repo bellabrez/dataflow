@@ -228,27 +228,27 @@ printlog("")
 # ### CORRELATION ###
 # ###################
 
-# printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
+printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
 
-# behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
-# job_ids = []
-# for behavior_to_corr in behaviors:
-#     for z in range(49):
-#         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210420_correlation/"
-#         args = {'logfile': logfile,
-#                 'save_directory': save_directory,
-#                 'behavior_to_corr': behavior_to_corr,
-#                 'z': z}
-#         script = '20210420_voxelres_correlation.py'
-#         job_id = flow.sbatch(jobname='corr',
-#                              script=os.path.join(scripts_path, script),
-#                              modules=modules,
-#                              args=args,
-#                              logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
-#         job_ids.append(job_id)
+behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
+job_ids = []
+for behavior_to_corr in behaviors:
+    for z in [20]:#range(49):
+        save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20211209_red_correlation/"
+        args = {'logfile': logfile,
+                'save_directory': save_directory,
+                'behavior_to_corr': behavior_to_corr,
+                'z': z}
+        script = '20210322_final_9_correlation.py'
+        job_id = flow.sbatch(jobname='corr',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
+        job_ids.append(job_id)
 
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # #################
 # ### Bootstrap ###
@@ -743,74 +743,74 @@ printlog("")
 ### Template alignment ################################################################################################
 ##########################
 
-res_JFRC = (0.62, 0.62, 0.62)
-res_JRC2018 = (0.38, 0.38, 0.38)
-res_IBNWB = (0.64, 0.64, 1.41)
-res_LUKE = (0.65, 0.65, 1)
-res_DIEGO = (0.75, 0.75, 1.0)
-res_KEVIN = (0.62,0.62,0.6)
+# res_JFRC = (0.62, 0.62, 0.62)
+# res_JRC2018 = (0.38, 0.38, 0.38)
+# res_IBNWB = (0.64, 0.64, 1.41)
+# res_LUKE = (0.65, 0.65, 1)
+# res_DIEGO = (0.75, 0.75, 1.0)
+# res_KEVIN = (0.62,0.62,0.6)
 
-printlog(f"\n{'   Template Alignment   ':=^{width}}")
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210507_luke_diego_corr2.nii"#luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
-moving_fly = "lukediegocorr"
-moving_resolution = res_LUKE
+# printlog(f"\n{'   Template Alignment   ':=^{width}}")
+# moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20210507_luke_diego_corr2.nii"#luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
+# moving_fly = "lukediegocorr"
+# moving_resolution = res_LUKE
 
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
-fixed_fly = 'jrc2018'
-fixed_resolution = res_JRC2018
+# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/JRC2018_FEMALE_38um_iso_16bit.nii"
+# fixed_fly = 'jrc2018'
+# fixed_resolution = res_JRC2018
 
-save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/"
-if not os.path.exists(save_directory):
-    os.mkdir(save_directory)
+# save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/"
+# if not os.path.exists(save_directory):
+#     os.mkdir(save_directory)
 
-type_of_transform = 'SyN' #'Affine' #SyN
-flip_X = False
-flip_Z = False
-save_warp_params = False
-low_res = False
-very_low_res = False
+# type_of_transform = 'SyN' #'Affine' #SyN
+# flip_X = False
+# flip_Z = False
+# save_warp_params = False
+# low_res = False
+# very_low_res = False
 
-grad_step = 0.2
-flow_sigma = 3
-total_sigma = 0
-syn_sampling = 32
+# grad_step = 0.2
+# flow_sigma = 3
+# total_sigma = 0
+# syn_sampling = 32
 
-job_ids = []
-#for syn_sampling in [.32,3.2,16,32,64,320]:
-#for total_sigma in [.01,.1,0,10,100]:
-#for flow_sigma in [30,50,70,90]:
-#for grad_step in [0.02,.2,2,.1,.4,.0002,20]:
-#fixed_fly = F"jrc2018_ss{syn_sampling}"
+# job_ids = []
+# #for syn_sampling in [.32,3.2,16,32,64,320]:
+# #for total_sigma in [.01,.1,0,10,100]:
+# #for flow_sigma in [30,50,70,90]:
+# #for grad_step in [0.02,.2,2,.1,.4,.0002,20]:
+# #fixed_fly = F"jrc2018_ss{syn_sampling}"
 
-args = {'logfile': logfile,
-        'save_directory': save_directory,
-        'fixed_path': fixed_path,
-        'moving_path': moving_path,
-        'fixed_fly': fixed_fly,
-        'moving_fly': moving_fly,
-        'type_of_transform': type_of_transform,
-        'flip_X': flip_X,
-        'flip_Z': flip_Z,
-        'moving_resolution': moving_resolution,
-        'fixed_resolution': fixed_resolution,
-        'save_warp_params': save_warp_params,
-        'low_res': low_res,
-        'very_low_res': very_low_res,
-        'grad_step': grad_step,
-        'flow_sigma': flow_sigma,
-        'total_sigma': total_sigma,
-        'syn_sampling': syn_sampling}
+# args = {'logfile': logfile,
+#         'save_directory': save_directory,
+#         'fixed_path': fixed_path,
+#         'moving_path': moving_path,
+#         'fixed_fly': fixed_fly,
+#         'moving_fly': moving_fly,
+#         'type_of_transform': type_of_transform,
+#         'flip_X': flip_X,
+#         'flip_Z': flip_Z,
+#         'moving_resolution': moving_resolution,
+#         'fixed_resolution': fixed_resolution,
+#         'save_warp_params': save_warp_params,
+#         'low_res': low_res,
+#         'very_low_res': very_low_res,
+#         'grad_step': grad_step,
+#         'flow_sigma': flow_sigma,
+#         'total_sigma': total_sigma,
+#         'syn_sampling': syn_sampling}
 
-script = 'align_anat.py'
-job_id = flow.sbatch(jobname='align',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
-job_ids.append(job_id)
+# script = 'align_anat.py'
+# job_id = flow.sbatch(jobname='align',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
+# job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 ###################################################################################################################
 
