@@ -80,20 +80,20 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-#########################################
-### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
-#########################################
-job_ids = []
-args = {'logfile': logfile}
-script = 'create_behavior_X_matrix_acceleration.py'
-job_id = flow.sbatch(jobname='neuwebeh',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=12, mem=12, nice=nice, nodes=nodes) # 2 to 1
-job_ids.append(job_id)
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# #########################################
+# ### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
+# #########################################
+# job_ids = []
+# args = {'logfile': logfile}
+# script = 'create_behavior_X_matrix_acceleration.py'
+# job_id = flow.sbatch(jobname='neuwebeh',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=12, mem=12, nice=nice, nodes=nodes) # 2 to 1
+# job_ids.append(job_id)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   GLM - superfly reconstructed   ':=^{width}}")
 # job_ids = []
@@ -318,7 +318,7 @@ for z in [20]:#range(49):
                          script=os.path.join(scripts_path, script),
                          modules=modules,
                          args=args,
-                         logfile=logfile, time=24, mem=10, nice=nice, nodes=nodes) # 2 to 1
+                         logfile=logfile, time=24, mem=16, nice=nice, nodes=nodes) # 2 to 1
     job_ids.append(job_id)
 
 for job_id in job_ids:
