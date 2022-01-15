@@ -130,6 +130,17 @@ def main(args):
 				fictrac_interp = np.clip(fictrac_interp, a_min=None, a_max=0)*-1
 			behavior_shifts.append(fictrac_interp)
 
+			 #### CONVERT TO JERK
+			fictrac_interp = np.diff(fictrac_interp)
+			fictrac_interp = np.append(fictrac_interp, 0) #need to add a single value that was removed
+
+			# Split JERK in +/-
+			if 'up' in behavior:
+				fictrac_interp = np.clip(fictrac_interp, a_min=0, a_max=None)
+			if 'down' in behavior:
+				fictrac_interp = np.clip(fictrac_interp, a_min=None, a_max=0)*-1
+			behavior_shifts.append(fictrac_interp)
+
 		return time_shifts, behavior_shifts
 
 	def build_X (time_shifts, behaviors, z):
@@ -161,9 +172,17 @@ def main(args):
 
 	time_shifts = list(range(-5000,5000,20)) # in ms
 	# pos/neg refers to velocity, plus/minus refers to acceleration
-	behaviors = ['Y_pos_plus', 'Y_pos_minus',
-				 'Z_pos_plus', 'Z_pos_minus',
-				 'Z_neg_plus', 'Z_neg_minus']
+	# behaviors = ['Y_pos_plus', 'Y_pos_minus',
+	# 			 'Z_pos_plus', 'Z_pos_minus',
+	# 			 'Z_neg_plus', 'Z_neg_minus']
+
+	#JERK
+	behaviors = ['Y_pos_plus_up', 'Y_pos_plus_down',
+				 'Y_pos_minus_up', 'Y_pos_minus_down',
+				 'Z_pos_plus_up', 'Z_pos_plus_down',
+				 'Z_pos_minus_up', 'Z_pos_minus_down']
+				 # 'Z_neg_plus', 'Z_neg_plus',
+				 # 'Z_neg_minus', 'Z_neg_minus']
 
 	############################################
 	### Build the complete X behavior matrix ###
@@ -177,7 +196,7 @@ def main(args):
 	######################
 	### Save Responses ###
 	######################
-	save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/master_X_acceleration"
+	save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/master_X_jerk"
 	np.save(save_file, np.asarray(Xs))
 
 if __name__ == '__main__':
