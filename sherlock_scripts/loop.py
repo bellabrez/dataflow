@@ -307,22 +307,22 @@ for job_id in job_ids:
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-# ################################
-# ### NEURAL WEIGHTED BEHAVIOR ###
-# ################################
-# job_ids = []
-# for z in [20]:#range(49):
-#     args = {'logfile': logfile, 'z': z}
-#     script = '20210318_neu_weighted_beh.py'
-#     job_id = flow.sbatch(jobname='neuwebeh',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=24, mem=9, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
+################################
+### NEURAL WEIGHTED BEHAVIOR ###
+################################
+job_ids = []
+for z in [20]:#range(49):
+    args = {'logfile': logfile, 'z': z}
+    script = '20210318_neu_weighted_beh.py'
+    job_id = flow.sbatch(jobname='neuwebeh',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=24, mem=10, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # ##########################
 # ### CLUSTERING FILTERS ###

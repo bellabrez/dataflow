@@ -64,7 +64,7 @@ def main(args):
 	#####################
 	### Load Master X ###
 	#####################
-	file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/master_X_corrected.npy"
+	file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/master_X_acceleration.npy"
 	printlog(f'loading {file}')
 	X = np.load(file)
 
@@ -140,7 +140,7 @@ def main(args):
 		######################
 		### Save Responses ###
 		######################
-		save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/corrected/responses_{z}"
+		save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/acceleration/responses_{z}"
 		np.save(save_file, cluster_responses)
 		brain = None
 		Y = None
