@@ -142,6 +142,7 @@ def main(args):
 																				 behavior=behavior)
 				all_behavior_shifts.append(np.asarray(behavior_shifts))
 			all_behavior_shifts = np.asarray(all_behavior_shifts)
+			printlog(np.shape(all_behavior_shifts))
 			all_behavior_shifts = np.reshape(all_behavior_shifts, (-1,3384))
 			all_fly_shifts.append(all_behavior_shifts)
 		X = np.asarray(all_fly_shifts)
