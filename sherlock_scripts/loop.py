@@ -22,7 +22,7 @@ width = 120 # width of print log
 nodes = 2 # 1 or 2
 nice = True # true to lower priority of jobs. ie, other users jobs go first
 
-flies = ['fly_084', 'fly_088', 'fly_091', 'fly_108']
+#flies = ['fly_084', 'fly_088', 'fly_091', 'fly_108']
 #flies = ['fly_089', 'fly_094', 'fly_100']
 
 #fly = 'fly_089'
@@ -80,20 +80,20 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-# #########################################
-# ### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
-# #########################################
-# job_ids = []
-# args = {'logfile': logfile}
-# script = '20210419_neu_weighted_beh_exclude_fly_087.py'
-# job_id = flow.sbatch(jobname='neuwebeh',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=12, mem=12, nice=nice, nodes=nodes) # 2 to 1
-# job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+#########################################
+### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
+#########################################
+job_ids = []
+args = {'logfile': logfile}
+script = 'create_behavior_X_matrix_acceleration.py'
+job_id = flow.sbatch(jobname='neuwebeh',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=12, mem=12, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   GLM - superfly reconstructed   ':=^{width}}")
 # job_ids = []
@@ -228,27 +228,27 @@ printlog("")
 # ### CORRELATION ###
 # ###################
 
-printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
+# printlog(f"\n{'   CORRELATIONS   ':=^{width}}")
 
-behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
-job_ids = []
-for behavior_to_corr in behaviors:
-    for z in range(49):
-        save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20211209_red_correlation/"
-        args = {'logfile': logfile,
-                'save_directory': save_directory,
-                'behavior_to_corr': behavior_to_corr,
-                'z': z}
-        script = '20210322_final_9_correlation.py'
-        job_id = flow.sbatch(jobname='corr',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
+# behaviors = ['Y_pos', 'Z_pos', 'Z_neg']
+# job_ids = []
+# for behavior_to_corr in behaviors:
+#     for z in range(49):
+#         save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20211209_red_correlation/"
+#         args = {'logfile': logfile,
+#                 'save_directory': save_directory,
+#                 'behavior_to_corr': behavior_to_corr,
+#                 'z': z}
+#         script = '20210322_final_9_correlation.py'
+#         job_id = flow.sbatch(jobname='corr',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=2, mem=3, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # #################
 # ### Bootstrap ###
