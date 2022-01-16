@@ -179,8 +179,8 @@ def main(args):
 	#JERK
 	behaviors = ['Y_pos_plus_up', 'Y_pos_plus_down',
 				 'Y_pos_minus_up', 'Y_pos_minus_down',
-				 'Z_pos_plus_up', 'Z_pos_plus_down',
-				 'Z_pos_minus_up', 'Z_pos_minus_down']
+				 'Z_pos_plus_up', 'Z_pos_plus_down']
+				 # 'Z_pos_minus_up', 'Z_pos_minus_down']
 				 # 'Z_neg_plus', 'Z_neg_plus',
 				 # 'Z_neg_minus', 'Z_neg_minus']
 
