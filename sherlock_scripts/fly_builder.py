@@ -35,6 +35,7 @@ def main(args):
     # get fly folders in flagged directory and sort to ensure correct fly order
     likely_fly_folders = os.listdir(flagged_dir)
     bbb.sort_nicely(likely_fly_folders)
+    likely_fly_folders = [i for i in likely_fly_folders if 'fly' in i]
     printlog(F"Found fly folders{str(likely_fly_folders):.>{width-17}}")
 
     if fly_dirs is not None:

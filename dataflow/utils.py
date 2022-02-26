@@ -164,7 +164,7 @@ def sbatch(jobname, script, modules, args, logfile, time=1, mem=1, dep='', nice=
     sbatch_response = subprocess.getoutput(sbatch_command)
     width = 120
     if not silence_print:
-        Printlog(logfile=logfile).print_to_log(f"{sbatch_response}{jobname:.>{width-27}}")
+        Printlog(logfile=logfile).print_to_log(f"{sbatch_response}{jobname:.>{width-28}}")
     job_id = sbatch_response.split(' ')[-1].strip()
     return job_id
 
