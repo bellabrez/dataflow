@@ -510,6 +510,12 @@ for fly in flies:
     flip_X = False
     flip_Z = False
     low_res = True
+    very_low_res = False
+
+    grad_step = 0.2
+    flow_sigma = 3
+    total_sigma = 0
+    syn_sampling = 32
 
     args = {'logfile': logfile,
             'save_directory': save_directory,
@@ -523,7 +529,12 @@ for fly in flies:
             'moving_resolution': moving_resolution,
             'fixed_resolution': fixed_resolution,
             'save_warp_params': save_warp_params,
-            'low_res': low_res}
+            'low_res': low_res,
+            'very_low_res': very_low_res,
+            'grad_step': grad_step,
+            'flow_sigma': flow_sigma,
+            'total_sigma': total_sigma,
+            'syn_sampling': syn_sampling}
 
     script = 'align_anat.py'
     job_id = flow.sbatch(jobname='align',
@@ -819,21 +830,21 @@ for job_id in job_ids:
 ###################################################################################################################
 
 ###################################################################################################################
-printlog(f"\n{'   ZSCORE   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    args = {'logfile': logfile, 'directory': directory, 'smooth': True, 'colors': ['green']}
-    script = 'zscore.py'
-    job_id = flow.sbatch(jobname='zscore',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=8, mem=18, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# printlog(f"\n{'   ZSCORE   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     args = {'logfile': logfile, 'directory': directory, 'smooth': True, 'colors': ['green']}
+#     script = 'zscore.py'
+#     job_id = flow.sbatch(jobname='zscore',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=8, mem=18, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 
 
