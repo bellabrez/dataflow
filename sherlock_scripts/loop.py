@@ -491,7 +491,7 @@ for fly in flies:
     fly_directory = os.path.join(dataset_path, fly)
 
     #moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_1_mean.nii')
-    moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_2_moc_mean.nii')
+    moving_path = os.path.join(fly_directory, 'func_0', 'moco', 'functional_channel_2_moc_mean.nii')
     moving_fly = 'func'
     moving_resolution = res_func
 
