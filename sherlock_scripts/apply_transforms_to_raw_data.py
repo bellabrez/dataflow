@@ -64,7 +64,7 @@ def main(args):
     ############
     ### Save ###
     ############
-    save_file = os.path.join(save_directory, 'brain_zscored_red_high_pass_masked_warped.nii')#<---------------------------------------
+    save_file = os.path.join(save_directory, 'functional_channel_2_moco_zscore_highpass_warped.nii')#<---------------------------------------
     nib.Nifti1Image(moco.numpy(), np.eye(4)).to_filename(save_file)
 
 def sec_to_hms(t):

@@ -19,8 +19,12 @@ def main(args):
     printlog = getattr(flow.Printlog(logfile=logfile), 'print_to_log')
 
     ### Load brain ###
-    file = os.path.join(directory, 'stitched_brain_red_mean.nii') 
-    brain = np.asarray(nib.load(file).get_data(), dtype='float32')
+    try:
+        file = os.path.join(directory, 'stitched_brain_red_mean.nii') 
+        brain = np.asarray(nib.load(file).get_data(), dtype='float32')
+    except:
+        file = os.path.join(directory, 'anatomy_channel_1_moc_mean.nii') 
+        brain = np.asarray(nib.load(file).get_data(), dtype='float32')
 
     ### Blur brain and mask small values ###
     brain_copy = brain.copy().astype('float32')
