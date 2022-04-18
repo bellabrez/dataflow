@@ -31,12 +31,16 @@ def main(args):
     moving_fly = args['moving_fly']
     moving_resolution = args['moving_resolution']
 
+    final_2um_iso = args['final_2um_iso']
+
     ###################
     ### Load Brains ###
     ###################
     fixed = np.asarray(nib.load(fixed_path).get_data().squeeze(), dtype='float32')
     fixed = ants.from_numpy(fixed)
     fixed.set_spacing(fixed_resolution)
+    if final_2um_iso:
+        fixed = ants.resample_image(fixed,(2,2,2),use_voxels=False)
 
     moving = np.asarray(nib.load(moving_path).get_data().squeeze(), dtype='float32')
     moving = ants.from_numpy(moving)
