@@ -513,8 +513,8 @@ for fly in flies:
     low_res = False
     very_low_res = False
 
-    iso_2um_fixed = False
-    iso_2um_moving = True
+    iso_2um_fixed = True
+    iso_2um_moving = False
 
     grad_step = 0.2
     flow_sigma = 3
@@ -584,7 +584,7 @@ for fly in flies:
     flip_X = False
     flip_Z = False
 
-    low_res = True
+    low_res = False
     very_low_res = False
 
     iso_2um_fixed = True
