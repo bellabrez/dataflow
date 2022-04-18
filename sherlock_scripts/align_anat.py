@@ -38,8 +38,8 @@ def main(args):
     low_res = args['low_res']
     very_low_res = args['very_low_res']
 
-    2um_iso_fixed = args['2um_iso_fixed']
-    2um_iso_moving = args['2um_iso_moving']
+    iso_2um_fixed = args['iso_2um_fixed']
+    iso_2um_moving = args['iso_2um_moving']
 
     grad_step = args['grad_step']
     flow_sigma = args['flow_sigma']
@@ -70,7 +70,7 @@ def main(args):
         fixed = ants.resample_image(fixed,(256,128,49),1,0)
     elif very_low_res:
         fixed = ants.resample_image(fixed,(128,64,49),1,0)
-    elif 2um_iso_fixed:
+    elif iso_2um_fixed:
         fixed = ants.resample_image(fixed,(2,2,2),use_voxels=False)
 
 
@@ -86,7 +86,7 @@ def main(args):
         moving = ants.resample_image(moving,(256,128,49),1,0)
     elif very_low_res:
         moving = ants.resample_image(moving,(128,64,49),1,0)
-    elif 2um_iso_moving:
+    elif iso_2um_moving:
         moving = ants.resample_image(moving,(2,2,2),use_voxels=False)
 
     ### Mimic
