@@ -477,155 +477,155 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-#################
-### func2anat ###
-#################
+# #################
+# ### func2anat ###
+# #################
 
-res_anat = (0.653, 0.653, 1)
-res_func = (2.611, 2.611, 5)
+# res_anat = (0.653, 0.653, 1)
+# res_func = (2.611, 2.611, 5)
 
-printlog(f"\n{'   func2anat   ':=^{width}}")
+# printlog(f"\n{'   func2anat   ':=^{width}}")
 
-job_ids = []
-for fly in flies:
-    fly_directory = os.path.join(dataset_path, fly)
+# job_ids = []
+# for fly in flies:
+#     fly_directory = os.path.join(dataset_path, fly)
 
-    #moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_1_mean.nii')
-    moving_path = os.path.join(fly_directory, 'func_0', 'moco', 'functional_channel_1_moc_mean.nii') #did channel 2 for fly134
-    moving_fly = 'func'
-    moving_resolution = res_func
-
-
-    #fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
-    fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'anatomy_channel_1_moc_mean.nii')
-    fixed_fly = 'anat'
-    fixed_resolution = res_anat
-
-    save_directory = os.path.join(fly_directory, 'warp')
-    if not os.path.exists(save_directory):
-        os.mkdir(save_directory)
-
-    type_of_transform = 'Affine'
-    save_warp_params = True
-    flip_X = False
-    flip_Z = False
-
-    low_res = False
-    very_low_res = False
-
-    iso_2um_fixed = True
-    iso_2um_moving = False
-
-    grad_step = 0.2
-    flow_sigma = 3
-    total_sigma = 0
-    syn_sampling = 32
-
-    args = {'logfile': logfile,
-            'save_directory': save_directory,
-            'fixed_path': fixed_path,
-            'moving_path': moving_path,
-            'fixed_fly': fixed_fly,
-            'moving_fly': moving_fly,
-            'type_of_transform': type_of_transform,
-            'flip_X': flip_X,
-            'flip_Z': flip_Z,
-            'moving_resolution': moving_resolution,
-            'fixed_resolution': fixed_resolution,
-            'save_warp_params': save_warp_params,
-            'low_res': low_res,
-            'very_low_res': very_low_res,
-            'iso_2um_fixed': iso_2um_fixed,
-            'iso_2um_moving': iso_2um_moving,
-            'grad_step': grad_step,
-            'flow_sigma': flow_sigma,
-            'total_sigma': total_sigma,
-            'syn_sampling': syn_sampling}
-
-    script = 'align_anat.py'
-    job_id = flow.sbatch(jobname='align',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
-
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
-
-#################
-### anat2mean ###
-#################
-
-res_anat = (0.653, 0.653, 1)
-res_meanbrain = (0.38, 0.38, 0.38)
-
-printlog(f"\n{'   anat2mean   ':=^{width}}")
-
-job_ids = []
-for fly in flies:
-    fly_directory = os.path.join(dataset_path, fly)
-
-    moving_path = os.path.join(fly_directory, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
-    moving_fly = 'anat'
-    moving_resolution = res_anat
+#     #moving_path = os.path.join(fly_directory, 'func_0', 'imaging', 'functional_channel_1_mean.nii')
+#     moving_path = os.path.join(fly_directory, 'func_0', 'moco', 'functional_channel_1_moc_mean.nii') #did channel 2 for fly134
+#     moving_fly = 'func'
+#     moving_resolution = res_func
 
 
-    fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20220301_luke_2_jfrc_affine_zflip.nii"#luke.nii"
-    fixed_fly = 'meanbrain'
-    fixed_resolution = res_meanbrain
+#     #fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'stitched_brain_red_mean.nii')
+#     fixed_path = os.path.join(fly_directory, 'anat_0', 'moco', 'anatomy_channel_1_moc_mean.nii')
+#     fixed_fly = 'anat'
+#     fixed_resolution = res_anat
 
-    save_directory = os.path.join(fly_directory, 'warp')
-    if not os.path.exists(save_directory):
-        os.mkdir(save_directory)
+#     save_directory = os.path.join(fly_directory, 'warp')
+#     if not os.path.exists(save_directory):
+#         os.mkdir(save_directory)
 
-    type_of_transform = 'SyN'
-    save_warp_params = True
-    flip_X = False
-    flip_Z = False
+#     type_of_transform = 'Affine'
+#     save_warp_params = True
+#     flip_X = False
+#     flip_Z = False
 
-    low_res = False
-    very_low_res = False
+#     low_res = False
+#     very_low_res = False
 
-    iso_2um_fixed = True
-    iso_2um_moving = True
+#     iso_2um_fixed = True
+#     iso_2um_moving = False
 
-    grad_step = 0.2
-    flow_sigma = 3
-    total_sigma = 0
-    syn_sampling = 32
+#     grad_step = 0.2
+#     flow_sigma = 3
+#     total_sigma = 0
+#     syn_sampling = 32
 
-    args = {'logfile': logfile,
-            'save_directory': save_directory,
-            'fixed_path': fixed_path,
-            'moving_path': moving_path,
-            'fixed_fly': fixed_fly,
-            'moving_fly': moving_fly,
-            'type_of_transform': type_of_transform,
-            'flip_X': flip_X,
-            'flip_Z': flip_Z,
-            'moving_resolution': moving_resolution,
-            'fixed_resolution': fixed_resolution,
-            'save_warp_params': save_warp_params,
-            'low_res': low_res,
-            'very_low_res': very_low_res,
-            'iso_2um_fixed': iso_2um_fixed,
-            'iso_2um_moving': iso_2um_moving,
-            'grad_step': grad_step,
-            'flow_sigma': flow_sigma,
-            'total_sigma': total_sigma,
-            'syn_sampling': syn_sampling}
+#     args = {'logfile': logfile,
+#             'save_directory': save_directory,
+#             'fixed_path': fixed_path,
+#             'moving_path': moving_path,
+#             'fixed_fly': fixed_fly,
+#             'moving_fly': moving_fly,
+#             'type_of_transform': type_of_transform,
+#             'flip_X': flip_X,
+#             'flip_Z': flip_Z,
+#             'moving_resolution': moving_resolution,
+#             'fixed_resolution': fixed_resolution,
+#             'save_warp_params': save_warp_params,
+#             'low_res': low_res,
+#             'very_low_res': very_low_res,
+#             'iso_2um_fixed': iso_2um_fixed,
+#             'iso_2um_moving': iso_2um_moving,
+#             'grad_step': grad_step,
+#             'flow_sigma': flow_sigma,
+#             'total_sigma': total_sigma,
+#             'syn_sampling': syn_sampling}
 
-    script = 'align_anat.py'
-    job_id = flow.sbatch(jobname='align',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+#     script = 'align_anat.py'
+#     job_id = flow.sbatch(jobname='align',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+# #################
+# ### anat2mean ###
+# #################
+
+# res_anat = (0.653, 0.653, 1)
+# res_meanbrain = (0.38, 0.38, 0.38)
+
+# printlog(f"\n{'   anat2mean   ':=^{width}}")
+
+# job_ids = []
+# for fly in flies:
+#     fly_directory = os.path.join(dataset_path, fly)
+
+#     moving_path = os.path.join(fly_directory, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
+#     moving_fly = 'anat'
+#     moving_resolution = res_anat
+
+
+#     fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20220301_luke_2_jfrc_affine_zflip.nii"#luke.nii"
+#     fixed_fly = 'meanbrain'
+#     fixed_resolution = res_meanbrain
+
+#     save_directory = os.path.join(fly_directory, 'warp')
+#     if not os.path.exists(save_directory):
+#         os.mkdir(save_directory)
+
+#     type_of_transform = 'SyN'
+#     save_warp_params = True
+#     flip_X = False
+#     flip_Z = False
+
+#     low_res = False
+#     very_low_res = False
+
+#     iso_2um_fixed = True
+#     iso_2um_moving = True
+
+#     grad_step = 0.2
+#     flow_sigma = 3
+#     total_sigma = 0
+#     syn_sampling = 32
+
+#     args = {'logfile': logfile,
+#             'save_directory': save_directory,
+#             'fixed_path': fixed_path,
+#             'moving_path': moving_path,
+#             'fixed_fly': fixed_fly,
+#             'moving_fly': moving_fly,
+#             'type_of_transform': type_of_transform,
+#             'flip_X': flip_X,
+#             'flip_Z': flip_Z,
+#             'moving_resolution': moving_resolution,
+#             'fixed_resolution': fixed_resolution,
+#             'save_warp_params': save_warp_params,
+#             'low_res': low_res,
+#             'very_low_res': very_low_res,
+#             'iso_2um_fixed': iso_2um_fixed,
+#             'iso_2um_moving': iso_2um_moving,
+#             'grad_step': grad_step,
+#             'flow_sigma': flow_sigma,
+#             'total_sigma': total_sigma,
+#             'syn_sampling': syn_sampling}
+
+#     script = 'align_anat.py'
+#     job_id = flow.sbatch(jobname='align',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
+
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # ##################################
 # ### Apply transforms: raw2mean ###
@@ -698,7 +698,7 @@ for job_id in job_ids:
 ### Apply transforms ###
 ########################
 res_func = (2.611, 2.611, 5)
-res_anat = (2,2,2)#(0.38, 0.38, 0.38)
+res_anat = (0.38, 0.38, 0.38)#(2,2,2)
 final_2um_iso = True
 
 printlog(f"\n{'   Alignment   ':=^{width}}")
