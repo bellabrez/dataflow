@@ -82,7 +82,7 @@ def main():
 	###   Affine_0    ###
 	moving_dir = clean_dir
 	name_out = 'affine_0'
-	name_fixed = 'anat_143.nii'
+	name_fixed = 'anat_143'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
