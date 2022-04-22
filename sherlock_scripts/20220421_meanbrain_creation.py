@@ -160,7 +160,7 @@ def avg_brains(input_directory, save_directory, save_name):
 	### Load Brains ###
 	files = os.listdir(input_directory)
 	#bigbrain = np.zeros((len(files), 1024, 512, 256), dtype='float32',order='F') #my brain size
-	bigbrain = np.zeros((len(files), 1496, 772, 272), dtype='float32',order='F') # should add code to get dims
+	bigbrain = np.zeros((len(files), 333, 166, 121), dtype='float32',order='F') # should add code to get dims
 	for i, file in enumerate(files):
 		print(F"loading {file}")
 		bigbrain[i,...] = load_numpy_brain(os.path.join(input_directory, file))
