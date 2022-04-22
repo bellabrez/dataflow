@@ -39,7 +39,7 @@ def main():
 	raw_dir = os.path.join(main_dir, 'raw_anats')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
-	resolution = (0.65, 0.65, 1)
+	resolution = (2, 2, 2)
 
 	# #######################
 	# ### Clean Anatomies ###

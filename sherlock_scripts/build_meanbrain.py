@@ -57,211 +57,211 @@ printlog("")
 ################
 ### Affine_0 ###
 ################
-# Align all fly brains (and their mirrors) to a chosen seed brain
+#Align all fly brains (and their mirrors) to a chosen seed brain
 
-# printlog(f"\n{'   Affine Iter   ':=^{width}}")
-# job_ids = []
-# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/seed/seed_fly91_clean_20200803.nii"
-# fixed_fly = 'fly_91_seed'
-# type_of_transform = 'Affine'
-# for fly in flies:
-#     for mirror in [True, False]:
-#         moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
-#         moving_fly = fly
+printlog(f"\n{'   Affine Iter   ':=^{width}}")
+job_ids = []
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/seed/seed_fly91_clean_20200803.nii"
+fixed_fly = 'fly_91_seed'
+type_of_transform = 'Affine'
+for fly in flies:
+    for mirror in [True, False]:
+        moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
+        moving_fly = fly
 
-#         args = {'logfile': logfile,
-#                 'save_directory': save_directory,
-#                 'fixed_path': fixed_path,
-#                 'moving_path': moving_path,
-#                 'fixed_fly': fixed_fly,
-#                 'moving_fly': moving_fly,
-#                 'type_of_transform': type_of_transform,
-#                 'mirror': mirror}
+        args = {'logfile': logfile,
+                'save_directory': save_directory,
+                'fixed_path': fixed_path,
+                'moving_path': moving_path,
+                'fixed_fly': fixed_fly,
+                'moving_fly': moving_fly,
+                'type_of_transform': type_of_transform,
+                'mirror': mirror}
 
-#         script = 'align_anat.py'
-#         job_id = flow.sbatch(jobname='align',
-#                              script=os.path.join(scripts_path, script),
-#                              modules=modules,
-#                              args=args,
-#                              logfile=logfile, time=4, mem=4, nice=nice, nodes=nodes) # 2 to 1
-#         job_ids.append(job_id)
+        script = 'align_anat.py'
+        job_id = flow.sbatch(jobname='align',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=4, mem=4, nice=nice, nodes=nodes) # 2 to 1
+        job_ids.append(job_id)
 
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
-################
-### Affine_1 ###
-################
-# Align all fly brains (and their mirrors) to affine_0_mean.nii
+###############
+## Affine_1 ###
+###############
+#Align all fly brains (and their mirrors) to affine_0_mean.nii
 
-# printlog(f"\n{'   Affine_1   ':=^{width}}")
-# job_ids = []
-# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_0_mean.nii"
-# fixed_fly = 'affine_0_mean'
-# type_of_transform = 'Affine'
-# save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_1"
-# if not os.path.exists(save_directory):
-#     os.mkdir(save_directory)
-
-# for fly in flies:
-#     for mirror in [True, False]:
-#         moving_fly = fly
-#         moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
-
-#         args = {'logfile': logfile,
-#                 'save_directory': save_directory,
-#                 'fixed_path': fixed_path,
-#                 'moving_path': moving_path,
-#                 'fixed_fly': fixed_fly,
-#                 'moving_fly': moving_fly,
-#                 'type_of_transform': type_of_transform,
-#                 'mirror': mirror}
-
-#         script = 'align_anat.py'
-#         job_id = flow.sbatch(jobname='align',
-#                              script=os.path.join(scripts_path, script),
-#                              modules=modules,
-#                              args=args,
-#                              logfile=logfile, time=1, mem=2, nice=nice, nodes=nodes) # 2 to 1
-#         job_ids.append(job_id)
-
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
-
-################
-### SyN_Iter ###
-################
-# Align all fly brains (and their mirrors) to affine_1_mean.nii
-
-# iterations = 1
-# root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200811_meanbrain"
-
-# # if iter = 0, fixed = seed, 
-# # if iter = 1, fixed = syn_0_mean
-# # if iteration = 5, fixed = syn_4_mean, output dir = syn_5, savebrain = syn_5_mean
-
-# for iteration in range(iterations):
-#     printlog(f"\n{'   SyN Iteration ' + str(iteration+1) + '    ':=^{width}}")
-
-#     if iteration == 0:
-#         fixed_fly = "seed_syn_1_mean.nii"
-#     else:
-#         fixed_fly = "syn_{}_mean.nii".format(iteration-1) # use mean from previous iter round
-#     fixed_path = os.path.join(root_directory, fixed_fly)
-
-#     output_directory = os.path.join(root_directory, "syn_{}".format(iteration))
-#     if not os.path.exists(output_directory):
-#         os.mkdir(output_directory)
-
-#     moving_resolution = (0.65, 0.65, 1)
-#     fixed_resolution = (0.65, 0.65, 1)
-#     mimic_resolution = (0.65, 0.65, 1)
-#     flip_Z = False
-#     type_of_transform = 'SyN'
-
-#     job_ids = []
-#     for fly in flies:
-#         for flip_X in [True, False]:
-#             moving_fly = fly
-#             moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
-
-#             mimic_fly = fly
-#             mimic_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
-
-#             args = {'logfile': logfile,
-#                     'save_directory': output_directory,
-#                     'fixed_path': fixed_path,
-#                     'moving_path': moving_path,
-#                     'fixed_fly': fixed_fly,
-#                     'moving_fly': moving_fly,
-#                     'type_of_transform': type_of_transform,
-#                     'flip_X': flip_X,
-#                     'flip_Z': flip_Z,
-#                     'moving_resolution': moving_resolution,
-#                     'fixed_resolution': fixed_resolution,
-#                     'mimic_path': mimic_path,
-#                     'mimic_fly': mimic_fly,
-#                     'mimic_resolution': mimic_resolution}
-
-#             script = 'align_anat.py'
-#             job_id = flow.sbatch(jobname='align',
-#                                  script=os.path.join(scripts_path, script),
-#                                  modules=modules,
-#                                  args=args,
-#                                  logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
-#             job_ids.append(job_id)
-
-#     for job_id in job_ids:
-#         flow.wait_for_job(job_id, logfile, com_path)
-
-#     ######################
-#     ### Make Meanbrain ###
-#     ######################
-
-#     save_directory = root_directory
-#     input_directory = output_directory
-#     save_name = "syn_{}_mean".format(iteration)
-
-#     printlog(f"\n{'   LOOP   ':=^{width}}")
-#     args = {'logfile': logfile,
-#             'save_directory': save_directory,
-#             'input_directory': input_directory,
-#             'save_name': save_name}
-#     script = 'avg_brains.py'
-#     job_id = flow.sbatch(jobname='avgbrn',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
-#     flow.wait_for_job(job_id, logfile, com_path)
-
-##########################
-### Template alignment ###
-##########################
-
-res_JFRC = (0.62, 0.62, 0.62)
-res_IBNWB = (0.64, 0.64, 1.41)
-res_LUKE = (0.65, 0.65, 1)
-res_DIEGO = (0.75, 0.75, 1.0)
-res_KEVIN = (0.62,0.62,0.6)
-
-printlog(f"\n{'   Template Alignment   ':=^{width}}")
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/seed_syn_1_mean_0810.nii"
-moving_fly = "seed_syn_1_mean_0810"
-moving_resolution = res_LUKE
-
-fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/kevin.nii"
-fixed_fly = 'kevin'
-fixed_resolution = res_KEVIN
-
-save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
+printlog(f"\n{'   Affine_1   ':=^{width}}")
+job_ids = []
+fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_0_mean.nii"
+fixed_fly = 'affine_0_mean'
+type_of_transform = 'Affine'
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200803_meanbrain/affine_1"
 if not os.path.exists(save_directory):
     os.mkdir(save_directory)
 
-type_of_transform = 'SyN'
-flip_X = False
-flip_Z = True
+for fly in flies:
+    for mirror in [True, False]:
+        moving_fly = fly
+        moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
 
-args = {'logfile': logfile,
-        'save_directory': save_directory,
-        'fixed_path': fixed_path,
-        'moving_path': moving_path,
-        'fixed_fly': fixed_fly,
-        'moving_fly': moving_fly,
-        'type_of_transform': type_of_transform,
-        'flip_X': flip_X,
-        'flip_Z': flip_Z,
-        'moving_resolution': moving_resolution,
-        'fixed_resolution': fixed_resolution}
+        args = {'logfile': logfile,
+                'save_directory': save_directory,
+                'fixed_path': fixed_path,
+                'moving_path': moving_path,
+                'fixed_fly': fixed_fly,
+                'moving_fly': moving_fly,
+                'type_of_transform': type_of_transform,
+                'mirror': mirror}
 
-script = 'align_anat.py'
-job_id = flow.sbatch(jobname='align',
-                     script=os.path.join(scripts_path, script),
-                     modules=modules,
-                     args=args,
-                     logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+        script = 'align_anat.py'
+        job_id = flow.sbatch(jobname='align',
+                             script=os.path.join(scripts_path, script),
+                             modules=modules,
+                             args=args,
+                             logfile=logfile, time=1, mem=2, nice=nice, nodes=nodes) # 2 to 1
+        job_ids.append(job_id)
 
-flow.wait_for_job(job_id, logfile, com_path)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
+
+###############
+## SyN_Iter ###
+###############
+#Align all fly brains (and their mirrors) to affine_1_mean.nii
+
+iterations = 1
+root_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20200811_meanbrain"
+
+# if iter = 0, fixed = seed, 
+# if iter = 1, fixed = syn_0_mean
+# if iteration = 5, fixed = syn_4_mean, output dir = syn_5, savebrain = syn_5_mean
+
+for iteration in range(iterations):
+    printlog(f"\n{'   SyN Iteration ' + str(iteration+1) + '    ':=^{width}}")
+
+    if iteration == 0:
+        fixed_fly = "seed_syn_1_mean.nii"
+    else:
+        fixed_fly = "syn_{}_mean.nii".format(iteration-1) # use mean from previous iter round
+    fixed_path = os.path.join(root_directory, fixed_fly)
+
+    output_directory = os.path.join(root_directory, "syn_{}".format(iteration))
+    if not os.path.exists(output_directory):
+        os.mkdir(output_directory)
+
+    moving_resolution = (0.65, 0.65, 1)
+    fixed_resolution = (0.65, 0.65, 1)
+    mimic_resolution = (0.65, 0.65, 1)
+    flip_Z = False
+    type_of_transform = 'SyN'
+
+    job_ids = []
+    for fly in flies:
+        for flip_X in [True, False]:
+            moving_fly = fly
+            moving_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean_sharp.nii')
+
+            mimic_fly = fly
+            mimic_path = os.path.join(dataset_path, fly, 'anat_0', 'moco', 'anat_red_clean.nii')
+
+            args = {'logfile': logfile,
+                    'save_directory': output_directory,
+                    'fixed_path': fixed_path,
+                    'moving_path': moving_path,
+                    'fixed_fly': fixed_fly,
+                    'moving_fly': moving_fly,
+                    'type_of_transform': type_of_transform,
+                    'flip_X': flip_X,
+                    'flip_Z': flip_Z,
+                    'moving_resolution': moving_resolution,
+                    'fixed_resolution': fixed_resolution,
+                    'mimic_path': mimic_path,
+                    'mimic_fly': mimic_fly,
+                    'mimic_resolution': mimic_resolution}
+
+            script = 'align_anat.py'
+            job_id = flow.sbatch(jobname='align',
+                                 script=os.path.join(scripts_path, script),
+                                 modules=modules,
+                                 args=args,
+                                 logfile=logfile, time=8, mem=4, nice=nice, nodes=nodes) # 2 to 1
+            job_ids.append(job_id)
+
+    for job_id in job_ids:
+        flow.wait_for_job(job_id, logfile, com_path)
+
+    ######################
+    ### Make Meanbrain ###
+    ######################
+
+    save_directory = root_directory
+    input_directory = output_directory
+    save_name = "syn_{}_mean".format(iteration)
+
+    printlog(f"\n{'   LOOP   ':=^{width}}")
+    args = {'logfile': logfile,
+            'save_directory': save_directory,
+            'input_directory': input_directory,
+            'save_name': save_name}
+    script = 'avg_brains.py'
+    job_id = flow.sbatch(jobname='avgbrn',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=1, mem=4, nice=nice, nodes=nodes) # 2 to 1
+    flow.wait_for_job(job_id, logfile, com_path)
+
+# ##########################
+# ### Template alignment ###
+# ##########################
+
+# res_JFRC = (0.62, 0.62, 0.62)
+# res_IBNWB = (0.64, 0.64, 1.41)
+# res_LUKE = (0.65, 0.65, 1)
+# res_DIEGO = (0.75, 0.75, 1.0)
+# res_KEVIN = (0.62,0.62,0.6)
+
+# printlog(f"\n{'   Template Alignment   ':=^{width}}")
+# moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/seed_syn_1_mean_0810.nii"
+# moving_fly = "seed_syn_1_mean_0810"
+# moving_resolution = res_LUKE
+
+# fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/kevin.nii"
+# fixed_fly = 'kevin'
+# fixed_resolution = res_KEVIN
+
+# save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates"
+# if not os.path.exists(save_directory):
+#     os.mkdir(save_directory)
+
+# type_of_transform = 'SyN'
+# flip_X = False
+# flip_Z = True
+
+# args = {'logfile': logfile,
+#         'save_directory': save_directory,
+#         'fixed_path': fixed_path,
+#         'moving_path': moving_path,
+#         'fixed_fly': fixed_fly,
+#         'moving_fly': moving_fly,
+#         'type_of_transform': type_of_transform,
+#         'flip_X': flip_X,
+#         'flip_Z': flip_Z,
+#         'moving_resolution': moving_resolution,
+#         'fixed_resolution': fixed_resolution}
+
+# script = 'align_anat.py'
+# job_id = flow.sbatch(jobname='align',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=8, mem=8, nice=nice, nodes=nodes) # 2 to 1
+
+# flow.wait_for_job(job_id, logfile, com_path)
 
 #############
 ### SyN_from affine folder ###

@@ -437,25 +437,25 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-# ##################
-# ### Clean Anat ###
-# ##################
+##################
+### Clean Anat ###
+##################
 
-# printlog(f"\n{'   Clean Anat   ':=^{width}}")
-# job_ids = []
-# for fly in flies:
-#     directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
-#     args = {'logfile': logfile, 'directory': directory}
-#     script = 'clean_anat.py'
-#     job_id = flow.sbatch(jobname='clnanat',
-#                          script=os.path.join(scripts_path, script),
-#                          modules=modules,
-#                          args=args,
-#                          logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
-#     job_ids.append(job_id)
+printlog(f"\n{'   Clean Anat   ':=^{width}}")
+job_ids = []
+for fly in flies:
+    directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
+    args = {'logfile': logfile, 'directory': directory}
+    script = 'clean_anat.py'
+    job_id = flow.sbatch(jobname='clnanat',
+                         script=os.path.join(scripts_path, script),
+                         modules=modules,
+                         args=args,
+                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
+    job_ids.append(job_id)
 
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # ###############
 # ### Sharpen ###
