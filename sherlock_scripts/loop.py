@@ -127,19 +127,20 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-# printlog(f"\n{'   CLUSTERING   ':=^{width}}")
-# job_ids = []
-# args = {'logfile': logfile}
-# script = 'build_final_9_pooled_brain_for_pca.py'
-# #script = 'final_9_depth_correct_clustering.py'
-# job_id = flow.sbatch(jobname='cluster',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=24, mem=22, nice=nice, nodes=nodes) # 2 to 1
-# job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+printlog(f"\n{'   CLUSTERING   ':=^{width}}")
+job_ids = []
+args = {'logfile': logfile}
+#script = 'build_final_9_pooled_brain_for_pca.py'
+#script = 'final_9_depth_correct_clustering.py'
+script = 'final_9_full_volume_clustering.py'
+job_id = flow.sbatch(jobname='cluster',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=24, mem=23, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 ###########
 ### PCA ###
@@ -437,25 +438,25 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-##################
-### Clean Anat ###
-##################
+# ##################
+# ### Clean Anat ###
+# ##################
 
-printlog(f"\n{'   Clean Anat   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
-    args = {'logfile': logfile, 'directory': directory}
-    script = 'clean_anat.py'
-    job_id = flow.sbatch(jobname='clnanat',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# printlog(f"\n{'   Clean Anat   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'anat_0', 'moco')
+#     args = {'logfile': logfile, 'directory': directory}
+#     script = 'clean_anat.py'
+#     job_id = flow.sbatch(jobname='clnanat',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=1, mem=1, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # ###############
 # ### Sharpen ###
@@ -694,53 +695,53 @@ for job_id in job_ids:
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-########################
-### Apply transforms ###
-########################
-res_func = (2.611, 2.611, 5)
-res_anat = (0.38, 0.38, 0.38)#(2,2,2)
-final_2um_iso = True
+# ########################
+# ### Apply transforms ###
+# ########################
+# res_func = (2.611, 2.611, 5)
+# res_anat = (0.38, 0.38, 0.38)#(2,2,2)
+# final_2um_iso = True
 
-printlog(f"\n{'   Alignment   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    fly_directory = os.path.join(dataset_path, fly)
+# printlog(f"\n{'   Alignment   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     fly_directory = os.path.join(dataset_path, fly)
 
-    behaviors = ['dRotLabY']#['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
-    for behavior in behaviors:
-        moving_path = os.path.join(fly_directory, 'func_0', 'corr', 'corr_{}.nii'.format(behavior))#<---------------------------------------
-        moving_fly = 'corr_{}'.format(behavior)
-        moving_resolution = res_func
+#     behaviors = ['dRotLabY']#['Y', 'Y_pos', 'Y_neg', 'Z_abs', 'Z_pos', 'Z_neg']
+#     for behavior in behaviors:
+#         moving_path = os.path.join(fly_directory, 'func_0', 'corr', 'corr_{}.nii'.format(behavior))#<---------------------------------------
+#         moving_fly = 'corr_{}'.format(behavior)
+#         moving_resolution = res_func
 
-        #fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
-        fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20220301_luke_2_jfrc_affine_zflip.nii"#luke.nii"
-        fixed_fly = 'meanbrain'
-        fixed_resolution = res_anat
+#         #fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/luke.nii"
+#         fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/anat_templates/20220301_luke_2_jfrc_affine_zflip.nii"#luke.nii"
+#         fixed_fly = 'meanbrain'
+#         fixed_resolution = res_anat
 
-        save_directory = os.path.join(fly_directory, 'warp')
-        if not os.path.exists(save_directory):
-            os.mkdir(save_directory)
+#         save_directory = os.path.join(fly_directory, 'warp')
+#         if not os.path.exists(save_directory):
+#             os.mkdir(save_directory)
 
-        args = {'logfile': logfile,
-                'save_directory': save_directory,
-                'fixed_path': fixed_path,
-                'moving_path': moving_path,
-                'fixed_fly': fixed_fly,
-                'moving_fly': moving_fly,
-                'moving_resolution': moving_resolution,
-                'fixed_resolution': fixed_resolution,
-                'final_2um_iso': final_2um_iso}
+#         args = {'logfile': logfile,
+#                 'save_directory': save_directory,
+#                 'fixed_path': fixed_path,
+#                 'moving_path': moving_path,
+#                 'fixed_fly': fixed_fly,
+#                 'moving_fly': moving_fly,
+#                 'moving_resolution': moving_resolution,
+#                 'fixed_resolution': fixed_resolution,
+#                 'final_2um_iso': final_2um_iso}
 
-        script = 'apply_transforms.py'
-        job_id = flow.sbatch(jobname='aplytrns',
-                             script=os.path.join(scripts_path, script),
-                             modules=modules,
-                             args=args,
-                             logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
-        job_ids.append(job_id)
+#         script = 'apply_transforms.py'
+#         job_id = flow.sbatch(jobname='aplytrns',
+#                              script=os.path.join(scripts_path, script),
+#                              modules=modules,
+#                              args=args,
+#                              logfile=logfile, time=12, mem=4, nice=nice, nodes=nodes) # 2 to 1
+#         job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   MASK   ':=^{width}}")
 # job_ids = []

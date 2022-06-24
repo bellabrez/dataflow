@@ -41,22 +41,22 @@ def main():
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
 	resolution = (2, 2, 2)
 
-	# #######################
-	# ### Clean Anatomies ###
-	# #######################
-	# # Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
+	#######################
+	### Clean Anatomies ###
+	#######################
+	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
-	# anats = os.listdir(raw_dir)
-	# print('found raw anats: {}'.format(anats))
+	anats = os.listdir(raw_dir)
+	print('found raw anats: {}'.format(anats))
 
-	# if not os.path.exists(clean_dir):
-	# 	os.mkdir(clean_dir)
+	if not os.path.exists(clean_dir):
+		os.mkdir(clean_dir)
 
-	# print('*** Start Cleaning ***')
-	# for anat in anats:
-	# 	print('cleaning {}'.format(anat))
-	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	# print('*** Finished Cleaning ***')
+	print('*** Start Cleaning ***')
+	for anat in anats:
+		print('cleaning {}'.format(anat))
+		clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	print('*** Finished Cleaning ***')
 
 	#########################
 	### Sharpen Anatomies ###
