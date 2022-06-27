@@ -35,10 +35,10 @@ def main():
 
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
 	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
-	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20220421_make_nonmyr_meanbrain"
-	raw_dir = os.path.join(main_dir, 'raw_anats')
-	clean_dir = os.path.join(main_dir, 'clean_anats')
-	sharp_dir = os.path.join(main_dir, 'sharp_anats')
+	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20220627_LC11"
+	raw_dir = os.path.join(main_dir, 'raw_red')
+	#clean_dir = os.path.join(main_dir, 'clean_anats')
+	#sharp_dir = os.path.join(main_dir, 'sharp_anats')
 	resolution = (0.65, 0.65, 1)
 
 	# #######################
@@ -62,17 +62,17 @@ def main():
 	### Sharpen Anatomies ###
 	#########################
 	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	clean_anats = os.listdir(clean_dir)
-	print('found clean anats: {}'.format(clean_anats))
+	# clean_anats = os.listdir(clean_dir)
+	# print('found clean anats: {}'.format(clean_anats))
 
-	if not os.path.exists(sharp_dir):
-		os.mkdir(sharp_dir)
+	# if not os.path.exists(sharp_dir):
+	# 	os.mkdir(sharp_dir)
 
-	print('*** Start Sharpening ***')
-	for anat in clean_anats:
-		print('sharpening {}'.format(anat))
-		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	print('*** Finished Sharpening ***')
+	# print('*** Start Sharpening ***')
+	# for anat in clean_anats:
+	# 	print('sharpening {}'.format(anat))
+	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	# print('*** Finished Sharpening ***')
 
 	##############
 	### AFFINE ###
@@ -80,14 +80,14 @@ def main():
 	type_of_transform = 'Affine'
 
 	###   Affine_0    ###
-	moving_dir = clean_dir
+	moving_dir = raw_dir
 	name_out = 'affine_0'
 	name_fixed = 'anat_143.nii'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###   Affine_1    ###
-	moving_dir = clean_dir
+	moving_dir = raw_dir
 	name_out = 'affine_1'
 	name_fixed = 'affine_0'
 	sharpen_output = False
@@ -99,59 +99,61 @@ def main():
 	type_of_transform = 'SyN'
 
 	###    SyN_0    ###
-	moving_dir = clean_dir
+	moving_dir = raw_dir
 	name_out = 'syn_0'
 	name_fixed = 'affine_1'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_1    ###
-	moving_dir = clean_dir
+	moving_dir = raw_dir
 	name_out = 'syn_1'
 	name_fixed = 'syn_0'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_2    ###
-	moving_dir = clean_dir
+	moving_dir = raw_dir
 	name_out = 'syn_2'
 	name_fixed = 'syn_1'
 	sharpen_output = True
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_3    ###
-	moving_dir = clean_dir
+	moving_dir = raw_dir
 	name_out = 'syn_3'
 	name_fixed = 'syn_2'
 	sharpen_output = True
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_4    ###
-	moving_dir = clean_dir
+	moving_dir = raw_dir
 	name_out = 'syn_4'
 	name_fixed = 'syn_3'
 	sharpen_output = True
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	###    SyN_5    ###
-	moving_dir = sharp_dir
-	name_out = 'syn_5'
-	name_fixed = 'syn_4'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# ###    SyN_5    ###
+	# moving_dir = sharp_dir
+	# name_out = 'syn_5'
+	# name_fixed = 'syn_4'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	###    SyN_6    ###
-	moving_dir = sharp_dir
-	name_out = 'syn_6'
-	name_fixed = 'syn_5'
-	sharpen_output = False
-	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	# ###    SyN_6    ###
+	# moving_dir = sharp_dir
+	# name_out = 'syn_6'
+	# name_fixed = 'syn_5'
+	# sharpen_output = False
+	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 def load_numpy_brain(in_file):
 	if in_file.endswith('.nii'):
 		brain = np.asarray(nib.load(in_file).get_data().squeeze(), dtype='float32')
 	elif in_file.endswith('.nrrd'):
 		brain = np.asarray(nrrd.read(in_file)[0].squeeze(), dtype='float32')
+	elif in_file.endswith('.npy'):
+		brain = np.load(in_file)
 	else:
 		print(f'Could not load {in_file}')
 	return brain
@@ -267,6 +269,8 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 
 	if name_fixed.endswith('.nrrd'):
 		fixed_path = os.path.join(main_dir, name_fixed)
+	elif name_fixed.endswith('.npy'):
+		fixed_path = os.path.join(main_dir, f'{name_fixed}.npy')
 	else:
 		fixed_path = os.path.join(main_dir, f'{name_fixed}.nii')
 
@@ -274,7 +278,7 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 	anats = os.listdir(moving_dir)
 	for anat in anats:
 		moving_path = os.path.join(moving_dir, anat)
-		for mirror in [True, False]:
+		for mirror in [False]: # <----------------------- removed true here for subvol
 			t0 = time.time()
 			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
 			print('{} {} done. Duration {}s'.format(type_of_transform, anat, time.time()-t0))

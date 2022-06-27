@@ -8,5 +8,5 @@
 
 ml python/3.6.1
 date
-python3 -u /home/users/brezovec/projects/dataflow/sherlock_scripts/20210125_meanbrain_creation.py
+python3 -u /home/users/brezovec/projects/dataflow/sherlock_scripts/20220627_meanbrain_creation_subvol.py
 ##SBATCH --output=./logs/mainlog.out
