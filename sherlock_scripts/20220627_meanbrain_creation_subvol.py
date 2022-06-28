@@ -37,8 +37,8 @@ def main():
 	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
 	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20220628_LC11"
 	raw_dir = os.path.join(main_dir, 'raw_red')
-	#clean_dir = os.path.join(main_dir, 'clean_anats')
-	#sharp_dir = os.path.join(main_dir, 'sharp_anats')
+	clean_dir = os.path.join(main_dir, 'clean_anats')
+	sharp_dir = os.path.join(main_dir, 'sharp_anats')
 	resolution = (0.65, 0.65, 1)
 
 	#######################
