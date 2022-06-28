@@ -270,7 +270,7 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 	if name_fixed.endswith('.nrrd'):
 		fixed_path = os.path.join(main_dir, name_fixed)
 	elif name_fixed.endswith('.npy'):
-		fixed_path = os.path.join(main_dir, f'{name_fixed}.npy')
+		fixed_path = os.path.join(main_dir, f'{name_fixed}')
 	else:
 		fixed_path = os.path.join(main_dir, f'{name_fixed}.nii')
 
