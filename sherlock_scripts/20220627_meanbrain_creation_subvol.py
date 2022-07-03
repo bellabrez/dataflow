@@ -46,106 +46,106 @@ def main():
 	#######################
 	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
-	anats = os.listdir(raw_dir)
-	print('found raw anats: {}'.format(anats))
+	# anats = os.listdir(raw_dir)
+	# print('found raw anats: {}'.format(anats))
 
-	if not os.path.exists(clean_dir):
-		os.mkdir(clean_dir)
+	# if not os.path.exists(clean_dir):
+	# 	os.mkdir(clean_dir)
 
-	print('*** Start Cleaning ***')
-	for anat in anats:
-		print('cleaning {}'.format(anat))
-		clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	print('*** Finished Cleaning ***')
+	# print('*** Start Cleaning ***')
+	# for anat in anats:
+	# 	print('cleaning {}'.format(anat))
+	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	# print('*** Finished Cleaning ***')
 
-	########################
-	## Sharpen Anatomies ###
-	########################
-	#Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	clean_anats = os.listdir(clean_dir)
-	print('found clean anats: {}'.format(clean_anats))
+	# ########################
+	# ## Sharpen Anatomies ###
+	# ########################
+	# #Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	# clean_anats = os.listdir(clean_dir)
+	# print('found clean anats: {}'.format(clean_anats))
 
-	if not os.path.exists(sharp_dir):
-		os.mkdir(sharp_dir)
+	# if not os.path.exists(sharp_dir):
+	# 	os.mkdir(sharp_dir)
 
-	print('*** Start Sharpening ***')
-	for anat in clean_anats:
-		print('sharpening {}'.format(anat))
-		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	print('*** Finished Sharpening ***')
+	# print('*** Start Sharpening ***')
+	# for anat in clean_anats:
+	# 	print('sharpening {}'.format(anat))
+	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	# print('*** Finished Sharpening ***')
 
-	# ##############
-	# ### AFFINE ###
-	# ##############
-	# type_of_transform = 'Affine'
+	##############
+	### AFFINE ###
+	##############
+	type_of_transform = 'Affine'
 
-	# ###   Affine_0    ###
-	# moving_dir = raw_dir
-	# name_out = 'affine_0'
-	# name_fixed = '210208_02_red_o.npy'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###   Affine_0    ###
+	moving_dir = raw_dir
+	name_out = 'affine_0'
+	name_fixed = '210208_02_red_o.npy'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ###   Affine_1    ###
-	# moving_dir = raw_dir
-	# name_out = 'affine_1'
-	# name_fixed = 'affine_0'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###   Affine_1    ###
+	moving_dir = raw_dir
+	name_out = 'affine_1'
+	name_fixed = 'affine_0'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ##################
-	# ### NON-LINEAR ###
-	# ##################
-	# type_of_transform = 'SyN'
+	##################
+	### NON-LINEAR ###
+	##################
+	type_of_transform = 'SyN'
 
-	# ###    SyN_0    ###
-	# moving_dir = raw_dir
-	# name_out = 'syn_0'
-	# name_fixed = 'affine_1'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###    SyN_0    ###
+	moving_dir = raw_dir
+	name_out = 'syn_0'
+	name_fixed = 'affine_1'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ###    SyN_1    ###
-	# moving_dir = raw_dir
-	# name_out = 'syn_1'
-	# name_fixed = 'syn_0'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###    SyN_1    ###
+	moving_dir = raw_dir
+	name_out = 'syn_1'
+	name_fixed = 'syn_0'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ###    SyN_2    ###
-	# moving_dir = raw_dir
-	# name_out = 'syn_2'
-	# name_fixed = 'syn_1'
-	# sharpen_output = True
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###    SyN_2    ###
+	moving_dir = raw_dir
+	name_out = 'syn_2'
+	name_fixed = 'syn_1'
+	sharpen_output = True
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ###    SyN_3    ###
-	# moving_dir = raw_dir
-	# name_out = 'syn_3'
-	# name_fixed = 'syn_2'
-	# sharpen_output = True
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###    SyN_3    ###
+	moving_dir = raw_dir
+	name_out = 'syn_3'
+	name_fixed = 'syn_2'
+	sharpen_output = True
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ###    SyN_4    ###
-	# moving_dir = raw_dir
-	# name_out = 'syn_4'
-	# name_fixed = 'syn_3'
-	# sharpen_output = True
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###    SyN_4    ###
+	moving_dir = raw_dir
+	name_out = 'syn_4'
+	name_fixed = 'syn_3'
+	sharpen_output = True
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ###    SyN_5    ###
-	# moving_dir = sharp_dir
-	# name_out = 'syn_5'
-	# name_fixed = 'syn_4'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###    SyN_5    ###
+	moving_dir = sharp_dir
+	name_out = 'syn_5'
+	name_fixed = 'syn_4'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
-	# ###    SyN_6    ###
-	# moving_dir = sharp_dir
-	# name_out = 'syn_6'
-	# name_fixed = 'syn_5'
-	# sharpen_output = False
-	# alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
+	###    SyN_6    ###
+	moving_dir = sharp_dir
+	name_out = 'syn_6'
+	name_fixed = 'syn_5'
+	sharpen_output = False
+	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 def load_numpy_brain(in_file):
 	if in_file.endswith('.nii'):
