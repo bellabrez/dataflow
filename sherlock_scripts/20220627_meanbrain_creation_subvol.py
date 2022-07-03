@@ -80,14 +80,14 @@ def main():
 	type_of_transform = 'Affine'
 
 	###   Affine_0    ###
-	moving_dir = raw_dir
+	moving_dir = clean_dir
 	name_out = 'affine_0'
-	name_fixed = '210208_02_red_o.npy'
+	name_fixed = '/clean/210208_02_red_o_clean.nii'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###   Affine_1    ###
-	moving_dir = raw_dir
+	moving_dir = clean_dir
 	name_out = 'affine_1'
 	name_fixed = 'affine_0'
 	sharpen_output = False
@@ -99,35 +99,35 @@ def main():
 	type_of_transform = 'SyN'
 
 	###    SyN_0    ###
-	moving_dir = raw_dir
+	moving_dir = clean_dir
 	name_out = 'syn_0'
 	name_fixed = 'affine_1'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_1    ###
-	moving_dir = raw_dir
+	moving_dir = clean_dir
 	name_out = 'syn_1'
 	name_fixed = 'syn_0'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_2    ###
-	moving_dir = raw_dir
+	moving_dir = clean_dir
 	name_out = 'syn_2'
 	name_fixed = 'syn_1'
 	sharpen_output = True
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_3    ###
-	moving_dir = raw_dir
+	moving_dir = clean_dir
 	name_out = 'syn_3'
 	name_fixed = 'syn_2'
 	sharpen_output = True
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
 	###    SyN_4    ###
-	moving_dir = raw_dir
+	moving_dir = clean_dir
 	name_out = 'syn_4'
 	name_fixed = 'syn_3'
 	sharpen_output = True
