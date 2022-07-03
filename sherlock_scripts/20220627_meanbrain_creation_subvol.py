@@ -210,15 +210,15 @@ def clean_anat(in_file, save_dir):
 
 	### Blur brain and mask small values ###
 	brain_copy = brain.copy().astype('float32')
-	brain_copy = scipy.ndimage.filters.gaussian_filter(brain_copy, sigma=10)
-	threshold = triangle(brain_copy)
-	brain_copy[np.where(brain_copy < threshold/2)] = 0
+	# brain_copy = scipy.ndimage.filters.gaussian_filter(brain_copy, sigma=10)
+	# threshold = triangle(brain_copy)
+	# brain_copy[np.where(brain_copy < threshold/2)] = 0
 
-	### Remove blobs outside contiguous brain ###
-	labels, label_nb = scipy.ndimage.label(brain_copy)
-	brain_label = np.bincount(labels.flatten())[1:].argmax()+1
-	brain_copy = brain.copy().astype('float32')
-	brain_copy[np.where(labels != brain_label)] = np.nan
+	# ### Remove blobs outside contiguous brain ###
+	# labels, label_nb = scipy.ndimage.label(brain_copy)
+	# brain_label = np.bincount(labels.flatten())[1:].argmax()+1
+	# brain_copy = brain.copy().astype('float32')
+	# brain_copy[np.where(labels != brain_label)] = np.nan
 
 	### Perform quantile normalization ###
 	brain_out = quantile_transform(brain_copy.flatten().reshape(-1, 1), n_quantiles=500, random_state=0, copy=True)
