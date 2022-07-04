@@ -35,7 +35,7 @@ def main():
 
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
 	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
-	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20220628_LC11"
+	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20220704_LC11"
 	raw_dir = os.path.join(main_dir, 'raw_red')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
@@ -46,33 +46,33 @@ def main():
 	#######################
 	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
-	# anats = os.listdir(raw_dir)
-	# print('found raw anats: {}'.format(anats))
+	anats = os.listdir(raw_dir)
+	print('found raw anats: {}'.format(anats))
 
-	# if not os.path.exists(clean_dir):
-	# 	os.mkdir(clean_dir)
+	if not os.path.exists(clean_dir):
+		os.mkdir(clean_dir)
 
-	# print('*** Start Cleaning ***')
-	# for anat in anats:
-	# 	print('cleaning {}'.format(anat))
-	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	# print('*** Finished Cleaning ***')
+	print('*** Start Cleaning ***')
+	for anat in anats:
+		print('cleaning {}'.format(anat))
+		clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	print('*** Finished Cleaning ***')
 
-	# ########################
-	# ## Sharpen Anatomies ###
-	# ########################
-	# #Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	# clean_anats = os.listdir(clean_dir)
-	# print('found clean anats: {}'.format(clean_anats))
+	########################
+	## Sharpen Anatomies ###
+	########################
+	#Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	clean_anats = os.listdir(clean_dir)
+	print('found clean anats: {}'.format(clean_anats))
 
-	# if not os.path.exists(sharp_dir):
-	# 	os.mkdir(sharp_dir)
+	if not os.path.exists(sharp_dir):
+		os.mkdir(sharp_dir)
 
-	# print('*** Start Sharpening ***')
-	# for anat in clean_anats:
-	# 	print('sharpening {}'.format(anat))
-	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	# print('*** Finished Sharpening ***')
+	print('*** Start Sharpening ***')
+	for anat in clean_anats:
+		print('sharpening {}'.format(anat))
+		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	print('*** Finished Sharpening ***')
 
 	##############
 	### AFFINE ###
@@ -192,7 +192,10 @@ def align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution,
 
 	### Align
 	with stderr_redirected(): # to prevent itk gaussian error infinite printing
-		moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
+		if type_of_transform == 'SyN':
+			moco = ants.registration(fixed, moving, type_of_transform=type_of_transform, flow_sigma=5, total_sigma=5)
+		else:
+			moco = ants.registration(fixed, moving, type_of_transform=type_of_transform)
 
 	### Save
 	fixed_fly = fixed_path.split('/')[-1].split('.')[0]
