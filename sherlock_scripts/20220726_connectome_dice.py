@@ -43,8 +43,8 @@ def main(args):
 
 	### loop over cells and get dice score
 	all_dice = []
-	for j, cell in enumerate(cell_ids[:10]):
-		if j%10 == 0:
+	for j, cell in enumerate(cell_ids):
+		if j%1000 == 0:
 			printlog(f'j: {j}')
 		idx = list(np.where(synapses['bodyid']==cell)[0])
 		xs = synapses['x'][idx]
