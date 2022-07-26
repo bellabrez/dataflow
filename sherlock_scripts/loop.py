@@ -127,17 +127,32 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-printlog(f"\n{'   CLUSTERING   ':=^{width}}")
+# printlog(f"\n{'   CLUSTERING   ':=^{width}}")
+# job_ids = []
+# args = {'logfile': logfile}
+# #script = 'build_final_9_pooled_brain_for_pca.py'
+# #script = 'final_9_depth_correct_clustering.py'
+# script = 'final_9_full_volume_clustering.py'
+# job_id = flow.sbatch(jobname='cluster',
+#                      script=os.path.join(scripts_path, script),
+#                      modules=modules,
+#                      args=args,
+#                      logfile=logfile, time=24, mem=23, nice=nice, nodes=nodes) # 2 to 1
+# job_ids.append(job_id)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
+
+printlog(f"\n{'   CONNECTOME   ':=^{width}}")
 job_ids = []
 args = {'logfile': logfile}
 #script = 'build_final_9_pooled_brain_for_pca.py'
 #script = 'final_9_depth_correct_clustering.py'
-script = 'final_9_full_volume_clustering.py'
+script = '20220726_connectome_dice.py'
 job_id = flow.sbatch(jobname='cluster',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=24, mem=23, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=24, mem=16, nice=nice, nodes=nodes) # 2 to 1
 job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
