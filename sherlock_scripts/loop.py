@@ -892,7 +892,7 @@ mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/func/raw"
 murthy_res = (.49,.49,1)
 clandinin_res = (.76,.76,1)
 
-for moving_file in os.listdir(moving_dir)[0]:
+for moving_file in os.listdir(moving_dir)[:1]:
 	moving_path = os.path.join(moving_dir, moving_file)
 	moving_fly = moving_file[:-4]
 	moving_resolution = clandinin_res
