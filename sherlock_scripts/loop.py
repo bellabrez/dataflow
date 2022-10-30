@@ -898,7 +898,7 @@ for moving_file in os.listdir(moving_dir)[:1]:
 	moving_resolution = clandinin_res
 
 	micim_file = moving_file.replace('red', 'green')
-	mimic_path = os.path.join(mimic_dir, moving_file)
+	mimic_path = os.path.join(mimic_dir, micim_file)
 	mimic_fly = micim_file[:-4]
 	mimic_resolution = clandinin_res
 
