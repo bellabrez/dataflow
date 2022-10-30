@@ -916,6 +916,8 @@ for moving_file in os.listdir(moving_dir)[:1]:
 	save_warp_params = False
 	low_res = False
 	very_low_res = False
+	iso_2um_fixed = False
+	iso_2um_moving = False
 
 	grad_step = 0.2
 	flow_sigma = 3
@@ -938,6 +940,8 @@ for moving_file in os.listdir(moving_dir)[:1]:
 	        'save_warp_params': save_warp_params,
 	        'low_res': low_res,
 	        'very_low_res': very_low_res,
+	        'iso_2um_fixed': iso_2um_fixed,
+			'iso_2um_moving': iso_2um_moving,
 	        'grad_step': grad_step,
 	        'flow_sigma': flow_sigma,
 	        'total_sigma': total_sigma,
