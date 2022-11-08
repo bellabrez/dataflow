@@ -7,6 +7,48 @@ import pickle
 
 from sklearn.decomposition import FastICA
 
+def fastIca(signals,  alpha = 1, thresh=0.0001, iterations=200):
+    m, n = signals.shape
+
+    # Initialize random weights
+    W = np.random.rand(m, m)
+
+    for c in range(m):
+        w = W[c, :].copy().reshape(m, 1)
+        w = w / np.sqrt((w ** 2).sum())
+
+        i = 0
+        lim = 100
+        while ((lim > thresh) & (i < iterations)):
+
+            # Dot product of weight and signal
+            ws = np.dot(w.T, signals)
+
+            # Pass w*s into contrast function g
+            wg = np.tanh(ws * alpha).T
+
+            # Pass w*s into g prime
+            wg_ = (1 - np.square(np.tanh(ws))) * alpha
+
+            # Update weights
+            wNew = (signals * wg.T).mean(axis=1) - wg_.mean() * w.squeeze()
+
+            # Decorrelate weights              
+            wNew = wNew - np.dot(np.dot(wNew, W[:c].T), W[:c])
+            wNew = wNew / np.sqrt((wNew ** 2).sum())
+
+            # Calculate limit condition
+            lim = np.abs(np.abs((wNew * w).sum()) - 1)
+
+            # Update weights
+            w = wNew
+
+            # Update counter
+            i += 1
+
+        W[c, :] = w.T
+    return W
+
 def main(args):
 
     logfile = args['logfile']
@@ -42,12 +84,17 @@ def main(args):
     # printlog(F'fly_idx: {fly_idx}, start: {start}, stop: {stop}')
     # printlog('After fly_idx, X is time by voxels {}'.format(X.shape))
 
-    transformer = FastICA(n_components=100)
-    X_transformed = transformer.fit_transform(X)
-    printlog('X_transformed is {}'.format(X_transformed.shape))
+    #transformer = FastICA(n_components=100)
+    #X_transformed = transformer.fit_transform(X)
+
+    printlog("running custom ICA")
+    W = fastIca(X,  alpha=1)
+    unMixed = X.T.dot(W.T)
+
+    printlog('X_transformed is {}'.format(unMixed.shape))
 
     save_file = F'/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210130_superv_depth_correction/20221107_ICA_ztrim_fly.npy'
-    np.save(save_file, eigen_values)
+    np.save(save_file, unMixed)
 
 
 if __name__ == '__main__':
