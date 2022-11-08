@@ -7,6 +7,7 @@ import pickle
 
 from sklearn.decomposition import FastICA
 
+#https://github.com/akcarsten/Independent_Component_Analysis
 def fastIca(signals,  alpha = 1, thresh=0.0001, iterations=200):
     m, n = signals.shape
 
