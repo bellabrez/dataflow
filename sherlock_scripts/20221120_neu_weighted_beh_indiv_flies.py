@@ -97,6 +97,7 @@ def main(args):
 
 		# Get cluster responses for this slice
 		for idx,fly in enumerate(fly_names):
+			printlog(F"fly: {fly}")
 			flies[fly].load_brain_slice()
 			flies[fly].get_cluster_averages(cluster_model_labels_all[z,:], n_clusters)
 
@@ -147,8 +148,8 @@ def main(args):
 			######################
 			save_file = F"/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20220921_neural_weighted_behavior/indiv_flies/responses_fly{fly}_{z}"
 			np.save(save_file, cluster_responses)
-			brain = None
-			Y = None
+			#brain = None
+			#Y = None
 
 if __name__ == '__main__':
 	main(json.loads(sys.argv[1]))	 
