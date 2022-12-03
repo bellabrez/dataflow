@@ -82,20 +82,20 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-# #########################################
-# ### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
-# #########################################
-# job_ids = []
-# args = {'logfile': logfile}
-# script = 'create_behavior_X_matrix_acceleration.py'
-# job_id = flow.sbatch(jobname='neuwebeh',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=2, mem=23, nice=nice, nodes=nodes) # 2 to 1
-# job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+#########################################
+### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
+#########################################
+job_ids = []
+args = {'logfile': logfile}
+script = '20221202_create_behavior_X_matrix_noYclip.py'
+job_id = flow.sbatch(jobname='neuwebeh',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=2, mem=23, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   GLM - superfly reconstructed   ':=^{width}}")
 # job_ids = []
@@ -325,22 +325,22 @@ printlog("")
 # for job_id in job_ids:
 #     flow.wait_for_job(job_id, logfile, com_path)
 
-################################
-### NEURAL WEIGHTED BEHAVIOR ###
-################################
-job_ids = []
-for z in [20]:#range(49):
-    args = {'logfile': logfile, 'z': z}
-    script = '20221120_neu_weighted_beh_indiv_flies.py'
-    job_id = flow.sbatch(jobname='neuwebeh',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=48, mem=23, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# ################################
+# ### NEURAL WEIGHTED BEHAVIOR ###
+# ################################
+# job_ids = []
+# for z in [20]:#range(49):
+#     args = {'logfile': logfile, 'z': z}
+#     script = '20221120_neu_weighted_beh_indiv_flies.py'
+#     job_id = flow.sbatch(jobname='neuwebeh',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=48, mem=23, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 # ##########################
 # ### CLUSTERING FILTERS ###
