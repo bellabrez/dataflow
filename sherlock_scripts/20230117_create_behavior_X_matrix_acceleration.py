@@ -122,6 +122,7 @@ def main(args):
 			 #### CONVERT TO ACCELERATION
 			fictrac_interp = np.diff(fictrac_interp)
 			fictrac_interp = np.append(fictrac_interp, 0) #need to add a single value that was removed
+			behavior_shifts.append(fictrac_interp)
 
 			# # Split ACCELERATION in +/-
 			# if 'plus' in behavior:
