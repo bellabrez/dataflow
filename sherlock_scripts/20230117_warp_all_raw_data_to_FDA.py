@@ -48,12 +48,17 @@ def main(args):
 	out = ants.registration(fixed_lowres, luke_mean_lowres, type_of_transform='Affine')
 	
 	for fly in flies:
+
+		#reset memory
+		warped = None
+		moving = None
+		time.sleep(30)
+
 		printlog(fly)
 		### Load neural data ###
 		# this has already been warped from individual brains into the local meanbrain.
 		file = os.path.join(dataset_path, fly, 'func_0', 'brain_zscored_green_high_pass_masked_warped.nii')
-		brain = ants.image_read(file)
-		moving = ants.from_numpy(brain[:,:,::-1,:])
+		moving = ants.from_numpy(ants.image_read(file)[:,:,::-1,:])
 		moving.set_spacing((2.6076, 2.6154, 5.3125, 1)) ### matching this to the slightly off luke mean
 
 		warped = ants.apply_transforms(fixed_lowres, moving, out['fwdtransforms'][0], imagetype=3, interpolator='nearestNeighbor')
