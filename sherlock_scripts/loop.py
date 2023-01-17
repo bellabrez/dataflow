@@ -87,12 +87,12 @@ printlog("")
 #########################################
 job_ids = []
 args = {'logfile': logfile}
-script = '20230117_create_behavior_X_matrix_acceleration.py'
+script = '20230117_warp_all_raw_data_to_FDA.py'#'20230117_create_behavior_X_matrix_acceleration.py'
 job_id = flow.sbatch(jobname='neuwebeh',
                      script=os.path.join(scripts_path, script),
                      modules=modules,
                      args=args,
-                     logfile=logfile, time=2, mem=23, nice=nice, nodes=nodes) # 2 to 1
+                     logfile=logfile, time=5, mem=23, nice=nice, nodes=nodes) # 2 to 1
 job_ids.append(job_id)
 for job_id in job_ids:
     flow.wait_for_job(job_id, logfile, com_path)
