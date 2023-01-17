@@ -82,20 +82,20 @@ printlog("")
 ### LOOP SCRIPT ###
 ###################
 
-# #########################################
-# ### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
-# #########################################
-# job_ids = []
-# args = {'logfile': logfile}
-# script = '20221202_create_behavior_X_matrix_noYclip.py'
-# job_id = flow.sbatch(jobname='neuwebeh',
-#                      script=os.path.join(scripts_path, script),
-#                      modules=modules,
-#                      args=args,
-#                      logfile=logfile, time=2, mem=23, nice=nice, nodes=nodes) # 2 to 1
-# job_ids.append(job_id)
-# for job_id in job_ids:
-#     flow.wait_for_job(job_id, logfile, com_path)
+#########################################
+### NEURAL WEIGHTED BEHAVIOR - MAKE X ###
+#########################################
+job_ids = []
+args = {'logfile': logfile}
+script = '20230117_create_behavior_X_matrix_acceleration.py'
+job_id = flow.sbatch(jobname='neuwebeh',
+                     script=os.path.join(scripts_path, script),
+                     modules=modules,
+                     args=args,
+                     logfile=logfile, time=2, mem=23, nice=nice, nodes=nodes) # 2 to 1
+job_ids.append(job_id)
+for job_id in job_ids:
+    flow.wait_for_job(job_id, logfile, com_path)
 
 # printlog(f"\n{'   GLM - superfly reconstructed   ':=^{width}}")
 # job_ids = []
@@ -886,105 +886,105 @@ printlog("")
 
 ###################################################################################################################
 
-# #########################
-# ### General Alignment ###
-# #########################
+# # #########################
+# # ### General Alignment ###
+# # #########################
 
-# # murthy is 0.49 x 0.49 x 1 um
-# # clandinin is .6 .6 1
+# # # murthy is 0.49 x 0.49 x 1 um
+# # # clandinin is .6 .6 1
 
-printlog(f"\n{'   Template Alignment   ':=^{width}}")
-# #moving_path = "trc/data/Yukun/registration/mean_brain/LC11_to_FDA/brig1.nii"
+# printlog(f"\n{'   Template Alignment   ':=^{width}}")
+# # #moving_path = "trc/data/Yukun/registration/mean_brain/LC11_to_FDA/brig1.nii"
 
-# # CLANDININ RED: trc/data/Yukun/registration/mean_brain/LC11_to_FDA/brig3.nii
-# # CLANDININ GREEN: /trc/data/Alex/clab_data/LC11/func/average_green_LC11_clab_fda.nii
-# # MURTHY RED: trc/data/Alex/albert_data/LC11/anat/LC11_to_FDA/brig3.nii
-# # MURTHY GREEN: trc/data/Alex/albert_data/LC11/func/average_green_LC11_albert_fda.nii
+# # # CLANDININ RED: trc/data/Yukun/registration/mean_brain/LC11_to_FDA/brig3.nii
+# # # CLANDININ GREEN: /trc/data/Alex/clab_data/LC11/func/average_green_LC11_clab_fda.nii
+# # # MURTHY RED: trc/data/Alex/albert_data/LC11/anat/LC11_to_FDA/brig3.nii
+# # # MURTHY GREEN: trc/data/Alex/albert_data/LC11/func/average_green_LC11_albert_fda.nii
 
 
-murthy_res = (.49,.49,1)
-clandinin_res = (.76,.76,1)
-#for lab in ['clandinin', 'murthy']:
-for lab in ['murthy']: #quickly fixing a single brain
+# murthy_res = (.49,.49,1)
+# clandinin_res = (.76,.76,1)
+# #for lab in ['clandinin', 'murthy']:
+# for lab in ['murthy']: #quickly fixing a single brain
 
-	if lab == 'clandinin':
-		moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/anat/raw"
-		mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/func/raw"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/clandinin"
-		resolution = clandinin_res
-	elif lab == 'murthy':
-		moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/anat/raw"
-		mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/func/raw"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/murthy"
-		resolution = murthy_res
+# 	if lab == 'clandinin':
+# 		moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/anat/raw"
+# 		mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/func/raw"
+# 		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/clandinin"
+# 		resolution = clandinin_res
+# 	elif lab == 'murthy':
+# 		moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/anat/raw"
+# 		mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/func/raw"
+# 		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/murthy"
+# 		resolution = murthy_res
 
-	for moving_file in ["220420_LC11_vol1_local_atlas_red.nii"]:#os.listdir(moving_dir):
-		moving_path = os.path.join(moving_dir, moving_file)
-		moving_fly = moving_file[:-4]
-		moving_resolution = resolution
+# 	for moving_file in ["220420_LC11_vol1_local_atlas_red.nii"]:#os.listdir(moving_dir):
+# 		moving_path = os.path.join(moving_dir, moving_file)
+# 		moving_fly = moving_file[:-4]
+# 		moving_resolution = resolution
 
-		micim_file = moving_file.replace('red', 'green')
-		mimic_path = os.path.join(mimic_dir, micim_file)
-		mimic_fly = micim_file[:-4]
-		mimic_resolution = resolution
+# 		micim_file = moving_file.replace('red', 'green')
+# 		mimic_path = os.path.join(mimic_dir, micim_file)
+# 		mimic_fly = micim_file[:-4]
+# 		mimic_resolution = resolution
 
-		fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_downsampled_flip.nii"
-		fixed_fly = 'FDA'
-		fixed_resolution = clandinin_res
+# 		fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_downsampled_flip.nii"
+# 		fixed_fly = 'FDA'
+# 		fixed_resolution = clandinin_res
 
-		if not os.path.exists(save_directory):
-		    os.mkdir(save_directory)
+# 		if not os.path.exists(save_directory):
+# 		    os.mkdir(save_directory)
 
-		type_of_transform = 'Affine'#'SyN' #'Affine' #SyN
-		flip_X = False
-		flip_Z = False
-		save_warp_params = False
-		low_res = False
-		very_low_res = False
-		iso_2um_fixed = False
-		iso_2um_moving = False
+# 		type_of_transform = 'Affine'#'SyN' #'Affine' #SyN
+# 		flip_X = False
+# 		flip_Z = False
+# 		save_warp_params = False
+# 		low_res = False
+# 		very_low_res = False
+# 		iso_2um_fixed = False
+# 		iso_2um_moving = False
 
-		grad_step = 0.2
-		flow_sigma = 3
-		total_sigma = 0
-		syn_sampling = 32
+# 		grad_step = 0.2
+# 		flow_sigma = 3
+# 		total_sigma = 0
+# 		syn_sampling = 32
 
-		job_ids = []
+# 		job_ids = []
 
-		args = {'logfile': logfile,
-		        'save_directory': save_directory,
-		        'fixed_path': fixed_path,
-		        'moving_path': moving_path,
-		        'fixed_fly': fixed_fly,
-		        'moving_fly': moving_fly,
-		        'type_of_transform': type_of_transform,
-		        'flip_X': flip_X,
-		        'flip_Z': flip_Z,
-		        'moving_resolution': moving_resolution,
-		        'fixed_resolution': fixed_resolution,
-		        'save_warp_params': save_warp_params,
-		        'low_res': low_res,
-		        'very_low_res': very_low_res,
-		        'iso_2um_fixed': iso_2um_fixed,
-				'iso_2um_moving': iso_2um_moving,
-		        'grad_step': grad_step,
-		        'flow_sigma': flow_sigma,
-		        'total_sigma': total_sigma,
-		        'syn_sampling': syn_sampling,
-		        'mimic_path': mimic_path,
-		        'mimic_fly': mimic_fly,
-		        'mimic_resolution': mimic_resolution}
+# 		args = {'logfile': logfile,
+# 		        'save_directory': save_directory,
+# 		        'fixed_path': fixed_path,
+# 		        'moving_path': moving_path,
+# 		        'fixed_fly': fixed_fly,
+# 		        'moving_fly': moving_fly,
+# 		        'type_of_transform': type_of_transform,
+# 		        'flip_X': flip_X,
+# 		        'flip_Z': flip_Z,
+# 		        'moving_resolution': moving_resolution,
+# 		        'fixed_resolution': fixed_resolution,
+# 		        'save_warp_params': save_warp_params,
+# 		        'low_res': low_res,
+# 		        'very_low_res': very_low_res,
+# 		        'iso_2um_fixed': iso_2um_fixed,
+# 				'iso_2um_moving': iso_2um_moving,
+# 		        'grad_step': grad_step,
+# 		        'flow_sigma': flow_sigma,
+# 		        'total_sigma': total_sigma,
+# 		        'syn_sampling': syn_sampling,
+# 		        'mimic_path': mimic_path,
+# 		        'mimic_fly': mimic_fly,
+# 		        'mimic_resolution': mimic_resolution}
 
-		script = 'align_anat.py'
-		job_id = flow.sbatch(jobname='align',
-		                     script=os.path.join(scripts_path, script),
-		                     modules=modules,
-		                     args=args,
-		                     logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
-		job_ids.append(job_id)
+# 		script = 'align_anat.py'
+# 		job_id = flow.sbatch(jobname='align',
+# 		                     script=os.path.join(scripts_path, script),
+# 		                     modules=modules,
+# 		                     args=args,
+# 		                     logfile=logfile, time=4, mem=16, nice=nice, nodes=nodes) # 2 to 1
+# 		job_ids.append(job_id)
 
-		for job_id in job_ids:
-		    flow.wait_for_job(job_id, logfile, com_path)
+# 		for job_id in job_ids:
+# 		    flow.wait_for_job(job_id, logfile, com_path)
 
 ###################################################################################################################
 # printlog(f"\n{'   ZSCORE   ':=^{width}}")
