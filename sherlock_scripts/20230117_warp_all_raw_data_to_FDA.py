@@ -4,6 +4,7 @@ import sys
 import psutil
 import nibabel as nib
 from time import time
+from time import sleep
 import json
 import dataflow as flow
 import matplotlib.pyplot as plt
@@ -52,7 +53,7 @@ def main(args):
 		#reset memory
 		warped = None
 		moving = None
-		time.sleep(30)
+		sleep(30)
 
 		printlog(fly)
 		### Load neural data ###
