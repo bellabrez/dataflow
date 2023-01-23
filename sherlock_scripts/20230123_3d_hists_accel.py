@@ -26,12 +26,12 @@ def main(args):
 	### standard ###
 	file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/20221202_master_X_noYclip.npy"
 	X_beh = np.load(file)
-	printlog(X_beh.shape)
+	printlog(str(X_beh.shape))
 
 	### ACCEL ###
 	file = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210316_neural_weighted_behavior/20230117_master_X_accel_noclip.npy"
 	X_beh_accel = np.load(file)
-	printlog(X_beh_accel.shape)
+	printlog(str(X_beh_accel.shape))
 
 	# for a given supercluster, i need to know the original median z-depth for each fly
 	dataset_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset"
@@ -60,7 +60,7 @@ def main(args):
 	all_3d_hists_accel_Y = []
 
 	for cluster_ in range(251):
-		printlog(cluster_)
+		printlog(str(cluster_))
 
 		all_2d_hists = []
 		all_2d_hists_accel_X = []
@@ -108,7 +108,7 @@ def main(args):
 				all_2d_hists_accel_Y.append(accel_Y_2d)
 
 		all_2d_hists = np.reshape(np.asarray(all_2d_hists),(2,400,25,25))
-		printlog(all_2d_hists.shape)
+		printlog(str(all_2d_hists.shape))
 
 		all_2d_hists_accel_X = np.reshape(np.asarray(all_2d_hists_accel_X),(2,400,25,25))
 		all_2d_hists_accel_Y = np.reshape(np.asarray(all_2d_hists_accel_Y),(2,400,25,25))
