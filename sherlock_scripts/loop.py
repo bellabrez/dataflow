@@ -924,13 +924,13 @@ for lab in ['clandinin', 'murthy']:
 		moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/raw"
 		#moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/mbrain/preprocessed"
 		mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/func/raw"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine_DSX/clandinin"
+		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/clandinin"
 		resolution = clandinin_res
 	elif lab == 'murthy':
 		moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/raw2"
 		#moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/mbrain2/preprocessed"
 		mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/func/raw"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine_DSX/murthy"
+		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/murthy"
 		resolution = murthy_res
 
 	for moving_file in os.listdir(moving_dir):
@@ -950,7 +950,7 @@ for lab in ['clandinin', 'murthy']:
 		if not os.path.exists(save_directory):
 		    os.mkdir(save_directory)
 
-		type_of_transform = 'Affine'#'SyN' #'Affine' #SyN
+		type_of_transform = 'SyN'#'SyN' #'Affine' #SyN
 		flip_X = False
 		flip_Z = False
 		save_warp_params = False
