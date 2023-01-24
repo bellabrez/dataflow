@@ -123,7 +123,7 @@ def main(args):
 	file = os.path.join(cluster_dir, '20230117_3d_hists_accel_X')
 	np.save(file, np.asarray(all_3d_hists_accel_X))
 	file = os.path.join(cluster_dir, '20230117_3d_hists_accel_Y')
-	np.save(file, np.asarray(all_3d_hists_accel_X))
+	np.save(file, np.asarray(all_3d_hists_accel_Y))
 
 
 def bin_2D(pc, num_bins_x, num_bins_y, idx_x ,idx_y, X_accel, Y_accel):
