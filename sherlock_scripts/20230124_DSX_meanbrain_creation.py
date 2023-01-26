@@ -43,38 +43,38 @@ def main():
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
 	resolution = (.76,.76,1)#(2, 2, 2)
 
-	# #######################
-	# ### Clean Anatomies ###
-	# #######################
-	# # Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
+	#######################
+	### Clean Anatomies ###
+	#######################
+	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
-	# anats = os.listdir(raw_dir)
-	# print('found raw anats: {}'.format(anats))
+	anats = os.listdir(raw_dir)
+	print('found raw anats: {}'.format(anats))
 
-	# if not os.path.exists(clean_dir):
-	# 	os.mkdir(clean_dir)
+	if not os.path.exists(clean_dir):
+		os.mkdir(clean_dir)
 
-	# print('*** Start Cleaning ***')
-	# for anat in anats:
-	# 	print('cleaning {}'.format(anat))
-	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	# print('*** Finished Cleaning ***')
+	print('*** Start Cleaning ***')
+	for anat in anats:
+		print('cleaning {}'.format(anat))
+		clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	print('*** Finished Cleaning ***')
 
-	# #########################
-	# ### Sharpen Anatomies ###
-	# #########################
-	# # Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	# clean_anats = os.listdir(clean_dir)
-	# print('found clean anats: {}'.format(clean_anats))
+	#########################
+	### Sharpen Anatomies ###
+	#########################
+	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	clean_anats = os.listdir(clean_dir)
+	print('found clean anats: {}'.format(clean_anats))
 
-	# if not os.path.exists(sharp_dir):
-	# 	os.mkdir(sharp_dir)
+	if not os.path.exists(sharp_dir):
+		os.mkdir(sharp_dir)
 
-	# print('*** Start Sharpening ***')
-	# for anat in clean_anats:
-	# 	print('sharpening {}'.format(anat))
-	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	# print('*** Finished Sharpening ***')
+	print('*** Start Sharpening ***')
+	for anat in clean_anats:
+		print('sharpening {}'.format(anat))
+		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	print('*** Finished Sharpening ***')
 
 	##############
 	### AFFINE ###
@@ -156,12 +156,13 @@ def load_numpy_brain(in_file):
 		brain = np.asarray(nrrd.read(in_file)[0].squeeze(), dtype='float32')
 	else:
 		print(f'Could not load {in_file}')
+
 	return brain
 
 def avg_brains(input_directory, save_directory, save_name):
 	### Load Brains ###
 	files = os.listdir(input_directory)
-	bigbrain = np.zeros((len(files), 1024, 512, 241), dtype='float32',order='F') #my brain size #256
+	bigbrain = np.zeros((len(files), 1024, 512, 299), dtype='float32',order='F') #my brain size #256
 	#bigbrain = np.zeros((len(files), 333, 166, 121), dtype='float32',order='F') # should add code to get dims
 	for i, file in enumerate(files):
 		print(F"loading {file}")
