@@ -167,7 +167,10 @@ def main(args):
         save_file = os.path.join(save_directory, moving_fly + '-to-' + fixed_fly)
         if mimic_fly is not None:
             mimic_save_file = os.path.join(save_directory, mimic_fly + '-to-' + fixed_fly + '.nii')
-    nib.Nifti1Image(mimic_moco.numpy(), np.eye(4)).to_filename(mimic_save_file)
+    if mimic_path is not None:
+        nib.Nifti1Image(mimic_moco.numpy(), np.eye(4)).to_filename(mimic_save_file)
+
+    # Save moco
     if low_res:
         save_file += '_lowres'
     save_file += '.nii'
