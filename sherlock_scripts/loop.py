@@ -824,7 +824,7 @@ res_KEVIN = (0.62,0.62,0.6)
 res_clan_DSX = (0.76,0.76,1) #worth checking
 
 printlog(f"\n{'   Template Alignment   ':=^{width}}")
-moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/clandinin/syn_6.nii"#luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
+moving_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy/syn_6.nii"#luke.nii"#20210310_luke_depth_correction_2.nii"#nsybIVAf_c.nii"
 moving_fly = "clanDSXmean"
 moving_resolution = res_clan_DSX
 
@@ -832,7 +832,7 @@ fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_do
 fixed_fly = 'FDA'
 fixed_resolution = res_clan_DSX
 
-save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/clandinin"
+save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy"
 if not os.path.exists(save_directory):
     os.mkdir(save_directory)
 
