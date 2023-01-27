@@ -909,7 +909,7 @@ printlog(f"\n{'   Template Alignment   ':=^{width}}")
 
 murthy_res = (.49,.49,1)
 clandinin_res = (.76,.76,1)
-for lab in ['clandinin', 'murthy']:
+for lab in ['clandinin']:#, 'murthy']:
 #for lab in ['murthy']: #quickly fixing a single brain
 
 	##### LC11 #####
@@ -929,7 +929,8 @@ for lab in ['clandinin', 'murthy']:
 		moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/raw"
 		#moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/mbrain/preprocessed"
 		mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/func/raw"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/clandinin"
+		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230127_DSX_to_local/clandinin"
+		#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/clandinin"
 		resolution = clandinin_res
 	elif lab == 'murthy':
 		moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/raw2"
@@ -948,8 +949,9 @@ for lab in ['clandinin', 'murthy']:
 		mimic_fly = micim_file[:-4]
 		mimic_resolution = resolution
 
-		fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_downsampled_flip.nii"
-		fixed_fly = 'FDA'
+		fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/clandinin/syn_6.nii"
+		#fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_downsampled_flip.nii"
+		fixed_fly = 'localmean_syn6'
 		fixed_resolution = clandinin_res
 
 		if not os.path.exists(save_directory):
@@ -1006,22 +1008,22 @@ for lab in ['clandinin', 'murthy']:
 		for job_id in job_ids:
 		    flow.wait_for_job(job_id, logfile, com_path)
 
-#################################################################################################################
-printlog(f"\n{'   ZSCORE   ':=^{width}}")
-job_ids = []
-for fly in flies:
-    directory = os.path.join(dataset_path, fly, 'func_0')
-    args = {'logfile': logfile, 'directory': directory, 'smooth': True, 'colors': ['green']}
-    script = 'zscore.py'
-    job_id = flow.sbatch(jobname='zscore',
-                         script=os.path.join(scripts_path, script),
-                         modules=modules,
-                         args=args,
-                         logfile=logfile, time=8, mem=18, nice=nice, nodes=nodes) # 2 to 1
-    job_ids.append(job_id)
+# #################################################################################################################
+# printlog(f"\n{'   ZSCORE   ':=^{width}}")
+# job_ids = []
+# for fly in flies:
+#     directory = os.path.join(dataset_path, fly, 'func_0')
+#     args = {'logfile': logfile, 'directory': directory, 'smooth': True, 'colors': ['green']}
+#     script = 'zscore.py'
+#     job_id = flow.sbatch(jobname='zscore',
+#                          script=os.path.join(scripts_path, script),
+#                          modules=modules,
+#                          args=args,
+#                          logfile=logfile, time=8, mem=18, nice=nice, nodes=nodes) # 2 to 1
+#     job_ids.append(job_id)
 
-for job_id in job_ids:
-    flow.wait_for_job(job_id, logfile, com_path)
+# for job_id in job_ids:
+#     flow.wait_for_job(job_id, logfile, com_path)
 
 
 
