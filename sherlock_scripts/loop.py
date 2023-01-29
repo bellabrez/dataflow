@@ -909,7 +909,7 @@ printlog(f"\n{'   Template Alignment   ':=^{width}}")
 
 murthy_res = (.49,.49,1)
 clandinin_res = (.76,.76,1)
-for lab in ['clandinin']:#, 'murthy']:
+for lab in ['murthy']:#, 'murthy']:
 #for lab in ['murthy']: #quickly fixing a single brain
 
 	##### LC11 #####
@@ -936,7 +936,8 @@ for lab in ['clandinin']:#, 'murthy']:
 		moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/raw2"
 		#moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/mbrain2/preprocessed"
 		mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/func/raw"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/murthy"
+		#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/murthy"
+		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230127_DSX_to_local/murthy"
 		resolution = murthy_res
 
 	for moving_file in os.listdir(moving_dir):
@@ -949,10 +950,10 @@ for lab in ['clandinin']:#, 'murthy']:
 		mimic_fly = micim_file[:-4]
 		mimic_resolution = resolution
 
-		fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/clandinin/syn_6.nii"
+		fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy_hybrid/syn_5.nii"
 		#fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_downsampled_flip.nii"
-		fixed_fly = 'localmean_syn6'
-		fixed_resolution = clandinin_res
+		fixed_fly = 'localmean_syn5'
+		fixed_resolution = murthy_res
 
 		if not os.path.exists(save_directory):
 		    os.mkdir(save_directory)
