@@ -85,7 +85,7 @@ def main():
 	###   Affine_0    ###
 	moving_dir = clean_dir
 	name_out = 'affine_0'
-	name_fixed = "220419_LC11_vol2_local_atlas_red"#'220616_dsx_vol2_local_atlas_red'#'201204_03_red'
+	name_fixed = "210216_02_red"#"220419_LC11_vol2_local_atlas_red"#'220616_dsx_vol2_local_atlas_red'#'201204_03_red'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
