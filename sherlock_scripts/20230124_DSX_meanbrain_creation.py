@@ -37,11 +37,12 @@ def main():
 
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
 	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
-	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy_hybrid"#clandinin"
+	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy_hybrid"#clandinin"
+	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230130_LC11_full_analysis/meanbrain_building/clandinin/"
 	raw_dir = os.path.join(main_dir, 'raw_anats')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
-	resolution = (.76,.76,1)#(2, 2, 2)
+	resolution = (.6,.6,1)#(.76,.76,1)#(2, 2, 2)
 
 	# #######################
 	# ### Clean Anatomies ###
@@ -159,10 +160,10 @@ def load_numpy_brain(in_file):
 
 	return brain
 
-def avg_brains(input_directory, save_directory, save_name):
+def avg_brains(input_directory, save_directory, save_name, bs):
 	### Load Brains ###
 	files = os.listdir(input_directory)
-	bigbrain = np.zeros((len(files), 1024, 512, 299), dtype='float32',order='F') #my brain size #256
+	bigbrain = np.zeros((len(files), bs[0], bs[1], bs[2]), dtype='float32',order='F') #my brain size #256
 	#bigbrain = np.zeros((len(files), 333, 166, 121), dtype='float32',order='F') # should add code to get dims
 	for i, file in enumerate(files):
 		print(F"loading {file}")
@@ -203,6 +204,7 @@ def align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution,
 		save_file = os.path.join(save_dir, moving_fly + '-to-' + fixed_fly)
 	save_file += '.nii'
 	nib.Nifti1Image(moco['warpedmovout'].numpy(), np.eye(4)).to_filename(save_file)
+	return moving.shape
 
 def clean_anat(in_file, save_dir):
 	### Load brain ###
@@ -278,12 +280,12 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 		moving_path = os.path.join(moving_dir, anat)
 		for mirror in [True, False]:
 			t0 = time.time()
-			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
+			brain_shape = align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
 			print('{} {} done. Duration {}s'.format(type_of_transform, anat, time.time()-t0))
 	print(f'*** Finished {name_out} ***')
 
 	save_dir = os.path.join(main_dir, name_out)
-	avg_brains(input_directory=save_dir, save_directory=main_dir, save_name=name_out)
+	avg_brains(input_directory=save_dir, save_directory=main_dir, save_name=name_out, brain_shape=brain_shape)
 
 	if sharpen_output:
 		in_file = os.path.join(main_dir, f'{name_out}.nii')
