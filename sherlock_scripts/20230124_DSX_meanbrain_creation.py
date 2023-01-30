@@ -44,38 +44,38 @@ def main():
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
 	resolution = (.6,.6,1)#(.76,.76,1)#(2, 2, 2)
 
-	# #######################
-	# ### Clean Anatomies ###
-	# #######################
-	# # Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
+	#######################
+	### Clean Anatomies ###
+	#######################
+	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
-	# anats = os.listdir(raw_dir)
-	# print('found raw anats: {}'.format(anats))
+	anats = os.listdir(raw_dir)
+	print('found raw anats: {}'.format(anats))
 
-	# if not os.path.exists(clean_dir):
-	# 	os.mkdir(clean_dir)
+	if not os.path.exists(clean_dir):
+		os.mkdir(clean_dir)
 
-	# print('*** Start Cleaning ***')
-	# for anat in anats:
-	# 	print('cleaning {}'.format(anat))
-	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	# print('*** Finished Cleaning ***')
+	print('*** Start Cleaning ***')
+	for anat in anats:
+		print('cleaning {}'.format(anat))
+		clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	print('*** Finished Cleaning ***')
 
-	# #########################
-	# ### Sharpen Anatomies ###
-	# #########################
-	# # Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	# clean_anats = os.listdir(clean_dir)
-	# print('found clean anats: {}'.format(clean_anats))
+	#########################
+	### Sharpen Anatomies ###
+	#########################
+	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	clean_anats = os.listdir(clean_dir)
+	print('found clean anats: {}'.format(clean_anats))
 
-	# if not os.path.exists(sharp_dir):
-	# 	os.mkdir(sharp_dir)
+	if not os.path.exists(sharp_dir):
+		os.mkdir(sharp_dir)
 
-	# print('*** Start Sharpening ***')
-	# for anat in clean_anats:
-	# 	print('sharpening {}'.format(anat))
-	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	# print('*** Finished Sharpening ***')
+	print('*** Start Sharpening ***')
+	for anat in clean_anats:
+		print('sharpening {}'.format(anat))
+		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	print('*** Finished Sharpening ***')
 
 	##############
 	### AFFINE ###
