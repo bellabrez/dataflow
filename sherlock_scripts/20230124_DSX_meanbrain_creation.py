@@ -38,11 +38,11 @@ def main():
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
 	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
 	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy_hybrid"#clandinin"
-	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230130_LC11_full_analysis/meanbrain_building/clandinin/"
+	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230130_LC11_full_analysis/meanbrain_building/murthy/"
 	raw_dir = os.path.join(main_dir, 'raw_anats')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
-	resolution = (.6,.6,1)#(.76,.76,1)#(2, 2, 2)
+	resolution = (0.49,0.49,1)#(.6,.6,1)#(.76,.76,1)#(2, 2, 2)
 
 	#######################
 	### Clean Anatomies ###
@@ -85,7 +85,7 @@ def main():
 	###   Affine_0    ###
 	moving_dir = clean_dir
 	name_out = 'affine_0'
-	name_fixed = "210216_02_red"#"220419_LC11_vol2_local_atlas_red"#'220616_dsx_vol2_local_atlas_red'#'201204_03_red'
+	name_fixed = "220419_LC11_vol2_local_atlas_red"#'220616_dsx_vol2_local_atlas_red'#'201204_03_red'"210216_02_red"#
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
