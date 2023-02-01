@@ -908,37 +908,49 @@ printlog(f"\n{'   Template Alignment   ':=^{width}}")
 
 
 murthy_res = (.49,.49,1)
-clandinin_res = (.76,.76,1)
-for lab in ['murthy']:#, 'murthy']:
+clandinin_res = (.65,.65,1)
+for lab in ['clandinin','murthy']:#, 'murthy']:
 #for lab in ['murthy']: #quickly fixing a single brain
 
 	##### LC11 #####
-	# if lab == 'clandinin':
-	# 	moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/anat/raw"
-	# 	mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/func/raw"
-	# 	save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/clandinin"
-	# 	resolution = clandinin_res
-	# elif lab == 'murthy':
-	# 	moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/anat/raw"
-	# 	mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/func/raw"
-	# 	save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/murthy"
-	# 	resolution = murthy_res
+	fixed_fly = 'localmeansyn6'
+	if lab == 'clandinin':
+		moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/anat/raw"
+		mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/LC11/func/raw"
+		#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/clandinin"
+		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230130_LC11_full_analysis/indiv_to_local/clandinin"
+		resolution = clandinin_res
+		fixed_resolution = clandinin_res
+		fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230130_LC11_full_analysis/meanbrain_building/clandinin/syn_6.nii"
+	elif lab == 'murthy':
+		moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/anat/raw"
+		mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/LC11/func/raw"
+		#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_affine/murthy"
+		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230130_LC11_full_analysis/indiv_to_local/murthy"
+		resolution = murthy_res
+		fixed_resolution = murthy_res
+		fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230130_LC11_full_analysis/meanbrain_building/murthy/syn_6.nii"
+
+	#fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy_hybrid/syn_5.nii"
+	#fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_downsampled_flip.nii"
+	
+	
 
 	##### DSX #####
-	if lab == 'clandinin':
-		moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/raw"
-		#moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/mbrain/preprocessed"
-		mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/func/raw"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230127_DSX_to_local/clandinin"
-		#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/clandinin"
-		resolution = clandinin_res
-	elif lab == 'murthy':
-		moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/raw2"
-		#moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/mbrain2/preprocessed"
-		mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/func/raw"
-		#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/murthy"
-		save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230127_DSX_to_local/murthy"
-		resolution = murthy_res
+	# if lab == 'clandinin':
+	# 	moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/raw"
+	# 	#moving_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/anat/mbrain/preprocessed"
+	# 	mimic_dir = "/oak/stanford/groups/trc/data/Alex/clab_data/DSX/func/raw"
+	# 	save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230127_DSX_to_local/clandinin"
+	# 	#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/clandinin"
+	# 	resolution = clandinin_res
+	# elif lab == 'murthy':
+	# 	moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/raw2"
+	# 	#moving_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/anat/mbrain2/preprocessed"
+	# 	mimic_dir = "/oak/stanford/groups/trc/data/Alex/albert_data/DSX/func/raw"
+	# 	#save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20221029_FDA_direct_syn_DSX/murthy"
+	# 	save_directory = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230127_DSX_to_local/murthy"
+	# 	resolution = murthy_res
 
 	for moving_file in os.listdir(moving_dir):
 		moving_path = os.path.join(moving_dir, moving_file)
@@ -949,11 +961,6 @@ for lab in ['murthy']:#, 'murthy']:
 		mimic_path = os.path.join(mimic_dir, micim_file)
 		mimic_fly = micim_file[:-4]
 		mimic_resolution = resolution
-
-		fixed_path = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy_hybrid/syn_5.nii"
-		#fixed_path = "/oak/stanford/groups/trc/data/Yukun/registration/mean_brain/FDA_downsampled_flip.nii"
-		fixed_fly = 'localmean_syn5'
-		fixed_resolution = murthy_res
 
 		if not os.path.exists(save_directory):
 		    os.mkdir(save_directory)
