@@ -35,11 +35,11 @@ def main():
 
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
 	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
-	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20220704_LC11"
-	raw_dir = os.path.join(main_dir, 'raw_red')
+	main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230717_IPS_dataset_template"
+	raw_dir = os.path.join(main_dir, 'raw_anats')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
-	resolution = (0.65, 0.65, 1)
+	resolution = (1.3, 1.3, 1)
 
 	#######################
 	### Clean Anatomies ###
@@ -82,7 +82,7 @@ def main():
 	###   Affine_0    ###
 	moving_dir = clean_dir
 	name_out = 'affine_0'
-	name_fixed = 'clean_anats/210208_02_red_o_clean'
+	name_fixed = 'clean_anats/313_clean'
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
@@ -281,7 +281,7 @@ def alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_tran
 	anats = os.listdir(moving_dir)
 	for anat in anats:
 		moving_path = os.path.join(moving_dir, anat)
-		for mirror in [False]: # <----------------------- removed true here for subvol
+		for mirror in [True, False]: # <----------------------- removed true here for subvol
 			t0 = time.time()
 			align_anat(fixed_path, moving_path, save_dir, type_of_transform, resolution, mirror)
 			print('{} {} done. Duration {}s'.format(type_of_transform, anat, time.time()-t0))
