@@ -8,5 +8,5 @@
 
 ml python/3.6.1
 date
-python3 -u /home/users/brezovec/projects/dataflow/sherlock_scripts/20240906_Aragon_male_meanbrain_creation.py
+python3 -u /home/users/brezovec/projects/dataflow/sherlock_scripts/20240911_Aragon_male_meanbrain_creation.py
 ##SBATCH --output=./logs/mainlog.out
