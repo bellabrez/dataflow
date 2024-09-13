@@ -33,49 +33,48 @@ def main():
 		6) Repeat step 5 for 2 additional iterations, aligning to the newly created syn_x.
 	'''
 
-	### EDIT BRAIN SHAPE IN "avg_brains" BELOW
-
 	# main_directory must contain a directory called "raw", which contains the raw individual anatomies
-	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20210317_make_diego_meanbrain"#20210126_alignment_package"
-	#main_dir = "/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20230124_DSX_meanbrain/murthy_hybrid"#clandinin"
-	main_dir = "/oak/stanford/groups/trc/data/Brezovec/20240819_aragon_male/OG_template_building_2"
+	main_dir = "/oak/stanford/groups/trc/data/Brezovec/20240819_aragon_male/20240913_OG_template_building"
 	raw_dir = os.path.join(main_dir, 'raw_anats')
 	clean_dir = os.path.join(main_dir, 'clean_anats')
 	sharp_dir = os.path.join(main_dir, 'sharp_anats')
-	resolution = (0.49,0.49,2)#(0.49,0.49,1)##(.76,.76,1)#(2, 2, 2)#(.65,.65,1)#
 
-	# #######################
-	# ### Clean Anatomies ###
-	# #######################
-	# # Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
+	# note I resampled these brains from the original (.49,.49,2) to (.6,.6,1) to match my FDA brains
+	# this is to help keep sharpening and cleaning consistant
+	resolution = (.6,.6,1)
 
-	# anats = os.listdir(raw_dir)
-	# print('found raw anats: {}'.format(anats))
+	#######################
+	### Clean Anatomies ###
+	#######################
+	# Loop over each anatomy in "raw_anats" directory, and saved a cleaned version to "clean_anats" directory
 
-	# if not os.path.exists(clean_dir):
-	# 	os.mkdir(clean_dir)
+	anats = os.listdir(raw_dir)
+	print('found raw anats: {}'.format(anats))
 
-	# print('*** Start Cleaning ***')
-	# for anat in anats:
-	# 	print('cleaning {}'.format(anat))
-	# 	clean_anat(os.path.join(raw_dir, anat), clean_dir)
-	# print('*** Finished Cleaning ***')
+	if not os.path.exists(clean_dir):
+		os.mkdir(clean_dir)
 
-	# #########################
-	# ### Sharpen Anatomies ###
-	# #########################
-	# # Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
-	# clean_anats = os.listdir(clean_dir)
-	# print('found clean anats: {}'.format(clean_anats))
+	print('*** Start Cleaning ***')
+	for anat in anats:
+		print('cleaning {}'.format(anat))
+		clean_anat(os.path.join(raw_dir, anat), clean_dir)
+	print('*** Finished Cleaning ***')
 
-	# if not os.path.exists(sharp_dir):
-	# 	os.mkdir(sharp_dir)
+	#########################
+	### Sharpen Anatomies ###
+	#########################
+	# Loop over each anatomy in "clean_anats" directory, and saved a sharp version to "sharp_anats" directory
+	clean_anats = os.listdir(clean_dir)
+	print('found clean anats: {}'.format(clean_anats))
 
-	# print('*** Start Sharpening ***')
-	# for anat in clean_anats:
-	# 	print('sharpening {}'.format(anat))
-	# 	sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
-	# print('*** Finished Sharpening ***')
+	if not os.path.exists(sharp_dir):
+		os.mkdir(sharp_dir)
+
+	print('*** Start Sharpening ***')
+	for anat in clean_anats:
+		print('sharpening {}'.format(anat))
+		sharpen_anat(os.path.join(clean_dir, anat), sharp_dir)
+	print('*** Finished Sharpening ***')
 
 	##############
 	### AFFINE ###
@@ -85,7 +84,7 @@ def main():
 	###   Affine_0    ###
 	moving_dir = clean_dir
 	name_out = 'affine_0'
-	name_fixed = "20240530_200"
+	name_fixed = "clean_anats/20240530_200_clean"
 	sharpen_output = False
 	alignment_iteration(main_dir, moving_dir, name_out, name_fixed, type_of_transform, resolution, sharpen_output)
 
